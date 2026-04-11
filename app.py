@@ -1,21 +1,25 @@
 import os
-import numpy as np
 import random
-import cv2
-# Assuming tensorflow and keras imports are valid
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing import image
+import logging
+import re
+import csv
 from functools import wraps
 from functools import lru_cache
+
+import cv2
+import numpy as np
+import pandas as pd
 from flask import Flask, request, render_template, jsonify, send_file, abort
 from flask_cors import CORS
 from deep_translator import GoogleTranslator
 from gtts import gTTS
-import logging
-import re
-import csv
-import os
-import pandas as pd
+
+try:
+    from tensorflow.keras.models import load_model
+    TENSORFLOW_IMPORT_ERROR = None
+except Exception as exc:
+    load_model = None
+    TENSORFLOW_IMPORT_ERROR = exc
 
 # -------------------- Logging Setup --------------------
 def setup_logger():
@@ -43,16 +47,24 @@ camera = cv2.VideoCapture()
 # Load model once at startup (not inside the function)
 MODEL_PATH = 'model/model_tomato.h5'
 
-try:
-    model = load_model(MODEL_PATH)
-except Exception as e:
-    log.error(f"Failed to load model at {MODEL_PATH}. Prediction will fail. Error: {e}")
-    # Define a placeholder model to prevent app crash if model loading fails
-    # In a real app, you would handle this more gracefully.
-    class MockModel:
-        def predict(self, x):
-            return np.zeros((1, 10))
+class MockModel:
+    def predict(self, x):
+        return np.zeros((1, 10))
+
+
+if load_model is None:
+    log.error(
+        "TensorFlow is unavailable in this environment. "
+        "Prediction will run in placeholder mode. Import error: %s",
+        TENSORFLOW_IMPORT_ERROR,
+    )
     model = MockModel()
+else:
+    try:
+        model = load_model(MODEL_PATH)
+    except Exception as e:
+        log.error(f"Failed to load model at {MODEL_PATH}. Prediction will fail. Error: {e}")
+        model = MockModel()
 
 # Class labels in the same order used during training
 CLASS_NAMES = [

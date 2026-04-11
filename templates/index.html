@@ -37,11 +37,13 @@
       background-image: url("../static/images/background.jpg");
       background-repeat: no-repeat;
       background-size: cover; /* Changed from 100% 130% to cover */
-      background-position-y: center;
+      background-position: center;
       min-height: 100vh;
       font-family: 'Montserrat', sans-serif;
       color: var(--text-light);
       position: relative;
+      display: flex;
+      flex-direction: column;
     }
 
     html {
@@ -93,9 +95,17 @@
         transform: translateY(-2px);
     }
 
+    .top-nav-actions {
+      gap: 0.75rem;
+    }
+
     /* ---------------------------------------------------- */
     /* --- Main Upload Section --- */
     /* ---------------------------------------------------- */
+
+    main {
+      flex: 1 0 auto;
+    }
 
     main #uploadImage {
       padding-top: 50px;
@@ -123,6 +133,7 @@
       padding: 40px;
       box-shadow: var(--shadow-md);
       transition: box-shadow 0.3s;
+      width: 100%;
     }
 
     #drop-area:hover {
@@ -258,10 +269,9 @@
     footer {
       background-color: var(--bg-light) !important;
       border-top: 1px solid #e0e0e0;
-      position: absolute;
-      bottom: 0;
       width: 100%;
       padding: 1.5rem 0;
+      margin-top: auto;
     }
     
     /* ---------------------------------------------------- */
@@ -269,16 +279,63 @@
     /* ---------------------------------------------------- */
 
     @media (max-width: 991px) {
-      /* Simplified navigation on mobile */
+      .navbar-collapse {
+        padding-top: 1rem;
+      }
+
+      .navbar-nav {
+        align-items: stretch !important;
+        gap: 0.5rem;
+      }
+
+      .navbar-nav .nav-link {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .top-nav-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .top-nav-actions .nav-item,
+      .top-nav-actions .nav-item.ms-lg-3 {
+        margin-left: 0 !important;
+      }
+
+      .top-nav-actions .btn,
+      #languageSelect {
+        width: 100%;
+      }
     }
 
     @media (max-width: 767px) {
+      main #uploadImage {
+        padding-top: 32px;
+        padding-bottom: 56px;
+      }
+
       #pageTitle {
         font-size: 2rem;
       }
+
+      #pageSubtitle {
+        font-size: 1rem;
+      }
+
       #drop-area {
         padding: 30px 20px;
       }
+
+      .d-flex.justify-content-center.gap-3.mb-4 {
+        flex-direction: column;
+      }
+
+      #uploadButton,
+      #speakButton {
+        width: 100%;
+      }
+
       .resultArea .list-group-item {
         flex-direction: column;
         align-items: center;
@@ -292,6 +349,37 @@
           padding-left: 0;
           margin-top: 0.5rem;
           text-align: left; /* Keep lists readable */
+      }
+
+      .modal-dialog {
+        margin: 0.75rem;
+      }
+
+      #supImageMain {
+        max-height: 240px !important;
+        margin-bottom: 1rem;
+      }
+
+      #supSimage {
+        width: 100% !important;
+        max-width: 180px;
+        height: auto !important;
+      }
+    }
+
+    @media (max-width: 575px) {
+      .container-fluid.px-4,
+      .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      #pageTitle {
+        font-size: 1.75rem;
+      }
+
+      #dragText {
+        font-size: 1rem;
       }
     }
   </style>
@@ -308,20 +396,20 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-              <li class="nav-item"><a href="/about" class="nav-link">About Project</a></li>
-              <li class="nav-item"><a href="/contact" class="nav-link">Contact</a></li>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center top-nav-actions">
+              <li class="nav-item"><a href="/about" class="nav-link" id="navAbout">About Project</a></li>
+              <li class="nav-item"><a href="/contact" class="nav-link" id="navContact">Contact</a></li>
 
               <!-- Chat Bot Button -->
-              <li class="nav-item" style="margin-left: 10px;">
+              <li class="nav-item">
                 <a href="/chat-bot" target="_blank" rel="noopener noreferrer"
-                   class="nav-link btn btn-warning text-white px-3">Chat Bot</a>
+                   class="nav-link btn btn-warning text-white px-3" id="navChatBot">Chat Bot</a>
               </li>
 
               <!-- Market Button (added) -->
-              <li class="nav-item" style="margin-left: 10px;">
+              <li class="nav-item">
                 <a href="/market" target="_blank" rel="noopener noreferrer"
-                   class="nav-link btn btn-info text-white px-3">Market</a>
+                   class="nav-link btn btn-info text-white px-3" id="navMarket">Market</a>
               </li>
 
               <!-- Language Selector -->
@@ -379,12 +467,12 @@
                     <div id="uploadProgress" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:100%;"></div>
                   </div>
                   <span id="uploadStatus" class="d-block text-start text-success fw-bold">Processing...</span>
-                  <span class="cancelUpload btn btn-sm btn-link text-danger">Cancel</span>
+                  <span class="cancelUpload btn btn-sm btn-link text-danger" id="cancelUploadText">Cancel</span>
                 </div>
 
                 <!-- Result Area -->
                 <div class="resultArea mt-4" style="display:none;">
-                  <h5 class="text-center mb-3 text-dark fw-bold">Prediction Result</h5>
+                  <h5 class="text-center mb-3 text-dark fw-bold" id="predictionHeading">Prediction Result</h5>
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex"><p id="resultLabel" class="mb-0">Result:</p><span id="result"></span></li>
                     <li class="list-group-item d-flex"><p id="confidenceLabel" class="mb-0">Confidence Score:</p><span id="confidenceScore"></span></li>
@@ -429,6 +517,10 @@
         let file = null;
         let currentLang = "en";
         let lastDescription = []; // stored as array of points
+        let lastPredictionLabel = "";
+        let lastConfidence = "";
+        let speaking = false;
+        let availableVoices = [];
 
         // === Multilingual Texts (Simplified) ===
         const translations = {
@@ -518,25 +610,73 @@
           "Healthy": { en: "Healthy", hi: "स्वस्थ", kn: "ಆರೋಗ್ಯಕರ", te: "ఆరోగ్యకరంగా", ta: "ஆரோக்கியம்" }
         };
 
+        function getUiExtras(lang) {
+          const extras = {
+            en: { navAbout: "About Project", navContact: "Contact", navChatBot: "Chat Bot", navMarket: "Market", predictionHeading: "Prediction Result", processing: "Processing...", cancel: "Cancel", speaking: "Speaking...", noDescription: "No description available" },
+            hi: { navAbout: "परियोजना", navContact: "संपर्क", navChatBot: "चैट बॉट", navMarket: "मार्केट", predictionHeading: "पूर्वानुमान परिणाम", processing: "प्रोसेस हो रहा है...", cancel: "रद्द करें", speaking: "बोला जा रहा है...", noDescription: "कोई विवरण उपलब्ध नहीं है" },
+            kn: { navAbout: "ಯೋಜನೆ", navContact: "ಸಂಪರ್ಕ", navChatBot: "ಚಾಟ್ ಬಾಟ್", navMarket: "ಮಾರ್ಕೆಟ್", predictionHeading: "ಭವಿಷ್ಯ ಫಲಿತಾಂಶ", processing: "ಸಂಸ್ಕರಿಸಲಾಗುತ್ತಿದೆ...", cancel: "ರದ್ದುಮಾಡಿ", speaking: "ಓದುತ್ತಿದೆ...", noDescription: "ವಿವರಣೆ ಲಭ್ಯವಿಲ್ಲ" },
+            te: { navAbout: "ప్రాజెక్ట్", navContact: "సంప్రదింపు", navChatBot: "చాట్ బాట్", navMarket: "మార్కెట్", predictionHeading: "అంచనా ఫలితం", processing: "ప్రాసెస్ అవుతోంది...", cancel: "రద్దు", speaking: "చదువుతోంది...", noDescription: "వివరణ అందుబాటులో లేదు" },
+            ta: { navAbout: "திட்டம்", navContact: "தொடர்பு", navChatBot: "சாட் பாட்", navMarket: "மார்க்கெட்", predictionHeading: "கணிப்பு முடிவு", processing: "செயலாக்கப்படுகிறது...", cancel: "ரத்து", speaking: "வாசிக்கிறது...", noDescription: "விளக்கம் இல்லை" }
+          };
+
+          return extras[lang] || extras.en;
+        }
+
+        async function refreshPredictionTranslations(lang) {
+          if (!lastPredictionLabel) return;
+
+          const translatedLabel = (diseaseTranslations[lastPredictionLabel] && diseaseTranslations[lastPredictionLabel][lang])
+            ? diseaseTranslations[lastPredictionLabel][lang]
+            : lastPredictionLabel;
+          $("#result").text(translatedLabel);
+          $("#confidenceScore").text(lastConfidence || "N/A");
+
+          try {
+            const descRes = await axios.post("/describe", { disease: lastPredictionLabel, lang });
+            if (descRes.status === 200 && descRes.data && descRes.data.description) {
+              lastDescription = Array.isArray(descRes.data.description) ? descRes.data.description : [descRes.data.description];
+            }
+          } catch (err) {
+            console.error("Description refresh failed", err);
+          }
+
+          if (Array.isArray(lastDescription) && lastDescription.length) {
+            const listHtml = lastDescription.map(pt => /<a\s+/i.test(pt) ? `<li>${pt}</li>` : `<li>${escapeHtml(pt)}</li>`).join("");
+            $("#diseaseDescription").html(`<ul>${listHtml}</ul>`);
+          } else {
+            $("#diseaseDescription").text(getUiExtras(lang).noDescription);
+          }
+        }
+
         // === Update UI Language ===
         function updateLanguage(lang) {
           const t = translations[lang] || translations.en;
+          const extra = getUiExtras(lang);
           $("#pageTitle").text(t.title);
           $("#pageSubtitle").text(t.subtitle);
           $("#uploadButton").text(t.upload);
-
+          $("#navAbout").text(extra.navAbout);
+          $("#navContact").text(extra.navContact);
+          $("#navChatBot").text(extra.navChatBot);
+          $("#navMarket").text(extra.navMarket);
           $("#dragText").text(t.drag);
           $("#fileTypeText").text(t.filetype);
+          $("#predictionHeading").text(extra.predictionHeading);
           $("#resultLabel").text(t.result);
           $("#confidenceLabel").text(t.confidence);
           $("#descriptionLabel").text(t.description);
-          $("#speakButton").text(t.speak);
+          $("#uploadStatus").text(extra.processing);
+          $("#cancelUploadText").text(extra.cancel);
+          if (!speaking) {
+            $("#speakButton").text(t.speak);
+          }
           $("#footerText").text(t.footer);
         }
 
         // apply language change to the whole page including about/contact content
         async function applyLanguageToPage(lang) {
           updateLanguage(lang);
+          await refreshPredictionTranslations(lang);
 
           // if on about/contact pages, ask backend for content
           const pageId = $("body").data("page"); 
@@ -556,6 +696,75 @@
           currentLang = e.target.value;
           applyLanguageToPage(currentLang);
         });
+
+        function loadVoices() {
+          availableVoices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+        }
+
+        function getSpeechLang(lang) {
+          const langMap = {
+            en: "en-US",
+            hi: "hi-IN",
+            ta: "ta-IN",
+            te: "te-IN",
+            kn: "kn-IN"
+          };
+          return langMap[(lang || "en").split("-")[0].toLowerCase()] || "en-US";
+        }
+
+        function getBestVoice(lang) {
+          const speechLang = getSpeechLang(lang).toLowerCase();
+          const shortLang = speechLang.split("-")[0];
+          return availableVoices.find(voice => voice.lang && voice.lang.toLowerCase() === speechLang)
+            || availableVoices.find(voice => voice.lang && voice.lang.toLowerCase().startsWith(shortLang))
+            || null;
+        }
+
+        function updateSpeakButtonState(isBusy) {
+          speaking = isBusy;
+          speakButton.disabled = isBusy;
+          speakButton.textContent = isBusy ? getUiExtras(currentLang).speaking : (translations[currentLang]?.speak || translations.en.speak);
+        }
+
+        async function speakWithBrowser(textToSpeak, lang) {
+          if (!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined") {
+            return false;
+          }
+
+          window.speechSynthesis.cancel();
+          loadVoices();
+
+          return new Promise((resolve) => {
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.lang = getSpeechLang(lang);
+
+            const matchedVoice = getBestVoice(lang);
+            if (matchedVoice) {
+              utterance.voice = matchedVoice;
+            }
+
+            utterance.rate = 1;
+            utterance.pitch = 1;
+
+            utterance.onend = () => {
+              updateSpeakButtonState(false);
+              resolve(true);
+            };
+
+            utterance.onerror = () => {
+              updateSpeakButtonState(false);
+              resolve(false);
+            };
+
+            updateSpeakButtonState(true);
+            window.speechSynthesis.speak(utterance);
+          });
+        }
+
+        if ("speechSynthesis" in window) {
+          loadVoices();
+          window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
 
         // === File upload / Drag & Drop handlers ===
         uploadButton.onclick = () => input.click();
@@ -605,6 +814,8 @@
             if (res.status === 200 && res.data) {
               const label = res.data.label || "Unknown";
               const confidence = res.data["confidence score"] || "N/A";
+              lastPredictionLabel = label;
+              lastConfidence = confidence;
 
               // Translate disease name for display (frontend dictionary)
               const translatedLabel = (diseaseTranslations[label] && diseaseTranslations[label][currentLang]) ? diseaseTranslations[label][currentLang] : label;
@@ -636,7 +847,7 @@
                 }).join("");
                 $("#diseaseDescription").html(`<ul>${listHtml}</ul>`);
               } else {
-                $("#diseaseDescription").text("No description available");
+                $("#diseaseDescription").text(getUiExtras(currentLang).noDescription);
               }
 
               // NEW: show supplement modal if backend provided data
@@ -679,12 +890,24 @@
             toastr.warning(translations[currentLang].description + " not available!");
             return;
           }
+
+          if (speaking) {
+            if ("speechSynthesis" in window) {
+              window.speechSynthesis.cancel();
+            }
+            updateSpeakButtonState(false);
+            return;
+          }
+
           try {
-            // join points into a readable paragraph for speech
-            // Remove any HTML tags before sending to TTS
             const textToSpeak = lastDescription.map(pt => pt.replace(/<[^>]+>/g, '')).join(". ");
-            // Pass the CURRENTLY selected language for gTTS
             const currentSelectedLang = languageSelect.value;
+            const browserSpeechWorked = await speakWithBrowser(textToSpeak, currentSelectedLang);
+            if (browserSpeechWorked) {
+              return;
+            }
+
+            updateSpeakButtonState(true);
             const response = await fetch("/speak", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -694,8 +917,11 @@
             const audioBlob = await response.blob();
             const audioUrl = URL.createObjectURL(audioBlob);
             const audio = new Audio(audioUrl);
-            audio.play();
+            audio.onended = () => updateSpeakButtonState(false);
+            audio.onerror = () => updateSpeakButtonState(false);
+            await audio.play();
           } catch (error) {
+            updateSpeakButtonState(false);
             console.error(error);
             toastr.error("Failed to play description voice!");
           }
@@ -705,6 +931,9 @@
         $(".cancelUpload").click(() => {
           $("#previewImage").attr("src", "../static/images/drag_drop.svg");
           $(".loadingArea, .resultArea").hide();
+          lastPredictionLabel = "";
+          lastConfidence = "";
+          lastDescription = [];
         });
 
         // Initialize page: set data-page-based content if present

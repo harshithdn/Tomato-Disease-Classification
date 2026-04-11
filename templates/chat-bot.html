@@ -104,6 +104,7 @@ header .small {
 }
 .controls {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 12px;
   align-items: center;
@@ -164,6 +165,7 @@ footer {
   align-items: center;
   justify-content: space-between;
   margin-top: 8px;
+  flex-wrap: wrap;
 }
 .lang-row label { font-size: 13px; color: var(--muted); }
 select {
@@ -171,6 +173,52 @@ select {
   border-radius: 10px;
   border: 1px solid #e5e7eb;
   font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 12px;
+    align-items: stretch;
+  }
+
+  .card {
+    min-height: calc(100vh - 24px);
+  }
+
+  header {
+    flex-wrap: wrap;
+  }
+
+  header .small {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .chat {
+    height: auto;
+    min-height: calc(100vh - 180px);
+    max-height: none;
+    padding: 12px;
+  }
+
+  .msg {
+    max-width: 88%;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+  }
+
+  #sendBtn {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .lang-row label,
+  .lang-row select {
+    width: 100%;
+  }
 }
 </style>
 </head>
@@ -199,6 +247,13 @@ select {
 .corner-back:hover {
   transform: translateY(-1px);
   box-shadow: 0 8px 16px rgba(0,0,0,0.14);
+}
+
+@media (max-width: 640px) {
+  .corner-back {
+    position: static;
+    margin-bottom: 10px;
+  }
 }
 
 /* ...existing styles... */
