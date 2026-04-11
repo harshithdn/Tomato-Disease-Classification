@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tomato Plant Care Marketplace</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600&family=Red+Rose:wght@400;600&display=swap"
+        rel="stylesheet"
+    />
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    />
+    
+    <!-- Font Awesome (for shopping cart icon) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+    <!-- Custom CSS Styles -->
+    <style>
+        /* --- CSS Variables --- */
+        :root {
+            --main-color: #4CAF50; /* A pleasant green for tomato plants */
+            --secondary-color: #2196F3;
+            --text-dark: #333;
+            --text-light: #666;
+            --border-color: #dee2e6;
+            --font-primary: 'Montserrat', sans-serif;
+            --font-secondary: 'Red Rose', cursive;
+        }
+
+        /* --- Base Styles (Full Screen Setup) --- */
+        body {
+            background-color: #ffffff;
+            min-height: 100vh;
+            font-family: var(--font-primary);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            margin: 0; /* Important: removes default margin */
+            padding: 0; /* Important: removes default padding */
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        a:hover {
+            color: var(--main-color);
+            text-decoration: none;
+        }
+
+        /* --- Header (Full Width) --- */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            width: 100%; /* Ensure full width */
+        }
+        header .navbar {
+             /* Use container-fluid inside the navbar to keep content centered but allow full width nav */
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        header h6 {
+            font-family: var(--font-secondary);
+            font-weight: bold;
+            font-size: 24px;
+            color: var(--main-color);
+            margin-bottom: 0;
+        }
+
+        /* --- Main Content --- */
+        main {
+            flex-grow: 1; 
+            width: 100%; /* Ensure main is full width */
+        }
+
+        /* --- Marketplace Styling (Full Width Section) --- */
+        #marketplace {
+            background-color: #f7f7f7;
+            padding: 50px 0; /* Vertical padding */
+            width: 100%;
+        }
+
+        #marketplace .row {
+            /* Add horizontal padding/margin to the grid content inside the full width section */
+            padding-left: 1rem; 
+            padding-right: 1rem;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        #marketplace h2 {
+            font-family: var(--font-secondary);
+            font-size: 2.5rem; /* Slightly larger for a full-screen feel */
+            color: var(--main-color) !important;
+            padding-left: 1rem; /* Align text with content grid */
+            padding-right: 1rem;
+        }
+        
+        #marketplace .lead {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent !important;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+            border: 1px solid var(--main-color) !important;
+        }
+
+        .product-image-container {
+            width: 100%;
+            max-width: 200px;
+            height: 250px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-name {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            min-height: 2.2rem;
+        }
+
+        .product-status .badge {
+            font-size: 0.8rem;
+        }
+
+        .product-type-badge {
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .buy-btn {
+            background-color: #05380b !important;
+            border-color: #05380b !important;
+            color: white;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            margin-top: 15px !important;
+        }
+
+        .buy-btn:hover {
+            background-color: #388e3c !important;
+            border-color: #388e3c !important;
+        }
+
+        /* --- Footer (Full Width) --- */
+        footer {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid rgba(0,0,0,0.1);
+            padding: 15px 0;
+            margin-top: auto;
+            width: 100%;
+        }
+        footer .text-center {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar navbar-light bg-white-transparent">
+            <!-- Use container-fluid for a full-width header with padded content -->
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">
+                    <h6>TOMATO CARE MARKETPLACE</h6>
+                </a>
+                <!-- Optional: Add a nav link back to the main prediction page -->
+                <a href="/" class="btn btn-outline-success">Back to Predictor</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content (Full Width) -->
+    <main>
+        <!-- Marketplace Section for Supplements and Fertilizers -->
+        <section id="marketplace" class="py-5">
+            <div class="row justify-content-center mb-5 mx-0">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">Recommended Plant Care Solutions</h2>
+                    <p class="lead text-muted">Find the right supplement or fertilizer for your tomato plant's health needs.</p>
+                </div>
+            </div>
+
+            <!-- Product Grid (Jinja2 Template Logic) - Removed container, rely on row g-4 -->
+            <div class="row g-4 justify-content-center mx-0">
+                <!-- NOTE: The content below uses Jinja2 syntax which requires Flask/Jinja to execute. -->
+                <!-- The original Jinja loop is kept for your Flask application. -->
+                
+                {% for index in range(0, supplement_name | length) %}
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+                    <div class="card product-card border-0 shadow-lg h-100 position-relative overflow-hidden">
+                        <!-- Product Type Label (Top Left) -->
+                        <span class="product-type-badge position-absolute top-0 start-0 px-3 py-1 fw-bold text-uppercase"
+                            style="font-size: 0.75rem; border-bottom-right-radius: 8px; {% if 'healthy' in disease[index] %} background-color: var(--main-color); color: white; {% else %} background-color: #dc3545; color: white; {% endif %}">
+                            {% if "healthy" in disease[index] %}
+                                Fertilizer
+                            {% else %}
+                                Supplement
+                            {% endif %}
+                        </span>
+
+                        <div class="card-body d-flex flex-column align-items-center p-4">
+                            
+                            <!-- Image -->
+                            <div class="product-image-container mb-3">
+                                <img src="{{ supplement_image[index] }}" alt="{{ supplement_name[index] }}" class="img-fluid rounded product-image">
+                            </div>
+
+                            <!-- Name and Type -->
+                            <h5 class="fw-bold text-center mb-1 product-name">{{ supplement_name[index] }}</h5>
+                            
+                            <!-- Disease/Health Status -->
+                            <p class="mb-2 text-center small text-uppercase fw-semibold product-status">
+                                For <span class="badge rounded-pill px-3 py-2" 
+                                      style="{% if 'healthy' in disease[index] %} background-color: #e8f5e9; color: #388e3c; border: 1px solid #4CAF50; {% else %} background-color: #ffebee; color: #d32f2f; border: 1px solid #f44336; {% endif %}">
+                                    {{ disease[index] }}
+                                </span>
+                            </p>
+
+                            <!-- Buy Button -->
+                            <a target="_blank" href="{{ buy[index] }}" class="btn btn-success mt-auto w-100 buy-btn">
+                                <i class="fas fa-shopping-cart me-2"></i> Buy Product
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- END Product Grid -->
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="text-center">
+            <p class="copyright mb-0">
+                &copy; <span id="currentYear"></span> All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JS Libraries (Required for Bootstrap) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Simple Script for Current Year (Optional) -->
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

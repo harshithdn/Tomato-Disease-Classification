@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Tomato Disease Prediction</title>
+
+    <!-- Fonts & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Red+Rose:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS Styles -->
+    <style>
+        /* --- CSS Variables --- */
+        :root {
+            --green-dark: #2e7d32; /* Primary Green */
+            --green-light: #4caf50;
+            --green-accent: #e8f5e9;
+            --font-primary: 'Montserrat', sans-serif;
+            --font-secondary: 'Red Rose', cursive;
+            --text-dark: #222;
+        }
+
+        /* --- Global Styles --- */
+        body {
+            font-family: var(--font-primary);
+            background: var(--green-accent);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- Header / Navigation --- */
+        header {
+            background: var(--green-dark);
+            color: #fff;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1020; /* Higher Z-index */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        header h6 {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        header .nav-link {
+            color: white !important;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        header .nav-link:hover {
+            color: #c8e6c9 !important;
+        }
+        
+        header #languageSelect {
+            border: 1px solid white;
+            color: var(--green-dark);
+            background-color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* --- Hero Section --- */
+        #aboutHeader {
+            background: linear-gradient(rgba(46, 125, 50, 0.7), rgba(46, 125, 50, 0.7)), url('../static/images/tomato-bg.jpg') center/cover no-repeat;
+            color: white;
+            padding: 100px 0;
+            text-align: left;
+        }
+
+        #aboutHeader h2 {
+            font-family: var(--font-secondary);
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        #aboutHeader p {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin: 20px 0 40px;
+        }
+
+        #aboutHeader a {
+            background: var(--green-light);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #aboutHeader a:hover {
+            background: #66bb6a;
+        }
+        
+        #aboutHeader img {
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* --- About Section --- */
+        #about {
+            padding: 100px 0;
+            background: white;
+        }
+
+        #about h1 {
+            text-align: center;
+            font-family: var(--font-secondary);
+            font-weight: 700;
+            color: var(--green-dark);
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+        }
+
+        .feature-card {
+            background: var(--green-accent);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            min-height: 250px; /* Ensure uniform height for cards */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--green-dark);
+            margin-bottom: 15px;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: #f9fff9;
+            border-left: 5px solid var(--green-light);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            margin-top: 30px;
+        }
+        
+        .info-box h5 {
+            color: var(--green-dark);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        /* Dataset/Tech Section */
+        #dataset {
+            background: var(--green-dark);
+            color: white;
+            padding: 80px 0;
+        }
+
+        #dataset h2 {
+            text-align: center;
+            font-family: var(--font-secondary);
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 2.5rem;
+        }
+        
+        #dataset p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        #dataset strong {
+            color: #a5d6a7; /* Light accent for tech words */
+        }
+
+        /* Contact Section */
+        #contact {
+            padding: 100px 0;
+            background: var(--green-accent);
+        }
+
+        #contact h2 {
+            font-family: var(--font-secondary);
+            font-weight: 700;
+            color: var(--green-dark);
+            margin-bottom: 10px;
+        }
+
+        .contactRow .singleItem {
+            text-align: center;
+            padding: 30px 0;
+            transition: 0.3s;
+        }
+
+        .contactRow .singleItem:hover {
+            transform: translateY(-5px);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .contactRow .singleItem i {
+            color: var(--green-dark) !important;
+            font-size: 2.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--green-dark);
+            color: white;
+            padding: 20px 0;
+            margin-top: auto; /* Sticky footer */
+        }
+
+        footer ul {
+            list-style: none;
+            display: flex;
+            justify-content: end;
+            gap: 20px;
+            padding: 0;
+            margin: 0;
+        }
+
+        footer img {
+            width: 28px;
+            filter: brightness(0) invert(1); /* Makes icons white */
+            transition: 0.3s;
+        }
+
+        footer img:hover {
+            transform: scale(1.15);
+            filter: brightness(0) invert(0.8); /* Slight gray on hover */
+        }
+        
+        /* Responsive */
+        @media (max-width: 991.98px) {
+            #aboutHeader h2 { font-size: 3rem; }
+            #aboutHeader { text-align: center; }
+            #aboutHeader img { margin-top: 30px; }
+            header .nav-link { padding: 5px 10px !important; }
+        }
+    </style>
+</head>
+
+<body data-page="about">
+    <header>
+        <div class="container d-flex justify-content-between align-items-center">
+            <h6>HARSHITH</h6>
+            <ul class="nav align-items-center">
+                <li class="nav-item"><a class="nav-link text-white" href="/">Predict</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/about">About</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="#contact">Contact</a></li>
+                
+                <li class="nav-item ms-3">
+                    <select id="languageSelect" class="form-select form-select-sm w-auto">
+                      <option value="en">English</option>
+                      <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                      <option value="te">తెలుగు (Telugu)</option>
+                      <option value="hi">हिन्दी (Hindi)</option>
+                      <option value="ta">தமிழ் (Tamil)</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section id="aboutHeader">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-7" data-aos="fade-right">
+                        <h2 id="about_hero_h2">Tomato Disease Prediction</h2>
+                        <p id="about_hero_p">
+                            This intelligent system leverages deep learning to help farmers and gardeners quickly identify tomato leaf diseases with just an image.
+                            Our mission is to promote healthier crops and sustainable farming through AI innovation.
+                        </p>
+                        <a href="#about" id="about_hero_link">Learn More</a>
+                    </div>
+                    <div class="col-lg-5 text-center" data-aos="fade-left">
+                        <img src="../static/images/tomato.jpg" alt="Tomato Leaf" class="img-fluid rounded">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Project -->
+        <section id="about">
+            <div class="container">
+                <h1 id="about_section_h1" data-aos="fade-up">About the Project</h1>
+                <p id="about_section_p" class="text-center mb-5 lead" data-aos="fade-up" style="max-width: 900px; margin: 0 auto;">
+                    Our deep learning model is trained using a comprehensive tomato leaf dataset. It utilizes Convolutional Neural Networks (CNNs) 
+                    on resized and augmented images to enable high-accuracy classification of common tomato diseases and healthy leaves.
+                </p>
+
+                <div class="row g-5 mt-4">
+                    <div class="col-md-4" data-aos="zoom-in">
+                        <div class="feature-card">
+                            <i class="fa-solid fa-brain"></i>
+                            <h5 id="feature_1_h5">AI-Powered Detection</h5>
+                            <p id="feature_1_p">Utilizes deep learning to automatically detect tomato leaf diseases from uploaded images with speed and accuracy.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="feature-card">
+                            <i class="fa-solid fa-database"></i>
+                            <h5 id="feature_2_h5">Rich Dataset & CNN</h5>
+                            <p id="feature_2_p">Trained on thousands of images collected from trusted agricultural datasets for robust, high-performance classification.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="feature-card">
+                            <i class="fa-solid fa-seedling"></i>
+                            <h5 id="feature_3_h5">Sustainable Farming</h5>
+                            <p id="feature_3_p">Designed to assist farmers and home gardeners in maintaining healthy tomato crops, reducing pesticide use.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prevent Plant Disease -->
+                <div class="row mt-5">
+                    <div class="col-lg-6 mx-auto" data-aos="fade-up">
+                        <div class="info-box" style="height: 100%;">
+                            <h5 id="prevent_title" class="mb-3">Prevent Plant Disease: Steps to Follow</h5>
+                            <ol id="prevent_steps" class="list-unstyled">
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Follow Good Sanitation Practices.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Fertilize to Keep Your Plants Healthy.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Inspect Plants Before You Bring Them Home.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Allow the Soil to Warm Before Planting.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Rotate Crops for a Healthy Vegetable Garden.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Provide Good Air Circulation.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Remove Diseased Stems and Foliage promptly.</li>
+                            </ol>
+                            <a id="prevent_more" target="_blank" href="https://www.thespruce.com/prevent-plant-diseases-in-your-garden-2539511" class="d-inline-block mt-3">
+                                <button type="button" class="btn btn-sm btn-outline-success px-4">More Info</button>
+                            </a>
+                        </div>
+                    </div>
+                
+                    <!-- Why Detection is Necessary -->
+                    <div class="col-lg-6 mx-auto" data-aos="fade-up" data-aos-delay="100">
+                        <div class="info-box" style="height: 100%;">
+                            <h5 id="why_title" class="mb-3">Why is it Necessary to Detect Disease?</h5>
+                            <p id="why_content">
+                                Accurate diagnosis is the most important aspect of plant pathology. Without proper identification of the disease and the causal agent, 
+                                control measures are often ineffective, wasting resources and leading to further crop losses. This system provides the transparency needed 
+                                to detect diseases early, often before symptoms are clearly visible, ensuring timely and effective intervention.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dataset & Tech -->
+        <section id="dataset">
+            <div class="container">
+                <h2 id="tech_stack_h2" data-aos="fade-up">Technology Stack</h2>
+                <div class="row justify-content-center mt-4" data-aos="fade-up">
+                    <div class="col-md-10 text-center">
+                        <p id="tech_stack_p">
+                            The core detection model is powered by modern deep learning frameworks: <strong>TensorFlow</strong> and <strong>Keras</strong>, 
+                            with image preprocessing handled by <strong>OpenCV</strong>. The responsive web interface is built using <strong>Flask</strong> (Python) and 
+                            the mobile-first framework <strong>Bootstrap 5</strong>. This combination ensures a reliable, fast, and scalable system for real-time predictions.
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact">
+            <div class="container text-center">
+                <h2 id="contact_h2" data-aos="fade-up">Connect With Me</h2>
+                <p id="contact_p" data-aos="fade-up" data-aos-delay="100" class="lead text-muted">Feel free to reach out for collaboration, suggestions, or queries.</p>
+
+                <div class="row contactRow mt-5 g-4">
+                    <div class="col-md-4 singleItem" data-aos="zoom-in">
+                        <i class="fa-solid fa-location-dot fa-2x mb-3"></i>
+                        <p id="contact_location" class="fw-semibold">Bangalore, Karnataka, India</p>
+                    </div>
+                    <div class="col-md-4 singleItem" data-aos="zoom-in" data-aos-delay="100">
+                        <i class="fa-solid fa-phone fa-2x mb-3"></i>
+                        <a id="contact_phone_link" href="tel:+91 7483367339" class="d-block fw-semibold">+91 7483367339</a>
+                    </div>
+                    <div class="col-md-4 singleItem" data-aos="zoom-in" data-aos-delay="200">
+                        <i class="fa-solid fa-envelope fa-2x mb-3"></i>
+                        <a id="contact_email_link" href="mailto:harshithdn27@gmail.com" class="d-block fw-semibold">harshithdn27@gmail.com</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer id="footer_section">
+            <div class="container d-flex justify-content-between align-items-center">
+                <p id="footer_p" class="m-0 small">© 2025 Tomato Disease Prediction | All rights reserved</p>
+                <ul class="m-0">
+                    <li><a href="https://www.linkedin.com/in/%20harshith-d-n" target="_blank"><img src="../static/images/linkedin.svg" alt="LinkedIn"></a></li>
+                    <li><a href="https://github.com/harshithdn" target="_blank"><img src="../static/images/github.svg" alt="GitHub"></a></li>
+                </ul>
+            </div>
+        </footer>
+    </main>
+
+    <!-- JS Scripts (Keep the translation logic) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+    <!-- Embedded Language Script for About Page -->
+    <script>
+        $(document).ready(function () {
+            // Function to fetch translated content and update the page
+            async function applyLanguageToPage(lang) {
+                const elementsToTranslate = {
+                    "about_hero_h2": "text",
+                    "about_hero_p": "text",
+                    "about_hero_link": "text",
+                    "about_section_h1": "text",
+                    "about_section_p": "text",
+                    "feature_1_h5": "text",
+                    "feature_1_p": "text",
+                    "feature_2_h5": "text",
+                    "feature_2_p": "text",
+                    "feature_3_h5": "text",
+                    "feature_3_p": "text",
+                    "tech_stack_h2": "text",
+                    "tech_stack_p": "html",
+                    "contact_h2": "text",
+                    "contact_p": "text",
+                    "contact_location": "text",
+                    "contact_phone_link": "text",
+                    "contact_email_link": "text",
+                    "footer_p": "text",
+                    "prevent_title": "text",
+                    "prevent_steps": "html",
+                    "prevent_more": "text",
+                    "why_title": "text",
+                    "why_content": "text"
+                };
+
+                try {
+                    // This assumes you have implemented a /translate_content route in Flask app.py
+                    const res = await axios.post("/translate_content", { page: "about", lang: lang });
+                    
+                    if (res.status === 200 && res.data) {
+                        const translations = res.data;
+
+                        for (const id in elementsToTranslate) {
+                            if (translations[id]) {
+                                const element = $(`#${id}`);
+                                const type = elementsToTranslate[id];
+
+                                if (type === "html") {
+                                    element.html(translations[id]);
+                                } else {
+                                    // Handle link text separately for anchor tags where you want to change only the visible text
+                                    if (element.is('a')) {
+                                        element.text(translations[id]);
+                                    } else {
+                                        element.text(translations[id]);
+                                    }
+                                }
+                            }
+                        }
+                        // Explicitly update the 'Learn More' link text
+                        $("#about_hero_link").text(translations["about_hero_link"] || (lang === 'en' ? "Learn More" : "More Info")); 
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch translations for about page:", e);
+                }
+            }
+
+            // Language change handler
+            const languageSelect = document.getElementById("languageSelect");
+            
+            languageSelect.addEventListener("change", (e) => {
+                const lang = e.target.value;
+                applyLanguageToPage(lang);
+            });
+
+            // Initial load
+            applyLanguageToPage(languageSelect.value);
+
+            // Initialize AOS library
+            AOS.init({
+                duration: 900,
+                once: true
+            });
+        });
+    </script>
+</body>
+
+</html>

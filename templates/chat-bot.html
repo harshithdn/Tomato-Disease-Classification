@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>🌾 AgriBot — Smart Farming Assistant</title>
+<style>
+:root {
+  --bg: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  --card-bg: rgba(255,255,255,0.9);
+  --accent: #16a34a;
+  --accent-dark: #15803d;
+  --muted: #6b7280;
+  --border: rgba(0,0,0,0.08);
+  --shadow: 0 8px 24px rgba(0,0,0,0.08);
+  --radius: 16px;
+  --font: 'Poppins', system-ui, sans-serif;
+}
+* {
+  box-sizing: border-box;
+  font-family: var(--font);
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+.card {
+  width: 100%;
+  max-width: 780px;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(10px);}
+  to {opacity:1; transform: translateY(0);}
+}
+header {
+  background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+  color: #fff;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+header h1 {
+  font-size: 18px;
+  margin: 0;
+  font-weight: 600;
+}
+header .small {
+  margin-left: auto;
+  font-size: 13px;
+  opacity: 0.9;
+}
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 72vh;
+  max-height: 78vh;
+  padding: 16px;
+}
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 8px;
+}
+.msg {
+  max-width: 75%;
+  padding: 12px 14px;
+  border-radius: 16px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  animation: slideIn 0.3s ease;
+}
+@keyframes slideIn {
+  from {opacity:0; transform: translateY(6px);}
+  to {opacity:1; transform: translateY(0);}
+}
+.msg.user {
+  align-self: flex-end;
+  background: var(--accent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.msg.bot {
+  align-self: flex-start;
+  background: #f3f4f6;
+  color: #111827;
+  border-bottom-left-radius: 4px;
+}
+.controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
+}
+.controls input[type="text"] {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+.controls input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.15);
+}
+.controls button {
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.25s ease;
+}
+#sendBtn {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: white;
+  padding: 10px 16px;
+  font-weight: 500;
+}
+#sendBtn:hover {transform: scale(1.05);}
+.icon-btn {
+  background: #fff;
+  color: var(--accent);
+  border: 1px solid #d1d5db;
+  font-size: 18px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+footer {
+  text-align: center;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  background: rgba(255,255,255,0.7);
+}
+.lang-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.lang-row label { font-size: 13px; color: var(--muted); }
+select {
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>  
+<style>
+/* ...existing styles... */
+
+/* CORNER BACK BUTTON */
+.corner-back {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+  background: #f59e0b;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+.corner-back:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.14);
+}
+
+/* ...existing styles... */
+</style>
+
+<a href="/" class="corner-back" aria-label="Back to app">← Back</a>
+
+<div class="card">
+  <header>
+    <h1>🌾 AgriBot Assistant</h1>
+    <div class="small">Multilingual Smart Chat</div>
+  </header>
+
+  <main class="chat">
+    <div id="messages" class="messages">
+      <div class="msg bot">👋 Hi! I'm AgriBot. Ask me about crops, weather, or fertilizers!</div>
+    </div>
+
+    <div class="controls">
+      <button id="micBtn" class="icon-btn" title="Start voice input">🎤</button>
+      <input id="input" type="text" placeholder="Type your question..." />
+      <button id="sendBtn">Send</button>
+      <button id="speakBtn" class="icon-btn" title="Play bot reply">🔊</button>
+    </div>
+
+    <div class="lang-row">
+      <label>Language:</label>
+      <select id="langSelect">
+        <option value="en">English</option>
+        <option value="hi-IN">हिन्दी (Hindi)</option>
+        <option value="ta-IN">தமிழ் (Tamil)</option>
+        <option value="te-IN">తెలుగు (Telugu)</option>
+        <option value="kn-IN">ಕನ್ನಡ (Kannada)</option>
+      </select>
+    </div>
+  </main>
+
+  <footer>© 2025 AgriBot — Voice + Multilingual Smart Farming Chat</footer>
+</div>
+
+<script>
+const SERVER_PROXY_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
+const FALLBACK_CLIENT_KEY = "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";
+const messagesEl = document.getElementById("messages");
+const inputEl = document.getElementById("input");
+const sendBtn = document.getElementById("sendBtn");
+const micBtn = document.getElementById("micBtn");
+const speakBtn = document.getElementById("speakBtn");
+const langSelect = document.getElementById("langSelect");
+let lastBotText = "";
+
+function appendMessage(text, who = "bot") {
+  const div = document.createElement("div");
+  div.className = "msg " + (who === "user" ? "user" : "bot");
+  div.innerHTML = text;
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+async function sendMessage() {
+  const text = inputEl.value.trim();
+  if (!text) return;
+  appendMessage(text, "user");
+  inputEl.value = "";
+  appendMessage("⏳ Thinking...", "bot");
+
+  const lang = langSelect.value;
+  const langMap = {
+    "en": "English",
+    "hi-IN": "Hindi",
+    "ta-IN": "Tamil",
+    "te-IN": "Telugu",
+    "kn-IN": "Kannada"
+  };
+  const targetLang = langMap[lang] || "English";
+
+  const promptInstruction = `You are AgriBot, a smart farming assistant. The user wants to chat in ${targetLang}. 
+Always reply in ${targetLang} only, regardless of the input language. 
+Keep answers helpful, short, and relevant to agriculture, crops, weather, and farming tips.`;
+
+  const payload = {
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: promptInstruction },
+      ...Array.from(messagesEl.querySelectorAll(".msg")).map(el => ({
+        role: el.classList.contains("user") ? "user" : "assistant",
+        content: el.textContent
+      })),
+      { role: "user", content: text }
+    ],
+    temperature: 0.6
+  };
+
+  try {
+    const res = await fetch(SERVER_PROXY_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${FALLBACK_CLIENT_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    messagesEl.querySelectorAll(".msg.bot").forEach(el => {
+      if (el.textContent.includes("Thinking")) el.remove();
+    });
+    const reply = data?.choices?.[0]?.message?.content || "⚠️ No response.";
+    appendMessage(reply, "bot");
+    lastBotText = reply;
+  } catch (err) {
+    appendMessage("⚠️ Error: " + err.message, "bot");
+  }
+}
+
+sendBtn.addEventListener("click", sendMessage);
+inputEl.addEventListener("keydown", e => { if (e.key === "Enter") sendMessage(); });
+
+// Speech recognition
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition, listening = false;
+
+micBtn.addEventListener("click", () => {
+  if (!SpeechRecognition) { alert("SpeechRecognition not supported."); return; }
+  if (listening) { recognition.stop(); return; }
+  recognition = new SpeechRecognition();
+  recognition.lang = langSelect.value || "en";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  recognition.onstart = () => { listening = true; micBtn.textContent = "🛑"; };
+  recognition.onend = () => { listening = false; micBtn.textContent = "🎤"; };
+  recognition.onresult = e => {
+    inputEl.value = e.results[0][0].transcript;
+    sendMessage();
+  };
+  recognition.start();
+});
+
+// Text-to-speech
+speakBtn.addEventListener("click", () => {
+  if (!lastBotText) { appendMessage("No message to speak.", "bot"); return; }
+  const u = new SpeechSynthesisUtterance(lastBotText);
+  u.lang = langSelect.value || "en";
+  speechSynthesis.speak(u);
+});
+</script>
+</body>
+</html>

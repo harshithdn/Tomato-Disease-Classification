@@ -1,0 +1,116 @@
+body {
+    background-image: url("../static/images/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-family: 'Montserrat', Arial, sans-serif;
+}
+
+header {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 4px 10px -5px #75757530;
+}
+
+main {
+    min-height: 80vh;
+}
+
+#uploadImage {
+    margin-top: 60px;
+    margin-bottom: 50px;
+}
+
+#drop-area {
+    background: #fff;
+    border: 2px dashed #13a1f1;
+    border-radius: 16px;
+    padding: 40px 24px;
+    transition: border-color 0.2s;
+    min-height: 400px;
+    text-align: center;
+}
+
+#drop-area.active, #drop-area:focus-within {
+    border-color: #1675e0;
+    background: #f8fcff;
+}
+
+#preview-container {
+    max-width: 320px;
+    margin: 0 auto 1rem auto;
+}
+
+#previewImage {
+    display: block;
+    margin: 0 auto;
+    max-width: 260px;
+    max-height: 180px;
+    border-radius: 8px;
+    background: #f7f7f9;
+    object-fit: cover;
+    border: 1px solid #e0e0e0;
+}
+
+.resultArea {
+    background: #f6fafd;
+    border: 1px solid #c5d8f7;
+    border-radius: 12px;
+    padding: 1.3rem 1rem;
+}
+
+.resultArea ul {
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.list-group-item {
+    background: transparent;
+    border: none;
+    padding: .45rem .2rem;
+    font-size: 1rem;
+}
+
+.loadingArea {
+    background: #fff6d6;
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid #ffecb3;
+    font-size: 1rem;
+}
+
+.cancelUpload {
+    float: right;
+    color: #d44242;
+    cursor: pointer;
+    margin-top: 0.25rem;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.btn {
+    min-width: 120px;
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-size: 1rem;
+    border-radius: 24px;
+    font-weight: 500;
+}
+
+#liveCameraArea, #camera {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
+}
+
+footer.footer {
+    position: static;
+    left: 0;
+    width: 100%;
+    background: #f8f9fc;
+    border-top: 1px solid #eaeaea;
+    padding: 8px 0;
+    font-size: 0.95rem;
+}
