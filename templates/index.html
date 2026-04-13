@@ -126,6 +126,89 @@
       font-size: 1.1rem;
     }
 
+    .agrimart-card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(56, 161, 105, 0.15);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      height: 100%;
+    }
+
+    .agrimart-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(56, 161, 105, 0.12);
+      color: var(--primary-green);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .agrimart-card h5 {
+      color: var(--text-dark);
+      font-weight: 700;
+      margin: 0.9rem 0 0.65rem;
+    }
+
+    .agrimart-card p,
+    .agrimart-card li,
+    .agrimart-card a {
+      font-size: 0.95rem;
+    }
+
+    .agrimart-list {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0 0;
+    }
+
+    .agrimart-list li {
+      margin-bottom: 0.65rem;
+      color: var(--text-light);
+    }
+
+    .agrimart-meta {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eef2f0;
+    }
+
+    .agrimart-meta p {
+      margin-bottom: 0.45rem;
+      color: var(--text-light);
+    }
+
+    .agrimart-socials {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .agrimart-socials a {
+      width: 2.3rem;
+      height: 2.3rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #f3f7f4;
+      border: 1px solid #e3ece6;
+    }
+
+    .agrimart-socials img {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .agrimart-socials span {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
     #drop-area {
       background-color: white;
       border: 3px dashed var(--primary-green);
@@ -323,6 +406,10 @@
         font-size: 1rem;
       }
 
+      .agrimart-card {
+        margin-bottom: 1.25rem;
+      }
+
       #drop-area {
         padding: 30px 20px;
       }
@@ -439,8 +526,41 @@
             <p id="pageSubtitle" class="lead">Upload an image of a tomato leaf to instantly predict and learn about potential diseases.</p>
           </div>
         </div>
-        <div class="row justify-content-center">
-          <div class="col-lg-8 col-md-10 col-12">
+        <div class="row justify-content-center align-items-start g-4">
+          <div class="col-xl-3 col-lg-4 col-md-10 col-12">
+            <aside class="agrimart-card">
+              <span class="agrimart-badge" id="agrimartBadge">Agrimart</span>
+              <h5 id="agrimartTitle">Agrimart India</h5>
+              <p id="agrimartDescription">Based at Bangalore, Agrimart is marketed by Ratnagiri Impex Pvt. Ltd. with a long agriculture business background.</p>
+
+              <ul class="agrimart-list">
+                <li><strong id="agrimartProductsLabel">Products:</strong> <span id="agrimartProductsText">seeds, fertilizers, fungicides, insecticides, and crop nutrition products.</span></li>
+                <li><strong id="agrimartOfficeLabel">Office:</strong> <span id="agrimartOfficeText">Mysore Road, Bangalore - 560026</span></li>
+              </ul>
+
+              <div class="agrimart-meta">
+                <p><strong id="agrimartDomainLabel">Domain:</strong> <a href="https://agrimart.in/" target="_blank" rel="noopener noreferrer">agrimart.in</a></p>
+                <p><strong id="agrimartEmailLabel">Email:</strong> <a href="mailto:ask@agrimart.in">ask@agrimart.in</a></p>
+                <p><strong id="agrimartCallLabel">Call:</strong> <a href="tel:+917393938938">+91 7393 938 938</a></p>
+              </div>
+
+              <div class="agrimart-socials">
+                <a href="https://www.instagram.com/agrimart20" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <span>IG</span>
+                </a>
+                <a href="https://www.linkedin.com/company/agrimart20" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                  <img src="../static/images/linkedin.svg" alt="LinkedIn" />
+                </a>
+                <a href="https://www.youtube.com/channel/UCPChKPEwHssr4WmuOxrJY9g?view_as=subscriber" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                  <span>YT</span>
+                </a>
+                <a href="https://www.facebook.com/agrimart20" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                  <span>FB</span>
+                </a>
+              </div>
+            </aside>
+          </div>
+          <div class="col-xl-7 col-lg-8 col-md-10 col-12">
             <div id="drop-area" class="p-4 rounded-4">
               <form id="customForm" method="post" enctype="multipart/form-data">
                 
@@ -652,6 +772,79 @@
         function updateLanguage(lang) {
           const t = translations[lang] || translations.en;
           const extra = getUiExtras(lang);
+          const agrimartText = {
+            en: {
+              badge: "Agrimart",
+              title: "Agrimart India",
+              description: "Based at Bangalore, Agrimart is marketed by Ratnagiri Impex Pvt. Ltd. with a long agriculture business background.",
+              productsLabel: "Products:",
+              productsText: "seeds, fertilizers, fungicides, insecticides, and crop nutrition products.",
+              officeLabel: "Office:",
+              officeText: "Mysore Road, Bangalore - 560026",
+              domainLabel: "Domain:",
+              emailLabel: "Email:",
+              callLabel: "Call:"
+            },
+            hi: {
+              badge: "एग्रीमार्ट",
+              title: "एग्रीमार्ट इंडिया",
+              description: "बैंगलोर स्थित एग्रीमार्ट को Ratnagiri Impex Pvt. Ltd. संचालित करता है और इसका कृषि व्यवसाय में लंबा अनुभव है।",
+              productsLabel: "उत्पाद:",
+              productsText: "बीज, उर्वरक, फंगिसाइड, इंसेक्टिसाइड और फसल पोषण उत्पाद।",
+              officeLabel: "कार्यालय:",
+              officeText: "मैसूर रोड, बैंगलोर - 560026",
+              domainLabel: "डोमेन:",
+              emailLabel: "ईमेल:",
+              callLabel: "कॉल:"
+            },
+            kn: {
+              badge: "ಏಗ್ರಿಮಾರ್ಟ್",
+              title: "ಏಗ್ರಿಮಾರ್ಟ್ ಇಂಡಿಯಾ",
+              description: "ಬೆಂಗಳೂರು ಆಧಾರಿತ ಏಗ್ರಿಮಾರ್ಟ್ ಅನ್ನು Ratnagiri Impex Pvt. Ltd. ಮಾರುಕಟ್ಟೆಗೆ ತರುತ್ತದೆ ಮತ್ತು ಕೃಷಿ ವ್ಯವಹಾರದಲ್ಲಿ ದೀರ್ಘ ಅನುಭವ ಹೊಂದಿದೆ.",
+              productsLabel: "ಉತ್ಪನ್ನಗಳು:",
+              productsText: "ಬೀಜಗಳು, ಗೊಬ್ಬರಗಳು, ಫಂಗಿಸೈಡ್, ಇನ್ಸೆಕ್ಟಿಸೈಡ್ ಮತ್ತು ಬೆಳೆ ಪೋಷಣಾ ಉತ್ಪನ್ನಗಳು.",
+              officeLabel: "ಕಚೇರಿ:",
+              officeText: "ಮೈಸೂರು ರಸ್ತೆ, ಬೆಂಗಳೂರು - 560026",
+              domainLabel: "ಡೊಮೇನ್:",
+              emailLabel: "ಇಮೇಲ್:",
+              callLabel: "ಕರೆ:"
+            },
+            te: {
+              badge: "అగ్రిమార్ట్",
+              title: "అగ్రిమార్ట్ ఇండియా",
+              description: "బెంగళూరులో ఉన్న అగ్రిమార్ట్‌ను Ratnagiri Impex Pvt. Ltd. నిర్వహిస్తోంది మరియు వ్యవసాయ వ్యాపారంలో దీర్ఘ అనుభవం కలిగి ఉంది.",
+              productsLabel: "ఉత్పత్తులు:",
+              productsText: "విత్తనాలు, ఎరువులు, ఫంగిసైడ్లు, ఇన్సెక్టిసైడ్లు మరియు పంట పోషణ ఉత్పత్తులు.",
+              officeLabel: "కార్యాలయం:",
+              officeText: "మైసూరు రోడ్, బెంగళూరు - 560026",
+              domainLabel: "డొమైన్:",
+              emailLabel: "ఈమెయిల్:",
+              callLabel: "కాల్:"
+            },
+            ta: {
+              badge: "அக்ரிமார்ட்",
+              title: "அக்ரிமார்ட் இந்தியா",
+              description: "பெங்களூரை மையமாக கொண்ட அக்ரிமார்டை Ratnagiri Impex Pvt. Ltd. முன்னெடுக்கிறது; இதற்கு நீண்டகால வேளாண் அனுபவம் உள்ளது.",
+              productsLabel: "தயாரிப்புகள்:",
+              productsText: "விதைகள், உரங்கள், ஃபங்கிசைட்கள், இன்செக்டிசைட்கள் மற்றும் பயிர் ஊட்டச்சத்து தயாரிப்புகள்.",
+              officeLabel: "அலுவலகம்:",
+              officeText: "மைசூர் ரோடு, பெங்களூரு - 560026",
+              domainLabel: "டொமைன்:",
+              emailLabel: "மின்னஞ்சல்:",
+              callLabel: "அழைப்பு:"
+            }
+          }[lang] || {
+            badge: "Agrimart",
+            title: "Agrimart India",
+            description: "Based at Bangalore, Agrimart is marketed by Ratnagiri Impex Pvt. Ltd. with a long agriculture business background.",
+            productsLabel: "Products:",
+            productsText: "seeds, fertilizers, fungicides, insecticides, and crop nutrition products.",
+            officeLabel: "Office:",
+            officeText: "Mysore Road, Bangalore - 560026",
+            domainLabel: "Domain:",
+            emailLabel: "Email:",
+            callLabel: "Call:"
+          };
           $("#pageTitle").text(t.title);
           $("#pageSubtitle").text(t.subtitle);
           $("#uploadButton").text(t.upload);
@@ -667,6 +860,16 @@
           $("#descriptionLabel").text(t.description);
           $("#uploadStatus").text(extra.processing);
           $("#cancelUploadText").text(extra.cancel);
+          $("#agrimartBadge").text(agrimartText.badge);
+          $("#agrimartTitle").text(agrimartText.title);
+          $("#agrimartDescription").text(agrimartText.description);
+          $("#agrimartProductsLabel").text(agrimartText.productsLabel);
+          $("#agrimartProductsText").text(agrimartText.productsText);
+          $("#agrimartOfficeLabel").text(agrimartText.officeLabel);
+          $("#agrimartOfficeText").text(agrimartText.officeText);
+          $("#agrimartDomainLabel").text(agrimartText.domainLabel);
+          $("#agrimartEmailLabel").text(agrimartText.emailLabel);
+          $("#agrimartCallLabel").text(agrimartText.callLabel);
           if (!speaking) {
             $("#speakButton").text(t.speak);
           }
