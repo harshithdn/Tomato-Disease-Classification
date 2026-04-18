@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -7,13 +7,13 @@
 <style>
 :root {
   --bg: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-  --card-bg: rgba(255,255,255,0.9);
+  --card-bg: rgba(255,255,255,0.84);
   --accent: #16a34a;
   --accent-dark: #15803d;
   --muted: #6b7280;
-  --border: rgba(0,0,0,0.08);
-  --shadow: 0 8px 24px rgba(0,0,0,0.08);
-  --radius: 16px;
+  --border: rgba(16,88,41,0.14);
+  --shadow: 0 22px 48px rgba(15, 71, 33, 0.22);
+  --radius: 20px;
   --font: 'Poppins', system-ui, sans-serif;
 }
 * {
@@ -23,7 +23,11 @@
 }
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 92, 0.26), rgba(255, 210, 92, 0) 24%),
+    radial-gradient(circle at bottom left, rgba(34, 197, 94, 0.22), rgba(34, 197, 94, 0) 26%),
+    linear-gradient(rgba(16, 64, 28, 0.18), rgba(233, 248, 235, 0.30)),
+    url("/static/images/chatbot-bg-custom.jpg") center/cover no-repeat fixed;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,7 +38,7 @@ body {
   width: 100%;
   max-width: 780px;
   background: var(--card-bg);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(10px) saturate(1.08);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
@@ -69,6 +73,7 @@ header .small {
   height: 72vh;
   max-height: 78vh;
   padding: 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0.08));
 }
 .messages {
   flex: 1;
@@ -92,13 +97,13 @@ header .small {
 }
 .msg.user {
   align-self: flex-end;
-  background: var(--accent);
+  background: linear-gradient(135deg, #18a34a, #0f7e37);
   color: #fff;
   border-bottom-right-radius: 4px;
 }
 .msg.bot {
   align-self: flex-start;
-  background: #f3f4f6;
+  background: rgba(246, 247, 250, 0.94);
   color: #111827;
   border-bottom-left-radius: 4px;
 }
@@ -241,7 +246,7 @@ select {
 
 <script>
 const SERVER_PROXY_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
-const FALLBACK_CLIENT_KEY = "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";
+const FALLBACK_CLIENT_KEY = "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";
 const messagesEl = document.getElementById("messages");
 const inputEl = document.getElementById("input");
 const sendBtn = document.getElementById("sendBtn");
@@ -249,6 +254,8 @@ const micBtn = document.getElementById("micBtn");
 const speakBtn = document.getElementById("speakBtn");
 const langSelect = document.getElementById("langSelect");
 let lastBotText = "";
+let botUtterance = null;
+let botSpeaking = false;
 
 function appendMessage(text, who = "bot") {
   const div = document.createElement("div");
@@ -339,9 +346,31 @@ micBtn.addEventListener("click", () => {
 // Text-to-speech
 speakBtn.addEventListener("click", () => {
   if (!lastBotText) { appendMessage("No message to speak.", "bot"); return; }
-  const u = new SpeechSynthesisUtterance(lastBotText);
-  u.lang = langSelect.value || "en";
-  speechSynthesis.speak(u);
+  if (botSpeaking || speechSynthesis.speaking) {
+    speechSynthesis.cancel();
+    botSpeaking = false;
+    botUtterance = null;
+    speakBtn.textContent = "🔊";
+    return;
+  }
+
+  botUtterance = new SpeechSynthesisUtterance(lastBotText);
+  botUtterance.lang = langSelect.value || "en";
+  botUtterance.onstart = () => {
+    botSpeaking = true;
+    speakBtn.textContent = "⏹";
+  };
+  botUtterance.onend = () => {
+    botSpeaking = false;
+    botUtterance = null;
+    speakBtn.textContent = "🔊";
+  };
+  botUtterance.onerror = () => {
+    botSpeaking = false;
+    botUtterance = null;
+    speakBtn.textContent = "🔊";
+  };
+  speechSynthesis.speak(botUtterance);
 });
 </script>
 </body>

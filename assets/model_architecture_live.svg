@@ -1,0 +1,111 @@
+<svg width="1400" height="900" viewBox="0 0 1400 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="900" fill="#F6FBF6"/>
+  <rect x="40" y="32" width="1320" height="836" rx="28" fill="#FFFFFF" stroke="#D7E8D7" stroke-width="2"/>
+
+  <text x="700" y="90" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="36" font-weight="700" fill="#1F5130">
+    Tomato Disease Classification Model Architecture
+  </text>
+  <text x="700" y="128" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#4B6353">
+    Live prediction model used in app.py: model/model_tomato.h5
+  </text>
+  <text x="700" y="158" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#6A7F70">
+    Input size: 64 x 64 x 3 | Total trainable parameters: 88,402
+  </text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5A8E69"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#BCD5C2" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="240" width="150" height="260" rx="22" fill="#E7F5EA" stroke="#83B78F" stroke-width="2"/>
+    <text x="145" y="292" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#214F30">Input</text>
+    <text x="145" y="336" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" fill="#355B40">Tomato Leaf</text>
+    <text x="145" y="370" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" fill="#355B40">Image</text>
+    <text x="145" y="426" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#50735A">64 x 64 x 3</text>
+    <text x="145" y="458" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#6E8676">RGB after preprocessing</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="270" y="220" width="180" height="300" rx="22" fill="#FFF2D9" stroke="#E2B86B" stroke-width="2"/>
+    <text x="360" y="270" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#6B4A12">Conv Block 1</text>
+    <text x="360" y="315" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#7A5A1F">Conv2D</text>
+    <text x="360" y="345" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">8 filters, 3x3, ReLU</text>
+    <text x="360" y="380" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">Output: 64 x 64 x 8</text>
+    <text x="360" y="412" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">Params: 224</text>
+    <line x1="305" y1="438" x2="415" y2="438" stroke="#D7B273" stroke-width="2"/>
+    <text x="360" y="474" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#7A5A1F">MaxPooling2D</text>
+    <text x="360" y="505" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">Output: 32 x 32 x 8</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="500" y="220" width="180" height="300" rx="22" fill="#FFF2D9" stroke="#E2B86B" stroke-width="2"/>
+    <text x="590" y="270" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#6B4A12">Conv Block 2</text>
+    <text x="590" y="315" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#7A5A1F">Conv2D</text>
+    <text x="590" y="345" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">16 filters, 3x3, ReLU</text>
+    <text x="590" y="380" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">Output: 32 x 32 x 16</text>
+    <text x="590" y="412" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">Params: 1,168</text>
+    <line x1="535" y1="438" x2="645" y2="438" stroke="#D7B273" stroke-width="2"/>
+    <text x="590" y="474" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#7A5A1F">MaxPooling2D</text>
+    <text x="590" y="505" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">Output: 16 x 16 x 16</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="730" y="220" width="180" height="300" rx="22" fill="#FFF2D9" stroke="#E2B86B" stroke-width="2"/>
+    <text x="820" y="270" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#6B4A12">Conv Block 3</text>
+    <text x="820" y="315" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#7A5A1F">Conv2D</text>
+    <text x="820" y="345" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">32 filters, 3x3, ReLU</text>
+    <text x="820" y="380" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">Output: 16 x 16 x 32</text>
+    <text x="820" y="412" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">Params: 4,640</text>
+    <line x1="765" y1="438" x2="875" y2="438" stroke="#D7B273" stroke-width="2"/>
+    <text x="820" y="474" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#7A5A1F">MaxPooling2D</text>
+    <text x="820" y="505" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#8A6830">Output: 8 x 8 x 32</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="960" y="220" width="150" height="300" rx="22" fill="#EAF0FF" stroke="#86A3E0" stroke-width="2"/>
+    <text x="1035" y="270" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#29427D">Flatten</text>
+    <text x="1035" y="345" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#3A4F84">8 x 8 x 32</text>
+    <text x="1035" y="376" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#3A4F84">to</text>
+    <text x="1035" y="410" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#29427D">2048</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1160" y="185" width="160" height="190" rx="22" fill="#F6E7FF" stroke="#B888D8" stroke-width="2"/>
+    <text x="1240" y="235" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#5E2F82">Dense</text>
+    <text x="1240" y="273" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#724695">40 units</text>
+    <text x="1240" y="305" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#7D5B99">Fully connected</text>
+    <text x="1240" y="337" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#7D5B99">Params: 81,960</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1160" y="420" width="160" height="190" rx="22" fill="#DDF6EA" stroke="#70BA8A" stroke-width="2"/>
+    <text x="1240" y="470" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#1F6B40">Output Layer</text>
+    <text x="1240" y="508" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#2A7A4E">Dense 10</text>
+    <text x="1240" y="540" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#3B8960">Softmax classification</text>
+    <text x="1240" y="572" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#3B8960">Params: 410</text>
+  </g>
+
+  <line x1="220" y1="370" x2="270" y2="370" stroke="#5A8E69" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="450" y1="370" x2="500" y2="370" stroke="#5A8E69" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="680" y1="370" x2="730" y2="370" stroke="#5A8E69" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="910" y1="370" x2="960" y2="370" stroke="#5A8E69" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="1110" y1="370" x2="1160" y2="280" stroke="#5A8E69" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="1240" y1="375" x2="1240" y2="420" stroke="#5A8E69" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <rect x="90" y="620" width="1220" height="190" rx="22" fill="#F8FBFF" stroke="#D6E1EE" stroke-width="2"/>
+  <text x="130" y="668" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#27435C">Output Classes</text>
+  <text x="130" y="708" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#45637B">
+    Tomato Mosaic Virus • Target Spot • Bacterial Spot • Early Blight • Late Blight
+  </text>
+  <text x="130" y="742" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#45637B">
+    Leaf Mold • Septoria Leaf Spot • Spider Mites • Bacterial Speck • Healthy
+  </text>
+  <text x="130" y="786" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#6A7E92">
+    Architecture extracted from the live Flask model in app.py. Shapes and parameter counts correspond to model_tomato.h5.
+  </text>
+</svg>

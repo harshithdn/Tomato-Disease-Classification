@@ -16,6 +16,12 @@ import re
 import csv
 import os
 import pandas as pd
+import json
+from urllib import request as urllib_request
+from urllib import error as urllib_error
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # -------------------- Logging Setup --------------------
 def setup_logger():
@@ -373,12 +379,42 @@ def _translate_cached(text: str, target_lang: str) -> str:
         log.debug(f"_translate_cached error: {e}")
         return text
 
+
+YOUTUBE_LANGUAGE_URLS = {
+    "en": "https://youtu.be/S9-5_Y-Bb30?si=ZC0r9htaXCnMWfRD",
+    "te": "https://youtu.be/8ZIl8srx52k?si=elwI6VmRaqwcD50N",
+    "kn": "https://youtu.be/ENddaeTYRK4?si=96mgmXTSmq8ravHC",
+    "hi": "https://youtu.be/CE8y9jhHghU?si=GvrawlbkeGy-E8mG",
+    "ta": "https://www.youtube.com/watch?v=etupF7L_L_A",
+}
+
+
+YOUTUBE_POINT_COPY = {
+    "en": {"title": "Video Guide", "cta": "Watch on YouTube"},
+    "hi": {"title": "वीडियो मार्गदर्शिका", "cta": "यूट्यूब पर देखें"},
+    "kn": {"title": "ವೀಡಿಯೊ ಮಾರ್ಗದರ್ಶಿ", "cta": "YouTube ನಲ್ಲಿ ನೋಡಿ"},
+    "te": {"title": "వీడియో మార్గదర్శిని", "cta": "YouTube లో చూడండి"},
+    "ta": {"title": "வீடியோ வழிகாட்டி", "cta": "YouTube-ல் பார்க்க"},
+}
+
+
+def build_youtube_point(lang: str) -> str:
+    normalized_lang = (lang or "en").split("-")[0].lower()
+    copy = YOUTUBE_POINT_COPY.get(normalized_lang, YOUTUBE_POINT_COPY["en"])
+    youtube_url = YOUTUBE_LANGUAGE_URLS.get(normalized_lang, YOUTUBE_LANGUAGE_URLS["en"])
+    return (
+        f"13. {copy['title']}: "
+        f"<a href='{youtube_url}' class='text-decoration-underline text-danger fw-bold' "
+        f"target='_blank' rel='noopener noreferrer'>{copy['cta']}</a>."
+    )
+
+
 def translate_text_preserve_links(html_text: str, target_lang: str) -> str:
-    """Translate html_text but preserve internal anchor tags linking to /market."""
+    """Translate html_text while preserving anchor tags."""
     if not html_text or target_lang == 'en':
         return html_text
     try:
-        link_pattern = r"(<a[^>]*href=['\"]/market[^>]*>.*?<\/a>)"
+        link_pattern = r"(<a\b[^>]*>.*?<\/a>)"
         matches = re.findall(link_pattern, html_text, flags=re.IGNORECASE)
         tmp = html_text
         placeholders = []
@@ -407,22 +443,21 @@ def describe_disease():
         if description is None:
             return jsonify({"description": f"No detailed description available for {disease}.", "is_html": False})
 
-        # Keep original text and also provide HTML (links preserved)
-        translated_html = translate_text_preserve_links(description, lang)
+        translated_body = translate_text_preserve_links(description, lang)
+        youtube_point = build_youtube_point(lang)
+        translated_html = f"{translated_body}\n{youtube_point}"
 
-        # Split into numbered points from the original English, then translate points (cached)
-        points = re.split(r'\d+\.\s', description)
-        points = [p.strip() for p in points if p.strip()]
-        if lang != 'en':
-            translated_points = [_translate_cached(p, lang) for p in points]
-        else:
-            translated_points = points
+        translated_points = re.split(r'(?:^|\n)\d+\.\s', translated_body)
+        translated_points = [p.strip() for p in translated_points if p.strip()]
+        if not translated_points:
+            translated_points = re.split(r'\d+\.\s', description)
+            translated_points = [p.strip() for p in translated_points if p.strip()]
+        translated_points.append(youtube_point.split("13. ", 1)[1])
 
-        # Provide both: legacy "description" (array) for existing frontend and HTML version
         return jsonify({
-            "description": translated_points,            # legacy frontend expects this (array or string)
-            "description_points": translated_points,     # explicit points array
-            "description_html": translated_html,         # full HTML with preserved links
+            "description": translated_points,
+            "description_points": translated_points,
+            "description_html": translated_html,
             "is_html": True
         })
     except Exception as e:
@@ -563,6 +598,172 @@ def speak_description():
     except Exception as e:
         log.debug(f"Speech error: {e}")
         return create_error_response("Failed to generate speech", 500)
+
+
+def build_chatbot_reply(message: str, lang: str) -> str:
+    text = (message or "").lower()
+    normalized_lang = (lang or "en").split("-")[0].lower()
+    agriculture_responses = [
+        (
+            ["agriculture", "farming", "farmer", "cultivation", "krishi", "agri"],
+            "Agriculture is the science and practice of growing crops and raising animals for food, fiber, and income. Good agriculture depends on proper land preparation, healthy soil, quality seeds, balanced fertilizer use, timely irrigation, pest and disease control, weed management, and harvesting at the correct stage. Farmers also need to understand weather, market demand, storage, and post-harvest handling. Modern agriculture combines traditional knowledge with improved methods such as soil testing, drip irrigation, resistant varieties, mulching, bio-inputs, and better crop planning. Sustainable farming is important because it protects soil fertility, saves water, reduces unnecessary chemical use, and improves long-term productivity and farmer income. If you want, I can also explain agriculture in detail topic by topic like soil, irrigation, fertilizer, pests, diseases, or crop planning."
+        ),
+        (
+            ["hello", "hi", "hey", "namaste"],
+            "Hello. I can help with crop diseases, fertilizers, irrigation, soil health, pests, weather, market planning, and general farming tips."
+        ),
+        (
+            ["disease", "blight", "spot", "mold", "virus", "leaf", "wilt", "rot", "yellow leaf", "fungus"],
+            "Check the affected leaves and stems closely, remove badly infected parts, avoid overhead watering, and keep good airflow. If symptoms continue, use the prediction page and follow crop-specific disease control."
+        ),
+        (
+            ["fertilizer", "manure", "npk", "urea", "dap", "potash", "micronutrient", "zinc", "boron", "nutrient"],
+            "Use balanced fertilizer based on crop stage and soil condition. Avoid excess nitrogen, add organic matter when possible, and split fertilizer doses instead of applying everything at once."
+        ),
+        (
+            ["water", "irrigation", "drip", "moisture", "watering", "sprinkler"],
+            "Keep soil moisture even but avoid waterlogging. Drip irrigation is usually better for vegetables because it saves water and reduces leaf wetness and disease spread."
+        ),
+        (
+            ["pest", "insect", "aphid", "mites", "thrips", "whitefly", "caterpillar", "worm", "hopper", "borer"],
+            "Inspect the underside of leaves and growing tips, isolate badly affected plants, and begin with safer control such as field sanitation, sticky traps, neem-based spray, or crop-specific pest management."
+        ),
+        (
+            ["weather", "rain", "humidity", "temperature", "summer", "winter", "climate", "forecast"],
+            "Weather strongly affects crops. High humidity and long leaf wetness increase disease risk, while heat and dry wind increase water stress. Adjust irrigation, scouting, and spraying based on local conditions."
+        ),
+        (
+            ["soil", "ph", "salinity", "organic carbon", "compost", "mulch", "mulching"],
+            "Healthy soil should have good drainage, enough organic matter, and a crop-suitable pH. Add compost, avoid overwatering, and test soil when possible before major fertilizer decisions."
+        ),
+        (
+            ["seed", "germination", "nursery", "seedling", "transplant", "tray"],
+            "Use clean, high-quality seed, well-drained nursery media, and avoid overcrowding. During transplanting, water lightly, reduce stress, and protect young seedlings from damping-off and extreme heat."
+        ),
+        (
+            ["flower", "fruit", "yield", "production", "harvest", "ripening"],
+            "Good yield depends on balanced nutrition, timely irrigation, pest control, and healthy flowering. Avoid stress during flowering and fruit set, and harvest at the correct maturity stage for better quality."
+        ),
+        (
+            ["weed", "weeds", "grass", "herbicide"],
+            "Control weeds early because they compete for water and nutrients. Mulching, timely hand weeding, and crop-safe herbicides can help depending on the crop and growth stage."
+        ),
+        (
+            ["market", "price", "sell", "selling", "mandi", "profit", "income"],
+            "For better profit, track local market prices, sort produce by quality, reduce post-harvest loss, and plan harvest timing carefully. Selling clean, graded produce usually improves returns."
+        ),
+        (
+            ["organic", "natural farming", "bio", "jeevamrutham", "vermicompost"],
+            "Organic farming works best with compost, crop rotation, mulching, bio-inputs, and preventive pest management. Nutrient release is slower, so planning and regular soil improvement are important."
+        ),
+        (
+            ["spray", "pesticide", "fungicide", "insecticide", "dose", "dosage"],
+            "Always follow the label dose, spray during calm weather, and wear protection. Do not mix chemicals unless they are compatible, and rotate products to reduce resistance."
+        ),
+        (
+            ["tomato", "brinjal", "chilli", "paddy", "rice", "wheat", "cotton", "maize", "onion", "potato"],
+            "For crop-specific advice, focus on stage, symptoms, water status, and pest pressure. Share the crop name and problem clearly, and I can guide you with more targeted farming advice."
+        ),
+    ]
+
+    reply = None
+    best_match_score = 0
+    wants_long_answer = any(word in text for word in ["long", "detail", "detailed", "explain", "full", "complete", "format"])
+    for keywords, response in agriculture_responses:
+        match_score = sum(1 for word in keywords if word in text)
+        if wants_long_answer and any(word in keywords for word in ["agriculture", "farming", "farmer", "cultivation", "krishi", "agri"]):
+            match_score += 2
+        if match_score > best_match_score:
+            best_match_score = match_score
+            reply = response
+
+    if best_match_score == 0 or reply is None:
+        if wants_long_answer:
+            reply = (
+                "Agriculture includes soil preparation, seed selection, sowing or transplanting, irrigation, fertilizer management, weed control, pest and disease protection, harvesting, storage, and marketing. "
+                "A successful farmer chooses crops based on soil type, season, climate, water availability, and market demand. Healthy agriculture also depends on balanced plant nutrition, proper spacing, good drainage, timely field observation, and reducing crop stress during critical stages such as flowering and fruiting. "
+                "Good farming practices improve yield, quality, and profit while sustainable farming helps protect soil, water, and long-term income."
+            )
+        else:
+            reply = (
+                "I can answer agriculture questions about crops, soil, fertilizer, irrigation, pests, diseases, weather, yield, harvesting, markets, and organic farming. "
+                "Please ask your farming question with the crop name or problem."
+            )
+
+    if normalized_lang != "en":
+        return _translate_cached(reply, normalized_lang)
+    return reply
+
+
+def query_chatbot_llm(message: str, lang: str) -> str | None:
+    api_key = (
+        os.getenv("OPENROUTER_API_KEY")
+        or os.getenv("OPENAI_API_KEY")
+        or os.getenv("CHATBOT_API_KEY")
+        or os.getenv("DEEPSEEK_API_KEY")
+    )
+    if not api_key:
+        return None
+
+    normalized_lang = (lang or "en").split("-")[0].lower()
+    api_url = os.getenv("CHATBOT_API_URL", "https://openrouter.ai/api/v1/chat/completions")
+    model = os.getenv("CHATBOT_MODEL", "openai/gpt-4o-mini")
+
+    system_prompt = (
+        "You are AgriBot, a helpful agriculture assistant. "
+        "Answer farming, crop, soil, irrigation, fertilizer, pest, disease, weather, market, and harvest questions clearly and accurately. "
+        f"Reply only in language code '{normalized_lang}'. "
+        "Keep answers practical and directly useful for farmers."
+    )
+
+    payload = {
+        "model": model,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": message},
+        ],
+        "temperature": 0.4,
+    }
+
+    req = urllib_request.Request(
+        api_url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib_request.urlopen(req, timeout=25) as response:
+            data = json.loads(response.read().decode("utf-8"))
+            reply = data.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
+            return reply or None
+    except urllib_error.HTTPError as e:
+        log.debug(f"Chatbot API HTTP error: {e}")
+    except urllib_error.URLError as e:
+        log.debug(f"Chatbot API URL error: {e}")
+    except Exception as e:
+        log.debug(f"Chatbot API error: {e}")
+
+    return None
+
+
+@app.route('/chat-bot/api', methods=['POST'])
+def chat_bot_api():
+    data = request.json or {}
+    message = (data.get('message') or '').strip()
+    lang = data.get('lang', 'en')
+
+    if not message:
+        return jsonify({"reply": "Please enter a question."}), 400
+
+    llm_reply = query_chatbot_llm(message, lang)
+    if llm_reply:
+        return jsonify({"reply": llm_reply, "source": "api"})
+
+    return jsonify({"reply": build_chatbot_reply(message, lang), "source": "fallback"})
 
 # Quick routes to serve chat and market pages so navbar links don't 404.
 @app.route('/chat-bot')

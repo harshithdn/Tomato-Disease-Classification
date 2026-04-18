@@ -67,13 +67,24 @@
         header .nav-link:hover {
             color: #c8e6c9 !important;
         }
-        
+
+        .site-nav {
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
         header #languageSelect {
             border: 1px solid white;
             color: var(--green-dark);
             background-color: white;
             font-size: 0.85rem;
             font-weight: 600;
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 460px;
         }
 
         /* --- Hero Section --- */
@@ -239,6 +250,7 @@
             list-style: none;
             display: flex;
             justify-content: end;
+            flex-wrap: wrap;
             gap: 20px;
             padding: 0;
             margin: 0;
@@ -261,6 +273,74 @@
             #aboutHeader { text-align: center; }
             #aboutHeader img { margin-top: 30px; }
             header .nav-link { padding: 5px 10px !important; }
+            .site-nav {
+                justify-content: center;
+                margin-top: 1rem;
+            }
+            header .container {
+                flex-direction: column;
+                align-items: center !important;
+            }
+            footer .container {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            #aboutHeader {
+                padding: 72px 0;
+            }
+
+            #aboutHeader h2 {
+                font-size: 2.35rem;
+            }
+
+            #aboutHeader p,
+            #dataset p,
+            #contact_p {
+                font-size: 1rem;
+            }
+
+            #about,
+            #contact {
+                padding: 72px 0;
+            }
+
+            .feature-card,
+            .info-box {
+                padding: 24px;
+            }
+
+            footer .container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            header h6 {
+                font-size: 1.2rem;
+            }
+
+            .site-nav {
+                flex-direction: column;
+                width: 100%;
+                align-items: stretch;
+            }
+
+            .site-nav .nav-item,
+            .site-nav .nav-link,
+            .site-nav #languageSelect {
+                width: 100%;
+                text-align: center;
+            }
+
+            #aboutHeader h2,
+            #about h1,
+            #dataset h2,
+            #contact h2 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -269,7 +349,7 @@
     <header>
         <div class="container d-flex justify-content-between align-items-center">
             <h6>HARSHITH</h6>
-            <ul class="nav align-items-center">
+            <ul class="nav align-items-center site-nav">
                 <li class="nav-item"><a class="nav-link text-white" href="/">Predict</a></li>
                 <li class="nav-item"><a class="nav-link text-white" href="/about">About</a></li>
                 <li class="nav-item"><a class="nav-link text-white" href="#contact">Contact</a></li>
@@ -301,7 +381,7 @@
                         <a href="#about" id="about_hero_link">Learn More</a>
                     </div>
                     <div class="col-lg-5 text-center" data-aos="fade-left">
-                        <img src="../static/images/tomato.jpg" alt="Tomato Leaf" class="img-fluid rounded">
+                        <img src="../static/images/tomato.jpg" alt="Tomato Leaf" class="img-fluid rounded hero-image">
                     </div>
                 </div>
             </div>
@@ -356,6 +436,9 @@
                             </ol>
                             <a id="prevent_more" target="_blank" href="https://www.thespruce.com/prevent-plant-diseases-in-your-garden-2539511" class="d-inline-block mt-3">
                                 <button type="button" class="btn btn-sm btn-outline-success px-4">More Info</button>
+                            </a>
+                            <a id="prevent_video_link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+english" class="d-inline-block mt-3 ms-2">
+                                <button id="prevent_video_label" type="button" class="btn btn-sm btn-success px-4">Watch Video</button>
                             </a>
                         </div>
                     </div>
@@ -435,65 +518,231 @@
     <!-- Embedded Language Script for About Page -->
     <script>
         $(document).ready(function () {
-            // Function to fetch translated content and update the page
-            async function applyLanguageToPage(lang) {
-                const elementsToTranslate = {
-                    "about_hero_h2": "text",
-                    "about_hero_p": "text",
-                    "about_hero_link": "text",
-                    "about_section_h1": "text",
-                    "about_section_p": "text",
-                    "feature_1_h5": "text",
-                    "feature_1_p": "text",
-                    "feature_2_h5": "text",
-                    "feature_2_p": "text",
-                    "feature_3_h5": "text",
-                    "feature_3_p": "text",
-                    "tech_stack_h2": "text",
-                    "tech_stack_p": "html",
-                    "contact_h2": "text",
-                    "contact_p": "text",
-                    "contact_location": "text",
-                    "contact_phone_link": "text",
-                    "contact_email_link": "text",
-                    "footer_p": "text",
-                    "prevent_title": "text",
-                    "prevent_steps": "html",
-                    "prevent_more": "text",
-                    "why_title": "text",
-                    "why_content": "text"
-                };
+            const elementsToTranslate = {
+                "about_hero_h2": "text",
+                "about_hero_p": "text",
+                "about_hero_link": "text",
+                "about_section_h1": "text",
+                "about_section_p": "text",
+                "feature_1_h5": "text",
+                "feature_1_p": "text",
+                "feature_2_h5": "text",
+                "feature_2_p": "text",
+                "feature_3_h5": "text",
+                "feature_3_p": "text",
+                "tech_stack_h2": "text",
+                "tech_stack_p": "html",
+                "contact_h2": "text",
+                "contact_p": "text",
+                "contact_location": "text",
+                "contact_phone_link": "text",
+                "contact_email_link": "text",
+                "footer_p": "text",
+                "prevent_title": "text",
+                "prevent_steps": "html",
+                "prevent_more": "text",
+                "why_title": "text",
+                "why_content": "text"
+            };
 
-                try {
-                    // This assumes you have implemented a /translate_content route in Flask app.py
-                    const res = await axios.post("/translate_content", { page: "about", lang: lang });
-                    
-                    if (res.status === 200 && res.data) {
-                        const translations = res.data;
-
-                        for (const id in elementsToTranslate) {
-                            if (translations[id]) {
-                                const element = $(`#${id}`);
-                                const type = elementsToTranslate[id];
-
-                                if (type === "html") {
-                                    element.html(translations[id]);
-                                } else {
-                                    // Handle link text separately for anchor tags where you want to change only the visible text
-                                    if (element.is('a')) {
-                                        element.text(translations[id]);
-                                    } else {
-                                        element.text(translations[id]);
-                                    }
-                                }
-                            }
-                        }
-                        // Explicitly update the 'Learn More' link text
-                        $("#about_hero_link").text(translations["about_hero_link"] || (lang === 'en' ? "Learn More" : "More Info")); 
-                    }
-                } catch (e) {
-                    console.error("Failed to fetch translations for about page:", e);
+            const aboutTranslations = {
+                en: {
+                    about_hero_h2: "Tomato Disease Prediction",
+                    about_hero_p: "This intelligent system leverages deep learning to help farmers and gardeners quickly identify tomato leaf diseases with just an image. Our mission is to promote healthier crops and sustainable farming through AI innovation.",
+                    about_hero_link: "Learn More",
+                    about_section_h1: "About the Project",
+                    about_section_p: "Our deep learning model is trained using a comprehensive tomato leaf dataset. It utilizes Convolutional Neural Networks (CNNs) on resized and augmented images to enable high-accuracy classification of common tomato diseases and healthy leaves.",
+                    feature_1_h5: "AI-Powered Detection",
+                    feature_1_p: "Utilizes deep learning to automatically detect tomato leaf diseases from uploaded images with speed and accuracy.",
+                    feature_2_h5: "Rich Dataset & CNN",
+                    feature_2_p: "Trained on thousands of images collected from trusted agricultural datasets for robust, high-performance classification.",
+                    feature_3_h5: "Sustainable Farming",
+                    feature_3_p: "Designed to assist farmers and home gardeners in maintaining healthy tomato crops, reducing pesticide use.",
+                    tech_stack_h2: "Technology Stack",
+                    tech_stack_p: "The core detection model is powered by modern deep learning frameworks: <strong>TensorFlow</strong> and <strong>Keras</strong>, with image preprocessing handled by <strong>OpenCV</strong>. The responsive web interface is built using <strong>Flask</strong> (Python) and the mobile-first framework <strong>Bootstrap 5</strong>. This combination ensures a reliable, fast, and scalable system for real-time predictions.",
+                    contact_h2: "Connect With Me",
+                    contact_p: "Feel free to reach out for collaboration, suggestions, or queries.",
+                    contact_location: "Bangalore, Karnataka, India",
+                    contact_phone_link: "+91 7483367339",
+                    contact_email_link: "harshithdn27@gmail.com",
+                    footer_p: "© 2025 Tomato Disease Prediction | All rights reserved",
+                    prevent_title: "Prevent Plant Disease: Steps to Follow",
+                    prevent_steps: `<li><i class="fa-solid fa-circle-check text-success me-2"></i> Follow Good Sanitation Practices.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Fertilize to Keep Your Plants Healthy.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Inspect Plants Before You Bring Them Home.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Allow the Soil to Warm Before Planting.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Rotate Crops for a Healthy Vegetable Garden.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Provide Good Air Circulation.</li>
+                                <li><i class="fa-solid fa-circle-check text-success me-2"></i> Remove Diseased Stems and Foliage promptly.</li>`,
+                    prevent_more: "More Info",
+                    why_title: "Why is it Necessary to Detect Disease?",
+                    why_content: "Accurate diagnosis is the most important aspect of plant pathology. Without proper identification of the disease and the causal agent, control measures are often ineffective, wasting resources and leading to further crop losses. This system provides the transparency needed to detect diseases early, often before symptoms are clearly visible, ensuring timely and effective intervention."
+                },
+                hi: {
+                    about_hero_h2: "टमाटर रोग पहचान",
+                    about_hero_p: "यह प्रणाली डीप लर्निंग का उपयोग करके किसानों और बागवानों को केवल एक छवि से टमाटर की पत्ती के रोग जल्दी पहचानने में मदद करती है। हमारा उद्देश्य एआई के माध्यम से स्वस्थ फसलें और टिकाऊ खेती को बढ़ावा देना है।",
+                    about_hero_link: "और जानें",
+                    about_section_h1: "परियोजना के बारे में",
+                    about_section_p: "हमारा डीप लर्निंग मॉडल टमाटर पत्तियों के बड़े डेटासेट पर प्रशिक्षित है। यह रिसाइज़ और ऑगमेंट की गई छवियों पर कॉन्वोल्यूशनल न्यूरल नेटवर्क (CNN) का उपयोग करके सामान्य टमाटर रोगों और स्वस्थ पत्तियों की उच्च सटीकता से पहचान करता है।",
+                    feature_1_h5: "एआई आधारित पहचान",
+                    feature_1_p: "अपलोड की गई छवियों से टमाटर पत्ती के रोगों की तेज और सटीक पहचान करता है।",
+                    feature_2_h5: "समृद्ध डेटासेट और CNN",
+                    feature_2_p: "मजबूत और उच्च प्रदर्शन वर्गीकरण के लिए विश्वसनीय कृषि डेटासेट की हजारों छवियों पर प्रशिक्षित।",
+                    feature_3_h5: "टिकाऊ खेती",
+                    feature_3_p: "किसानों और घरेलू बागवानों को स्वस्थ टमाटर फसल बनाए रखने और कीटनाशक उपयोग कम करने में सहायता के लिए बनाया गया।",
+                    tech_stack_h2: "तकनीकी संरचना",
+                    tech_stack_p: "मुख्य पहचान मॉडल <strong>TensorFlow</strong> और <strong>Keras</strong> पर आधारित है, जबकि छवि प्रीप्रोसेसिंग के लिए <strong>OpenCV</strong> उपयोग किया गया है। रिस्पॉन्सिव वेब इंटरफ़ेस <strong>Flask</strong> (Python) और <strong>Bootstrap 5</strong> से बनाया गया है।",
+                    contact_h2: "संपर्क करें",
+                    contact_p: "सहयोग, सुझाव या प्रश्नों के लिए निःसंकोच संपर्क करें।",
+                    contact_location: "बेंगलुरु, कर्नाटक, भारत",
+                    contact_phone_link: "+91 7483367339",
+                    contact_email_link: "harshithdn27@gmail.com",
+                    footer_p: "© 2025 टमाटर रोग पहचान | सर्वाधिकार सुरक्षित",
+                    prevent_title: "पौधों के रोग से बचाव: अपनाने योग्य कदम",
+                    prevent_steps: `<li><i class="fa-solid fa-circle-check text-success me-2"></i> अच्छी स्वच्छता पद्धतियाँ अपनाएँ।</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> पौधों को स्वस्थ रखने के लिए संतुलित उर्वरक दें।</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> घर लाने से पहले पौधों की जाँच करें।</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> रोपाई से पहले मिट्टी को पर्याप्त गर्म होने दें।</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> फसल चक्र अपनाएँ।</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> अच्छी वायु संचार व्यवस्था रखें।</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> रोगग्रस्त तनों और पत्तियों को तुरंत हटा दें।</li>`,
+                    prevent_more: "अधिक जानकारी",
+                    why_title: "रोग की पहचान करना क्यों आवश्यक है?",
+                    why_content: "सटीक निदान पादप रोग विज्ञान का सबसे महत्वपूर्ण भाग है। रोग और उसके कारण की सही पहचान के बिना नियंत्रण उपाय अक्सर प्रभावी नहीं होते। यह प्रणाली रोगों को जल्दी पहचानने में मदद करती है, ताकि समय पर सही कदम उठाए जा सकें।"
+                },
+                kn: {
+                    about_hero_h2: "ಟೊಮೇಟೊ ರೋಗ ಗುರುತಿಸುವಿಕೆ",
+                    about_hero_p: "ಈ ವ್ಯವಸ್ಥೆ ಡೀಪ್ ಲರ್ನಿಂಗ್ ಬಳಸಿ ರೈತರು ಮತ್ತು ತೋಟಗಾರರು ಕೇವಲ ಒಂದು ಚಿತ್ರದ ಮೂಲಕ ಟೊಮೇಟೊ ಎಲೆ ರೋಗಗಳನ್ನು ವೇಗವಾಗಿ ಗುರುತಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ. ಆರೋಗ್ಯಕರ ಬೆಳೆ ಮತ್ತು ಸ್ಥಿರ ಕೃಷಿಯನ್ನು ಉತ್ತೇಜಿಸುವುದು ನಮ್ಮ ಉದ್ದೇಶ.",
+                    about_hero_link: "ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ",
+                    about_section_h1: "ಯೋಜನೆ ಬಗ್ಗೆ",
+                    about_section_p: "ನಮ್ಮ ಡೀಪ್ ಲರ್ನಿಂಗ್ ಮಾದರಿ ದೊಡ್ಡ ಟೊಮೇಟೊ ಎಲೆ ಡೇಟಾಸೆಟ್ ಮೇಲೆ ತರಬೇತುಗೊಂಡಿದೆ. ಇದು ಗಾತ್ರ ಬದಲಿಸಿದ ಮತ್ತು ವಿಸ್ತರಿಸಿದ ಚಿತ್ರಗಳ ಮೇಲೆ ಕಾಂವೊಲ್ಯೂಷನಲ್ ನ್ಯೂರಲ್ ನೆಟ್ವರ್ಕ್ (CNN) ಬಳಸಿ ಸಾಮಾನ್ಯ ರೋಗಗಳು ಮತ್ತು ಆರೋಗ್ಯಕರ ಎಲೆಗಳನ್ನು ನಿಖರವಾಗಿ ಗುರುತಿಸುತ್ತದೆ.",
+                    feature_1_h5: "ಎಐ ಆಧಾರಿತ ಪತ್ತೆ",
+                    feature_1_p: "ಅಪ್ಲೋಡ್ ಮಾಡಿದ ಚಿತ್ರಗಳಿಂದ ಟೊಮೇಟೊ ಎಲೆ ರೋಗಗಳನ್ನು ವೇಗವಾಗಿ ಮತ್ತು ನಿಖರವಾಗಿ ಪತ್ತೆಹಚ್ಚುತ್ತದೆ.",
+                    feature_2_h5: "ಸಮೃದ್ಧ ಡೇಟಾಸೆಟ್ ಮತ್ತು CNN",
+                    feature_2_p: "ದೃಢ ಮತ್ತು ಉತ್ತಮ ವರ್ಗೀಕರಣಕ್ಕಾಗಿ ವಿಶ್ವಾಸಾರ್ಹ ಕೃಷಿ ಡೇಟಾಸೆಟ್‌ಗಳ ಸಾವಿರಾರು ಚಿತ್ರಗಳ ಮೇಲೆ ತರಬೇತುಗೊಂಡಿದೆ.",
+                    feature_3_h5: "ಸ್ಥಿರ ಕೃಷಿ",
+                    feature_3_p: "ರೈತರು ಮತ್ತು ಮನೆ ತೋಟಗಾರರು ಆರೋಗ್ಯಕರ ಟೊಮೇಟೊ ಬೆಳೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಲು ಮತ್ತು ಕೀಟನಾಶಕ ಬಳಕೆಯನ್ನು ಕಡಿಮೆ ಮಾಡಲು ನೆರವಾಗುವಂತೆ ವಿನ್ಯಾಸಗೊಳಿಸಲಾಗಿದೆ.",
+                    tech_stack_h2: "ತಂತ್ರಜ್ಞಾನ ಸ್ಟ್ಯಾಕ್",
+                    tech_stack_p: "ಮುಖ್ಯ ಗುರುತಿಸುವಿಕೆ ಮಾದರಿ <strong>TensorFlow</strong> ಮತ್ತು <strong>Keras</strong> ಆಧಾರಿತವಾಗಿದೆ; ಚಿತ್ರ ಪೂರ್ವ ಸಂಸ್ಕರಣೆಗೆ <strong>OpenCV</strong> ಬಳಸಲಾಗಿದೆ. ಸ್ಪಂದನಶೀಲ ವೆಬ್ ಇಂಟರ್ಫೇಸ್ <strong>Flask</strong> (Python) ಮತ್ತು <strong>Bootstrap 5</strong> ಬಳಸಿ ನಿರ್ಮಿಸಲಾಗಿದೆ.",
+                    contact_h2: "ನನ್ನೊಂದಿಗೆ ಸಂಪರ್ಕಿಸಿ",
+                    contact_p: "ಸಹಕಾರ, ಸಲಹೆಗಳು ಅಥವಾ ಪ್ರಶ್ನೆಗಳಿಗಾಗಿ ಸಂಪರ್ಕಿಸಿ.",
+                    contact_location: "ಬೆಂಗಳೂರು, ಕರ್ನಾಟಕ, ಭಾರತ",
+                    contact_phone_link: "+91 7483367339",
+                    contact_email_link: "harshithdn27@gmail.com",
+                    footer_p: "© 2025 ಟೊಮೇಟೊ ರೋಗ ಗುರುತಿಸುವಿಕೆ | ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ",
+                    prevent_title: "ಸಸ್ಯರೋಗ ತಡೆ: ಅನುಸರಿಸಬೇಕಾದ ಕ್ರಮಗಳು",
+                    prevent_steps: `<li><i class="fa-solid fa-circle-check text-success me-2"></i> ಉತ್ತಮ ಸ್ವಚ್ಛತಾ ಕ್ರಮಗಳನ್ನು ಅನುಸರಿಸಿ.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> ಸಸ್ಯಗಳು ಆರೋಗ್ಯಕರವಾಗಿರಲು ಸಮತೋಲಿತ ಗೊಬ್ಬರ ನೀಡಿ.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> ಮನೆಗೆ ತರುವ ಮೊದಲು ಸಸ್ಯಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> ನೆಡುವ ಮೊದಲು ಮಣ್ಣು ಬೆಚ್ಚಗಾಗಲು ಅವಕಾಶ ನೀಡಿ.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> ಬೆಳೆ ಪರಿವರ್ತನೆ ಮಾಡಿ.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> ಉತ್ತಮ ಗಾಳಿಯ ಹರಿವು ಒದಗಿಸಿ.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> ರೋಗಗ್ರಸ್ತ ಕಾಂಡ ಮತ್ತು ಎಲೆಗಳನ್ನು ತಕ್ಷಣ ತೆಗೆದುಹಾಕಿ.</li>`,
+                    prevent_more: "ಹೆಚ್ಚಿನ ಮಾಹಿತಿ",
+                    why_title: "ರೋಗ ಪತ್ತೆ ಏಕೆ ಅಗತ್ಯ?",
+                    why_content: "ನಿಖರವಾದ ನಿರ್ಣಯವು ಸಸ್ಯರೋಗಶಾಸ್ತ್ರದ ಅತ್ಯಂತ ಮುಖ್ಯ ಭಾಗವಾಗಿದೆ. ರೋಗ ಮತ್ತು ಅದರ ಕಾರಣವನ್ನು ಸರಿಯಾಗಿ ಗುರುತಿಸದೆ ಇದ್ದರೆ ನಿಯಂತ್ರಣ ಕ್ರಮಗಳು ಪರಿಣಾಮಕಾರಿಯಾಗುವುದಿಲ್ಲ. ಈ ವ್ಯವಸ್ಥೆ ರೋಗಗಳನ್ನು ಬೇಗ ಪತ್ತೆಹಚ್ಚಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ."
+                },
+                te: {
+                    about_hero_h2: "టమోటా వ్యాధి గుర్తింపు",
+                    about_hero_p: "ఈ వ్యవస్థ డీప్ లెర్నింగ్ సహాయంతో రైతులు మరియు తోటమాలీలు కేవలం ఒక చిత్రంతోనే టమోటా ఆకుల వ్యాధులను త్వరగా గుర్తించడానికి సహాయపడుతుంది. ఆరోగ్యకరమైన పంటలు మరియు స్థిరమైన వ్యవసాయాన్ని ప్రోత్సహించడం మా లక్ష్యం.",
+                    about_hero_link: "మరింత తెలుసుకోండి",
+                    about_section_h1: "ప్రాజెక్ట్ గురించి",
+                    about_section_p: "మా డీప్ లెర్నింగ్ మోడల్ పెద్ద టమోటా ఆకుల డేటాసెట్‌పై శిక్షణ పొందింది. ఇది రీసైజ్ చేసిన మరియు ఆగ్మెంట్ చేసిన చిత్రాలపై కాన్వల్యూషనల్ న్యూరల్ నెట్‌వర్క్ (CNN) ఉపయోగించి సాధారణ టమోటా వ్యాధులు మరియు ఆరోగ్యకరమైన ఆకులను ఖచ్చితంగా గుర్తిస్తుంది.",
+                    feature_1_h5: "ఎఐ ఆధారిత గుర్తింపు",
+                    feature_1_p: "అప్లోడ్ చేసిన చిత్రాల నుంచి టమోటా ఆకుల వ్యాధులను వేగంగా మరియు ఖచ్చితంగా గుర్తిస్తుంది.",
+                    feature_2_h5: "సమృద్ధమైన డేటాసెట్ మరియు CNN",
+                    feature_2_p: "బలమైన వర్గీకరణ కోసం విశ్వసనీయ వ్యవసాయ డేటాసెట్‌ల వేలాది చిత్రాలపై శిక్షణ పొందింది.",
+                    feature_3_h5: "స్థిరమైన వ్యవసాయం",
+                    feature_3_p: "రైతులు మరియు ఇంటి తోటమాలీలు ఆరోగ్యకరమైన టమోటా పంటను պահպանించేందుకు మరియు పురుగుమందుల వినియోగం తగ్గించేందుకు రూపొందించబడింది.",
+                    tech_stack_h2: "టెక్నాలజీ స్టాక్",
+                    tech_stack_p: "ప్రధాన గుర్తింపు మోడల్ <strong>TensorFlow</strong> మరియు <strong>Keras</strong> ఆధారంగా ఉంటుంది; ఇమేజ్ ప్రీప్రాసెసింగ్ కోసం <strong>OpenCV</strong> ఉపయోగించబడింది. రెస్పాన్సివ్ వెబ్ ఇంటర్‌ఫేస్ <strong>Flask</strong> (Python) మరియు <strong>Bootstrap 5</strong> తో నిర్మించబడింది.",
+                    contact_h2: "నాతో కలవండి",
+                    contact_p: "సహకారం, సూచనలు లేదా ప్రశ్నల కోసం సంప్రదించండి.",
+                    contact_location: "బెంగళూరు, కర్ణాటక, భారతదేశం",
+                    contact_phone_link: "+91 7483367339",
+                    contact_email_link: "harshithdn27@gmail.com",
+                    footer_p: "© 2025 టమోటా వ్యాధి గుర్తింపు | అన్ని హక్కులు రిజర్వ్ చేయబడ్డాయి",
+                    prevent_title: "మొక్కల వ్యాధి నివారణ: అనుసరించాల్సిన దశలు",
+                    prevent_steps: `<li><i class="fa-solid fa-circle-check text-success me-2"></i> మంచి పారిశుధ్య పద్ధతులను పాటించండి.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> మొక్కలు ఆరోగ్యంగా ఉండేందుకు సమతుల్య ఎరువులు వాడండి.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> ఇంటికి తీసుకురాకముందు మొక్కలను పరిశీలించండి.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> నాటే ముందు మట్టి వేడెక్కే వరకు వేచి ఉండండి.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> పంట మార్పిడి చేయండి.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> సరైన గాలి ప్రసరణ ఉండేలా చూడండి.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> వ్యాధిగ్రస్త కాండాలు మరియు ఆకులను వెంటనే తొలగించండి.</li>`,
+                    prevent_more: "మరింత సమాచారం",
+                    why_title: "వ్యాధిని గుర్తించడం ఎందుకు అవసరం?",
+                    why_content: "ఖచ్చితమైన నిర్ధారణ మొక్కల వ్యాధి శాస్త్రంలో అత్యంత ముఖ్యమైన భాగం. వ్యాధి మరియు దానికి కారణాన్ని సరిగా గుర్తించకపోతే నియంత్రణ చర్యలు ఫలించవు. ఈ వ్యవస్థ వ్యాధులను తొందరగా గుర్తించేందుకు సహాయపడుతుంది."
+                },
+                ta: {
+                    about_hero_h2: "தக்காளி நோய் கண்டறிதல்",
+                    about_hero_p: "இந்த அமைப்பு டீப் லெர்னிங் மூலம் விவசாயிகள் மற்றும் தோட்டப் பணியாளர்கள் ஒரு படத்தின் மூலம் தக்காளி இலை நோய்களை விரைவாக கண்டறிய உதவுகிறது. ஆரோக்கியமான பயிர்களையும் நிலையான விவசாயத்தையும் ஊக்குவிப்பதே எங்கள் நோக்கம்.",
+                    about_hero_link: "மேலும் அறிக",
+                    about_section_h1: "திட்டம் பற்றி",
+                    about_section_p: "எங்கள் டீப் லெர்னிங் மாதிரி பெரிய தக்காளி இலை தரவுத்தொகுப்பில் பயிற்சியளிக்கப்பட்டுள்ளது. இது அளவு மாற்றப்பட்ட மற்றும் விரிவாக்கப்பட்ட படங்களில் கான்வல்யூஷனல் நியூரல் நெட்வொர்க் (CNN) மூலம் பொதுவான நோய்கள் மற்றும் ஆரோக்கியமான இலைகளை துல்லியமாக கண்டறிகிறது.",
+                    feature_1_h5: "ஏஐ அடிப்படையிலான கண்டறிதல்",
+                    feature_1_p: "பதிவேற்றப்பட்ட படங்களிலிருந்து தக்காளி இலை நோய்களை வேகமாகவும் துல்லியமாகவும் கண்டறிகிறது.",
+                    feature_2_h5: "செறிவான தரவுத்தொகுப்பு மற்றும் CNN",
+                    feature_2_p: "வலுவான வகைப்பாட்டிற்காக நம்பகமான வேளாண் தரவுத்தொகுப்புகளில் இருந்து சேகரிக்கப்பட்ட ஆயிரக்கணக்கான படங்களில் பயிற்சியளிக்கப்பட்டது.",
+                    feature_3_h5: "நிலையான விவசாயம்",
+                    feature_3_p: "விவசாயிகள் மற்றும் வீட்டு தோட்டக்காரர்கள் ஆரோக்கியமான தக்காளி பயிர்களை பராமரிக்கவும் பூச்சிக்கொல்லி பயன்பாட்டை குறைக்கவும் உதவுகிறது.",
+                    tech_stack_h2: "தொழில்நுட்ப அடுக்கு",
+                    tech_stack_p: "முக்கிய கண்டறிதல் மாதிரி <strong>TensorFlow</strong> மற்றும் <strong>Keras</strong> அடிப்படையில் இயங்குகிறது; பட முன்செயலாக்கத்திற்கு <strong>OpenCV</strong> பயன்படுத்தப்படுகிறது. பதிலளிக்கும் வலை இடைமுகம் <strong>Flask</strong> (Python) மற்றும் <strong>Bootstrap 5</strong> மூலம் கட்டப்பட்டுள்ளது.",
+                    contact_h2: "என்னுடன் தொடர்புகொள்ளுங்கள்",
+                    contact_p: "ஒத்துழைப்பு, பரிந்துரை அல்லது கேள்விகளுக்கு தயங்காமல் தொடர்புகொள்ளுங்கள்.",
+                    contact_location: "பெங்களூரு, கர்நாடகா, இந்தியா",
+                    contact_phone_link: "+91 7483367339",
+                    contact_email_link: "harshithdn27@gmail.com",
+                    footer_p: "© 2025 தக்காளி நோய் கண்டறிதல் | அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை",
+                    prevent_title: "தாவர நோய் தடுப்பு: பின்பற்ற வேண்டிய படிகள்",
+                    prevent_steps: `<li><i class="fa-solid fa-circle-check text-success me-2"></i> நல்ல சுத்தமான நடைமுறைகளை பின்பற்றுங்கள்.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> தாவரங்கள் ஆரோக்கியமாக இருக்க சமநிலையான உரம் கொடுங்கள்.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> வீட்டிற்கு கொண்டு வருவதற்கு முன் தாவரங்களை பரிசோதிக்கவும்.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> நட்டுவதற்கு முன் மண் சூடாக விடுங்கள்.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> பயிர் மாறுபாட்டை பின்பற்றுங்கள்.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> நல்ல காற்றோட்டத்தை உறுதிசெய்யுங்கள்.</li>
+                                    <li><i class="fa-solid fa-circle-check text-success me-2"></i> நோயுற்ற தண்டு மற்றும் இலைகளை உடனே அகற்றுங்கள்.</li>`,
+                    prevent_more: "மேலும் தகவல்",
+                    why_title: "நோயை கண்டறிதல் ஏன் அவசியம்?",
+                    why_content: "துல்லியமான நோயறிதல் தாவர நோயியலில் மிக முக்கியமானது. நோயையும் அதன் காரணத்தையும் சரியாக அடையாளம் காணாமல் இருந்தால் கட்டுப்பாட்டு நடவடிக்கைகள் பலனளிக்காது. இந்த அமைப்பு நோய்களை ஆரம்பத்திலேயே கண்டறிய உதவுகிறது."
                 }
+            };
+
+            const youtubeLinksByLanguage = {
+                en: "https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+english",
+                hi: "https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+hindi",
+                kn: "https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+kannada",
+                te: "https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+telugu",
+                ta: "https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+tamil"
+            };
+
+            const youtubeButtonTextByLanguage = {
+                en: "Watch Video",
+                hi: "वीडियो देखें",
+                kn: "ವೀಡಿಯೊ ನೋಡಿ",
+                te: "వీడియో చూడండి",
+                ta: "வீடியோ பார்க்க"
+            };
+
+            function applyLanguageToPage(lang) {
+                const translations = aboutTranslations[lang] || aboutTranslations.en;
+
+                for (const id in elementsToTranslate) {
+                    const element = $(`#${id}`);
+                    const type = elementsToTranslate[id];
+                    const value = translations[id] || aboutTranslations.en[id];
+
+                    if (!value) continue;
+
+                    if (type === "html") {
+                        element.html(value);
+                    } else {
+                        element.text(value);
+                    }
+                }
+
+                $("#prevent_video_link").attr("href", youtubeLinksByLanguage[lang] || youtubeLinksByLanguage.en);
+                $("#prevent_video_label").text(youtubeButtonTextByLanguage[lang] || youtubeButtonTextByLanguage.en);
             }
 
             // Language change handler

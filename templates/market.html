@@ -64,6 +64,11 @@
             padding: 15px 0;
             width: 100%; /* Ensure full width */
         }
+
+        .market-header {
+            gap: 1rem;
+        }
+
         header .navbar {
              /* Use container-fluid inside the navbar to keep content centered but allow full width nav */
             padding-left: 1rem;
@@ -125,8 +130,8 @@
 
         .product-image-container {
             width: 100%;
-            max-width: 200px;
-            height: 250px;
+            max-width: min(100%, 220px);
+            aspect-ratio: 4 / 5;
             overflow: hidden;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
@@ -185,6 +190,50 @@
             padding-left: 1rem;
             padding-right: 1rem;
         }
+
+        @media (max-width: 767.98px) {
+            header .navbar,
+            #marketplace .row,
+            #marketplace h2,
+            #marketplace .lead,
+            footer .text-center {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+
+            .market-header {
+                flex-direction: column;
+                align-items: stretch !important;
+                text-align: center;
+            }
+
+            .market-header .btn {
+                width: 100%;
+            }
+
+            #marketplace {
+                padding: 36px 0;
+            }
+
+            #marketplace h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .product-card .card-body {
+                padding: 1.25rem;
+            }
+
+            .product-image-container {
+                max-width: 180px;
+            }
+
+            .product-name {
+                font-size: 1rem;
+                min-height: auto;
+            }
+        }
     </style>
 </head>
 
@@ -193,7 +242,7 @@
     <header>
         <nav class="navbar navbar-light bg-white-transparent">
             <!-- Use container-fluid for a full-width header with padded content -->
-            <div class="container-fluid">
+            <div class="container-fluid market-header d-flex align-items-center justify-content-between flex-wrap">
                 <a class="navbar-brand" href="/">
                     <h6>TOMATO CARE MARKETPLACE</h6>
                 </a>
