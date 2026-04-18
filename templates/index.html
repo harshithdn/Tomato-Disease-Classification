@@ -209,6 +209,15 @@
       color: var(--text-dark);
     }
 
+    .farmer-help-card {
+      border-color: rgba(239, 58, 58, 0.16);
+    }
+
+    .farmer-help-badge {
+      background: rgba(239, 58, 58, 0.12);
+      color: var(--secondary-red);
+    }
+
     #drop-area {
       background-color: white;
       border: 3px dashed var(--primary-green);
@@ -560,7 +569,7 @@
               </div>
             </aside>
           </div>
-          <div class="col-xl-7 col-lg-8 col-md-10 col-12">
+          <div class="col-xl-6 col-lg-8 col-md-10 col-12">
             <div id="drop-area" class="p-4 rounded-4">
               <form id="customForm" method="post" enctype="multipart/form-data">
                 
@@ -603,6 +612,26 @@
               <button type="button" id="speakButton" class="btn btn-warning mt-4 w-100">🔊 Speak Description</button>
             </div>
           </div>
+          <div class="col-xl-3 col-lg-10 col-md-10 col-12">
+            <aside class="agrimart-card farmer-help-card">
+              <span class="agrimart-badge farmer-help-badge" id="farmerHelpBadge">Farmer Helpline</span>
+              <h5 id="farmerHelpTitle">Language-Based Farmer Support</h5>
+              <p id="farmerHelpDescription">Choose your preferred language to see a suitable local contact or helpline for farming support.</p>
+
+              <ul class="agrimart-list">
+                <li><strong id="farmerHelpSupportLabel">Support For:</strong> <span id="farmerHelpSupportText">General farming help</span></li>
+                <li><strong id="farmerHelpContactLabel">Contact:</strong> <span id="farmerHelpContactText">Krishi expert</span></li>
+                <li><strong id="farmerHelpPhoneLabel">Phone:</strong> <a id="farmerHelpPhoneLink" href="tel:+9108257204370">+91 08257-204370</a></li>
+                <li><strong id="farmerHelpLanguagesLabel">Languages:</strong> <span id="farmerHelpLanguagesText">Kannada + English</span></li>
+                <li><strong id="farmerHelpBestForLabel">Best For:</strong> <span id="farmerHelpBestForText">Local farming help, soil testing, training</span></li>
+              </ul>
+
+              <div class="agrimart-meta">
+                <p><strong id="farmerHelpNoteLabel">Note:</strong> <span id="farmerHelpNoteText">Government experts available.</span></p>
+                <p><strong id="farmerHelpUseGuideLabel">Use Guide:</strong> <span id="farmerHelpUseGuideText">Kannada farmers can use this contact for local support.</span></p>
+              </div>
+            </aside>
+          </div>
         </div>
       </div>
     </section>
@@ -641,6 +670,7 @@
         let lastConfidence = "";
         let speaking = false;
         let availableVoices = [];
+        let currentSpeechAudio = null;
 
         // === Multilingual Texts (Simplified) ===
         const translations = {
@@ -845,6 +875,127 @@
             emailLabel: "Email:",
             callLabel: "Call:"
           };
+          const farmerHelpText = {
+            en: {
+              badge: "Farmer Helpline",
+              title: "English Farmer Support",
+              description: "Get practical support from an English-friendly farming consultant based near Bangalore.",
+              supportLabel: "Support For:",
+              supportText: "English-speaking farmers",
+              contactLabel: "Contact:",
+              contactText: "Amruta Sanjeevani Farms (Bangalore)",
+              phoneLabel: "Phone:",
+              phoneHref: "tel:+919986072460",
+              phoneText: "+91 9986072460",
+              languagesLabel: "Languages:",
+              languagesText: "English + Kannada",
+              bestForLabel: "Best For:",
+              bestForText: "Organic farming and farm setup consultancy",
+              noteLabel: "Note:",
+              noteText: "Useful for farmers seeking guidance in English.",
+              useGuideLabel: "Use Guide:",
+              useGuideText: "English → Amruta Sanjeevani"
+            },
+            hi: {
+              badge: "किसान हेल्पलाइन",
+              title: "हिंदी किसान सहायता",
+              description: "पूरे भारत में तुरंत कृषि सलाह पाने के लिए सरकारी किसान कॉल सेंटर का उपयोग करें।",
+              supportLabel: "सहायता हेतु:",
+              supportText: "हिंदी बोलने वाले किसान",
+              contactLabel: "संपर्क:",
+              contactText: "किसान कॉल सेंटर (सरकारी हेल्पलाइन)",
+              phoneLabel: "फोन:",
+              phoneHref: "tel:18001801551",
+              phoneText: "1800-180-1551",
+              languagesLabel: "भाषाएँ:",
+              languagesText: "हिंदी + सभी प्रमुख भारतीय भाषाएँ",
+              bestForLabel: "सबसे उपयुक्त:",
+              bestForText: "तुरंत विशेषज्ञ सलाह कभी भी",
+              noteLabel: "नोट:",
+              noteText: "सरकारी सहायता केंद्र, तुरंत सलाह के लिए उपयोगी।",
+              useGuideLabel: "उपयोग मार्गदर्शिका:",
+              useGuideText: "Hindi → Kisan Call Center"
+            },
+            kn: {
+              badge: "ರೈತ ಸಹಾಯವಾಣಿ",
+              title: "ಕನ್ನಡ ರೈತ ಸಹಾಯ",
+              description: "ಕನ್ನಡದಲ್ಲಿ ಸ್ಥಳೀಯ ಕೃಷಿ ಮಾರ್ಗದರ್ಶನಕ್ಕಾಗಿ ದಕ್ಷಿಣ ಕನ್ನಡ ಕೃಷಿ ವಿಜ್ಞಾನ ಕೇಂದ್ರವನ್ನು ಸಂಪರ್ಕಿಸಿ.",
+              supportLabel: "ಸಹಾಯಕ್ಕಾಗಿ:",
+              supportText: "ಕನ್ನಡ ಭಾಷೆಯ ರೈತರು",
+              contactLabel: "ಸಂಪರ್ಕ:",
+              contactText: "Krishi Vigyan Kendra (KVK) – Dakshina Kannada",
+              phoneLabel: "ದೂರವಾಣಿ:",
+              phoneHref: "tel:+9108257204370",
+              phoneText: "+91 08257-204370",
+              languagesLabel: "ಭಾಷೆಗಳು:",
+              languagesText: "Kannada + English",
+              bestForLabel: "ಉತ್ತಮ ಬಳಕೆ:",
+              bestForText: "ಸ್ಥಳೀಯ ಕೃಷಿ ಸಹಾಯ, ಮಣ್ಣು ಪರೀಕ್ಷೆ, ತರಬೇತಿ",
+              noteLabel: "ಸೂಚನೆ:",
+              noteText: "ಸರ್ಕಾರಿ ತಜ್ಞರ ಸಹಾಯ ಲಭ್ಯ.",
+              useGuideLabel: "ಬಳಕೆ ಮಾರ್ಗದರ್ಶಿ:",
+              useGuideText: "Kannada → KVK"
+            },
+            te: {
+              badge: "రైతు హెల్ప్‌లైన్",
+              title: "తెలుగు రైతు సహాయం",
+              description: "ప్రాక్టికల్ వ్యవసాయ సలహాల కోసం తెలుగు మాట్లాడే ప్రోగ్రెసివ్ రైతును సంప్రదించండి.",
+              supportLabel: "సహాయం కోసం:",
+              supportText: "తెలుగు రైతులు",
+              contactLabel: "సంప్రదించండి:",
+              contactText: "A.V. Prasada Reddy (Progressive Farmer)",
+              phoneLabel: "ఫోన్:",
+              phoneHref: "tel:+919440381477",
+              phoneText: "+91 94403 81477",
+              languagesLabel: "భాషలు:",
+              languagesText: "Telugu + Hindi + English",
+              bestForLabel: "బెస్ట్ ఫర్:",
+              bestForText: "ప్రాక్టికల్ వ్యవసాయ మార్గదర్శకం",
+              noteLabel: "గమనిక:",
+              noteText: "రైతు అనుభవంపై ఆధారిత సలహా కోసం అనుకూలం.",
+              useGuideLabel: "వాడుక గైడ్:",
+              useGuideText: "Telugu → Prasada Reddy"
+            },
+            ta: {
+              badge: "விவசாயி உதவி",
+              title: "தமிழ் விவசாய உதவி",
+              description: "தமிழில் பயிர் திட்டமிடல் மற்றும் வயல் அனுபவ உதவிக்காக இந்த தொடர்பை பயன்படுத்தலாம்.",
+              supportLabel: "உதவி பெற:",
+              supportText: "தமிழ் பேசும் விவசாயிகள்",
+              contactLabel: "தொடர்பு:",
+              contactText: "A. Chandra Sekaran (Progressive Farmer – Chennai)",
+              phoneLabel: "தொலைபேசி:",
+              phoneHref: "tel:+919444461050",
+              phoneText: "+91 9444461050",
+              languagesLabel: "மொழிகள்:",
+              languagesText: "Tamil + English",
+              bestForLabel: "சிறந்த பயன்பாடு:",
+              bestForText: "பயிர் திட்டமிடல் மற்றும் வயல் அனுபவம்",
+              noteLabel: "குறிப்பு:",
+              noteText: "தமிழில் நேரடி விவசாய ஆலோசனை பெற உதவும்.",
+              useGuideLabel: "பயன்பாட்டு வழிகாட்டி:",
+              useGuideText: "Tamil → Chandra Sekaran"
+            }
+          }[lang] || {
+            badge: "Farmer Helpline",
+            title: "English Farmer Support",
+            description: "Get practical support from an English-friendly farming consultant based near Bangalore.",
+            supportLabel: "Support For:",
+            supportText: "English-speaking farmers",
+            contactLabel: "Contact:",
+            contactText: "Amruta Sanjeevani Farms (Bangalore)",
+            phoneLabel: "Phone:",
+            phoneHref: "tel:+919986072460",
+            phoneText: "+91 9986072460",
+            languagesLabel: "Languages:",
+            languagesText: "English + Kannada",
+            bestForLabel: "Best For:",
+            bestForText: "Organic farming and farm setup consultancy",
+            noteLabel: "Note:",
+            noteText: "Useful for farmers seeking guidance in English.",
+            useGuideLabel: "Use Guide:",
+            useGuideText: "English → Amruta Sanjeevani"
+          };
           $("#pageTitle").text(t.title);
           $("#pageSubtitle").text(t.subtitle);
           $("#uploadButton").text(t.upload);
@@ -870,6 +1021,23 @@
           $("#agrimartDomainLabel").text(agrimartText.domainLabel);
           $("#agrimartEmailLabel").text(agrimartText.emailLabel);
           $("#agrimartCallLabel").text(agrimartText.callLabel);
+          $("#farmerHelpBadge").text(farmerHelpText.badge);
+          $("#farmerHelpTitle").text(farmerHelpText.title);
+          $("#farmerHelpDescription").text(farmerHelpText.description);
+          $("#farmerHelpSupportLabel").text(farmerHelpText.supportLabel);
+          $("#farmerHelpSupportText").text(farmerHelpText.supportText);
+          $("#farmerHelpContactLabel").text(farmerHelpText.contactLabel);
+          $("#farmerHelpContactText").text(farmerHelpText.contactText);
+          $("#farmerHelpPhoneLabel").text(farmerHelpText.phoneLabel);
+          $("#farmerHelpPhoneLink").attr("href", farmerHelpText.phoneHref).text(farmerHelpText.phoneText);
+          $("#farmerHelpLanguagesLabel").text(farmerHelpText.languagesLabel);
+          $("#farmerHelpLanguagesText").text(farmerHelpText.languagesText);
+          $("#farmerHelpBestForLabel").text(farmerHelpText.bestForLabel);
+          $("#farmerHelpBestForText").text(farmerHelpText.bestForText);
+          $("#farmerHelpNoteLabel").text(farmerHelpText.noteLabel);
+          $("#farmerHelpNoteText").text(farmerHelpText.noteText);
+          $("#farmerHelpUseGuideLabel").text(farmerHelpText.useGuideLabel);
+          $("#farmerHelpUseGuideText").text(farmerHelpText.useGuideText);
           if (!speaking) {
             $("#speakButton").text(t.speak);
           }
@@ -925,8 +1093,21 @@
 
         function updateSpeakButtonState(isBusy) {
           speaking = isBusy;
-          speakButton.disabled = isBusy;
           speakButton.textContent = isBusy ? getUiExtras(currentLang).speaking : (translations[currentLang]?.speak || translations.en.speak);
+        }
+
+        function stopSpeechPlayback() {
+          if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+          }
+
+          if (currentSpeechAudio) {
+            currentSpeechAudio.pause();
+            currentSpeechAudio.currentTime = 0;
+            currentSpeechAudio = null;
+          }
+
+          updateSpeakButtonState(false);
         }
 
         async function speakWithBrowser(textToSpeak, lang) {
@@ -949,18 +1130,42 @@
             utterance.rate = 1;
             utterance.pitch = 1;
 
+            let hasStarted = false;
+            let settled = false;
+
+            const finish = (value) => {
+              if (settled) return;
+              settled = true;
+              resolve(value);
+            };
+
+            utterance.onstart = () => {
+              hasStarted = true;
+              finish(true);
+            };
+
             utterance.onend = () => {
               updateSpeakButtonState(false);
-              resolve(true);
+              if (!hasStarted) {
+                finish(false);
+              }
             };
 
             utterance.onerror = () => {
               updateSpeakButtonState(false);
-              resolve(false);
+              finish(false);
             };
 
             updateSpeakButtonState(true);
             window.speechSynthesis.speak(utterance);
+
+            setTimeout(() => {
+              if (!hasStarted) {
+                window.speechSynthesis.cancel();
+                updateSpeakButtonState(false);
+                finish(false);
+              }
+            }, 1200);
           });
         }
 
@@ -1095,14 +1300,12 @@
           }
 
           if (speaking) {
-            if ("speechSynthesis" in window) {
-              window.speechSynthesis.cancel();
-            }
-            updateSpeakButtonState(false);
+            stopSpeechPlayback();
             return;
           }
 
           try {
+            stopSpeechPlayback();
             const textToSpeak = lastDescription.map(pt => pt.replace(/<[^>]+>/g, '')).join(". ");
             const currentSelectedLang = languageSelect.value;
             const browserSpeechWorked = await speakWithBrowser(textToSpeak, currentSelectedLang);
@@ -1119,19 +1322,31 @@
             if (!response.ok) throw new Error("Speech generation failed!");
             const audioBlob = await response.blob();
             const audioUrl = URL.createObjectURL(audioBlob);
-            const audio = new Audio(audioUrl);
-            audio.onended = () => updateSpeakButtonState(false);
-            audio.onerror = () => updateSpeakButtonState(false);
-            await audio.play();
+            currentSpeechAudio = new Audio(audioUrl);
+            currentSpeechAudio.onended = () => {
+              URL.revokeObjectURL(audioUrl);
+              currentSpeechAudio = null;
+              updateSpeakButtonState(false);
+            };
+            currentSpeechAudio.onerror = () => {
+              URL.revokeObjectURL(audioUrl);
+              currentSpeechAudio = null;
+              updateSpeakButtonState(false);
+            };
+            await currentSpeechAudio.play();
           } catch (error) {
-            updateSpeakButtonState(false);
+            stopSpeechPlayback();
             console.error(error);
             toastr.error("Failed to play description voice!");
           }
         });
 
+        window.addEventListener("beforeunload", stopSpeechPlayback);
+        window.addEventListener("pagehide", stopSpeechPlayback);
+
         // === Cancel / Reset upload ===
         $(".cancelUpload").click(() => {
+          stopSpeechPlayback();
           $("#previewImage").attr("src", "../static/images/drag_drop.svg");
           $(".loadingArea, .resultArea").hide();
           lastPredictionLabel = "";

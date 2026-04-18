@@ -437,6 +437,9 @@
                             <a id="prevent_more" target="_blank" href="https://www.thespruce.com/prevent-plant-diseases-in-your-garden-2539511" class="d-inline-block mt-3">
                                 <button type="button" class="btn btn-sm btn-outline-success px-4">More Info</button>
                             </a>
+                            <a id="prevent_video_link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+english" class="d-inline-block mt-3 ms-2">
+                                <button id="prevent_video_label" type="button" class="btn btn-sm btn-success px-4">Watch Video</button>
+                            </a>
                         </div>
                     </div>
                 
@@ -705,6 +708,22 @@
                 }
             };
 
+            const youtubeLinksByLanguage = {
+                en: "https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+english",
+                hi: "https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+hindi",
+                kn: "https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+kannada",
+                te: "https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+telugu",
+                ta: "https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+tamil"
+            };
+
+            const youtubeButtonTextByLanguage = {
+                en: "Watch Video",
+                hi: "वीडियो देखें",
+                kn: "ವೀಡಿಯೊ ನೋಡಿ",
+                te: "వీడియో చూడండి",
+                ta: "வீடியோ பார்க்க"
+            };
+
             function applyLanguageToPage(lang) {
                 const translations = aboutTranslations[lang] || aboutTranslations.en;
 
@@ -721,6 +740,9 @@
                         element.text(value);
                     }
                 }
+
+                $("#prevent_video_link").attr("href", youtubeLinksByLanguage[lang] || youtubeLinksByLanguage.en);
+                $("#prevent_video_label").text(youtubeButtonTextByLanguage[lang] || youtubeButtonTextByLanguage.en);
             }
 
             // Language change handler

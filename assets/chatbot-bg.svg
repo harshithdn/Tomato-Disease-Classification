@@ -1,0 +1,73 @@
+<svg width="1600" height="1200" viewBox="0 0 1600 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky" x1="800" y1="0" x2="800" y2="1200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EEF9F1"/>
+      <stop offset="0.5" stop-color="#D7F0DA"/>
+      <stop offset="1" stop-color="#F8FCF2"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1280 170) rotate(90) scale(190 190)">
+      <stop stop-color="#FFF6BE" stop-opacity="0.95"/>
+      <stop offset="0.55" stop-color="#FFE58A" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#FFE58A" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hillBack" x1="800" y1="680" x2="800" y2="980" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#BCE4B8"/>
+      <stop offset="1" stop-color="#88C785"/>
+    </linearGradient>
+    <linearGradient id="hillFront" x1="800" y1="760" x2="800" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#90D280"/>
+      <stop offset="1" stop-color="#4D984C"/>
+    </linearGradient>
+    <linearGradient id="leafFill" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#8CD46D"/>
+      <stop offset="1" stop-color="#2D7B32"/>
+    </linearGradient>
+    <linearGradient id="leafFill2" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#C3EF73"/>
+      <stop offset="1" stop-color="#4C982B"/>
+    </linearGradient>
+    <filter id="blurSoft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="1200" fill="url(#sky)"/>
+  <circle cx="1280" cy="170" r="190" fill="url(#sunGlow)"/>
+
+  <g opacity="0.45" filter="url(#blurSoft)">
+    <circle cx="250" cy="180" r="120" fill="#C9F1C3"/>
+    <circle cx="450" cy="120" r="72" fill="#E8F8D7"/>
+    <circle cx="1370" cy="320" r="110" fill="#C0ECC2"/>
+  </g>
+
+  <path d="M0 770C180 640 390 610 610 700C760 760 920 770 1100 700C1290 624 1450 630 1600 720V1200H0V770Z" fill="url(#hillBack)"/>
+  <path d="M0 900C170 760 370 720 610 810C860 904 1060 884 1270 798C1405 742 1510 750 1600 810V1200H0V900Z" fill="url(#hillFront)"/>
+
+  <g opacity="0.18">
+    <path d="M100 930C150 880 200 850 260 826C286 816 312 832 322 856C332 880 318 914 292 926C226 956 172 994 122 1046" stroke="#2E7F35" stroke-width="16" stroke-linecap="round"/>
+    <path d="M138 1018C118 962 132 912 180 880" stroke="#4D9C49" stroke-width="10" stroke-linecap="round"/>
+    <path d="M188 980C164 920 182 864 232 832" stroke="#4D9C49" stroke-width="10" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(30 840)">
+    <path d="M40 310C100 196 188 116 298 56C330 38 370 54 382 88C395 122 378 162 346 178C252 222 180 294 126 398" fill="url(#leafFill)"/>
+    <path d="M154 360C148 246 184 156 270 94C298 74 338 84 354 114C370 144 360 184 332 202C270 242 234 314 232 404" fill="url(#leafFill2)"/>
+    <path d="M258 344C276 226 346 126 458 72C492 56 532 74 544 108C556 142 538 180 504 196C420 236 366 312 352 408" fill="url(#leafFill)"/>
+    <path d="M0 452H526" stroke="#245E29" stroke-width="10" stroke-linecap="round" opacity="0.18"/>
+  </g>
+
+  <g transform="translate(1180 830)">
+    <path d="M486 304C426 190 338 110 228 50C196 32 156 48 144 82C131 116 148 156 180 172C274 216 346 288 400 392" fill="url(#leafFill)"/>
+    <path d="M374 352C380 238 344 148 258 86C230 66 190 76 174 106C158 136 168 176 196 194C258 234 294 306 296 396" fill="url(#leafFill2)"/>
+    <path d="M268 338C250 220 180 120 68 66C34 50 -6 68 -18 102C-30 136 -12 174 22 190C106 230 160 306 174 402" fill="url(#leafFill)"/>
+    <path d="M-42 444H484" stroke="#245E29" stroke-width="10" stroke-linecap="round" opacity="0.18"/>
+  </g>
+
+  <g opacity="0.18">
+    <circle cx="1230" cy="560" r="20" fill="#8CCB8C"/>
+    <circle cx="1270" cy="600" r="14" fill="#7DC881"/>
+    <circle cx="1320" cy="550" r="18" fill="#9ED693"/>
+    <circle cx="340" cy="560" r="16" fill="#8FCF88"/>
+    <circle cx="290" cy="610" r="12" fill="#76BE76"/>
+  </g>
+</svg>
