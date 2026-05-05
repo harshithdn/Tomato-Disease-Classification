@@ -50,8 +50,12 @@ camera = cv2.VideoCapture()
 # Load model once at startup (not inside the function)
 MODEL_CANDIDATES = [
     os.getenv("MODEL_PATH"),
-    "model/model_tomato.h5"
-,
+    "model/model_inception.h5",
+    "model/model_tomato.h5",
+    "model/tomato_leaf_disease_prediction.h5",
+    "model/tomato-disease-detection-model.h5",
+    "model/t.h5",
+    "model/tt.h5",
 ]
 
 

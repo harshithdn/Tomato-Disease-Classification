@@ -245,8 +245,7 @@ select {
 </div>
 
 <script>
-const SERVER_PROXY_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
-const FALLBACK_CLIENT_KEY = "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";
+const SERVER_PROXY_ENDPOINT = "/chat-bot/api";
 const messagesEl = document.getElementById("messages");
 const inputEl = document.getElementById("input");
 const sendBtn = document.getElementById("sendBtn");
@@ -287,23 +286,14 @@ Always reply in ${targetLang} only, regardless of the input language.
 Keep answers helpful, short, and relevant to agriculture, crops, weather, and farming tips.`;
 
   const payload = {
-    model: "gpt-4o-mini",
-    messages: [
-      { role: "system", content: promptInstruction },
-      ...Array.from(messagesEl.querySelectorAll(".msg")).map(el => ({
-        role: el.classList.contains("user") ? "user" : "assistant",
-        content: el.textContent
-      })),
-      { role: "user", content: text }
-    ],
-    temperature: 0.6
+    message: `${promptInstruction}\n\nUser message: ${text}`,
+    lang
   };
 
   try {
     const res = await fetch(SERVER_PROXY_ENDPOINT, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${FALLBACK_CLIENT_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(payload)
@@ -312,7 +302,7 @@ Keep answers helpful, short, and relevant to agriculture, crops, weather, and fa
     messagesEl.querySelectorAll(".msg.bot").forEach(el => {
       if (el.textContent.includes("Thinking")) el.remove();
     });
-    const reply = data?.choices?.[0]?.message?.content || "⚠️ No response.";
+    const reply = data?.reply || "⚠️ No response.";
     appendMessage(reply, "bot");
     lastBotText = reply;
   } catch (err) {

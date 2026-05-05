@@ -671,6 +671,7 @@
         let speaking = false;
         let availableVoices = [];
         let currentSpeechAudio = null;
+        let currentSpeechRequestToken = 0;
 
         // === Multilingual Texts (Simplified) ===
         const translations = {
@@ -1097,6 +1098,8 @@
         }
 
         function stopSpeechPlayback() {
+          currentSpeechRequestToken += 1;
+
           if ("speechSynthesis" in window) {
             window.speechSynthesis.cancel();
           }
@@ -1120,7 +1123,8 @@
 
           return new Promise((resolve) => {
             const utterance = new SpeechSynthesisUtterance(textToSpeak);
-            utterance.lang = getSpeechLang(lang);
+            const speechLang = getSpeechLang(lang);
+            utterance.lang = speechLang;
 
             const matchedVoice = getBestVoice(lang);
             if (matchedVoice) {
@@ -1165,7 +1169,7 @@
                 updateSpeakButtonState(false);
                 finish(false);
               }
-            }, 1200);
+            }, 1800);
           });
         }
 
@@ -1313,16 +1317,24 @@
               return;
             }
 
+            const requestToken = currentSpeechRequestToken;
             updateSpeakButtonState(true);
             const response = await fetch("/speak", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ text: textToSpeak, lang: currentSelectedLang })
             });
+            if (requestToken !== currentSpeechRequestToken) {
+              return;
+            }
             if (!response.ok) throw new Error("Speech generation failed!");
             const audioBlob = await response.blob();
+            if (requestToken !== currentSpeechRequestToken) {
+              return;
+            }
             const audioUrl = URL.createObjectURL(audioBlob);
             currentSpeechAudio = new Audio(audioUrl);
+            currentSpeechAudio.preload = "auto";
             currentSpeechAudio.onended = () => {
               URL.revokeObjectURL(audioUrl);
               currentSpeechAudio = null;
