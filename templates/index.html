@@ -494,7 +494,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center top-nav-actions">
               <li class="nav-item"><a href="/about" class="nav-link" id="navAbout">About Project</a></li>
-              <li class="nav-item"><a href="/contact" class="nav-link" id="navContact">Contact</a></li>
+              <li class="nav-item"><a href="/about#contact" class="nav-link" id="navContact">Contact</a></li>
 
               <!-- Chat Bot Button -->
               <li class="nav-item">
@@ -749,15 +749,18 @@
         // Disease translations dictionary (frontend labels)
         const diseaseTranslations = {
           "Tomato Mosaic Virus": { en: "Tomato Mosaic Virus", hi: "टमाटर मोज़ेक वायरस", kn: "ಟೊಮ್ಯಾಟೊ ಮೋಸೈಕ್ ವೈರಸ್", te: "టమోటా మోజాయిక్ వైరస్", ta: "தக்காளி மோசைக் வைரஸ்" },
-          "Target Spot": { en: "Target Spot", hi: "लक्ष्य धब्बा", kn: "ಲಕ್ಷ್ಯ ದಾಗೆ", te: "లక్ష్య బిಂದುవు", ta: "இலக்கு தழுவல்" },
+          "Target Spot": { en: "Target Spot", hi: "लक्ष्य धब्बा", kn: "ಲಕ್ಷ್ಯ ದಾಗೆ", te: "లక్ష్య బిందువు", ta: "இலக்கு தழுவல்" },
           "Bacterial Spot": { en: "Bacterial Spot", hi: "बैक्टीरियल स्पॉट", kn: "ಜೀವಾಣು ಕಲೆ", te: "బాక్టీరియల్ మచ్చ", ta: "பாக்டீரியல் புள்ளி" },
-          "Early Blight": { en: "Early Blight", hi: "प्रारंभिक जलन", kn: "ಆರಂಭಿಕ ಸುಟ್ಟುಹೋಗುವಿಕೆ", te: "ప్రాథమిక చిటుపు", ta: "ஆரம்ப இரும்பு" },
-          "Late Blight": { en: "Late Blight", hi: "देर से जलन", kn: "ನಂತರದ ಸುಟ್ಟುಹೋಗುವುದು", te: "సమయానంతరం బ్లైట్", ta: "தாமதமான நாசம்" },
+          "Early Blight": { en: "Early Blight", hi: "अगेती झुलसा", kn: "ಆರಂಭಿಕ ಸುಟ್ಟುಹೋಗುವಿಕೆ", te: "ప్రాథమిక చిటుపు", ta: "ஆரம்பக் கருகல் நோய்" },
+          "Late Blight": { en: "Late Blight", hi: "पछेती झुलसा", kn: "ನಂತರದ ಸುಟ್ಟುಹೋಗುವುದು", te: "సమయానంతరం బ్లైట్", ta: "தாமதமான நாசம்" },
           "Leaf Mold": { en: "Leaf Mold", hi: "पत्ती फफूंदी", kn: "ಎಲೆ ಫಂಗೆಸ್", te: "ఆకు దడ", ta: "இலை பூஞ்சை" },
           "Septoria Leaf Spot": { en: "Septoria Leaf Spot", hi: "सेप्टोरिया पत्ती धब्बा", kn: "ಸೆಪ್ಟೋರಿಯಾ ಎಲೆ ಕಲೆ", te: "సెప్టోరియా ఆకు మచ్చ", ta: "செப்டோரியா இலைக் கீற்று" },
           "Spider Mites": { en: "Spider Mites", hi: "मकड़ी के फंदे कीट", kn: "ಚೆಳ್ಳಿ ಕೀಟಗಳು", te: "సపారు పురుగు", ta: "சிலந்தி பூச்சிகள்" },
+          "Tomato Yellow Leaf Curl Virus": { en: "Tomato Yellow Leaf Curl Virus", hi: "टमाटर पर्ण कुंचन वायरस", kn: "ಟೊಮ್ಯಾಟೊ ಎಲೆ ಮುದುರು ವೈರಸ್", te: "టమోటా ఆకు ముడత వైరస్", ta: "தக்காளி இலைச் சுருள் வைரஸ்" },
           "Bacterial Speck": { en: "Bacterial Speck", hi: "बैक्टीरियल स्पेक", kn: "ಬ್ಯಾಕ್ಟೀರಿಯಾದ ಸ್ಪೆಕ್", te: "బాక్టీరియల్ స్పెక్", ta: "பாக்டீரியல் சிறுநீர்" },
-          "Healthy": { en: "Healthy", hi: "स्वस्थ", kn: "ಆರೋಗ್ಯಕರ", te: "ఆరోగ్యకరంగా", ta: "ஆரோக்கியம்" }
+          "Healthy": { en: "Healthy", hi: "स्वस्थ", kn: "ಆರೋಗ್ಯಕರ", te: "ఆరోగ్యకరంగా", ta: "ஆரோக்கியம்" },
+          "Not a Tomato Leaf": { en: "Not a Tomato Leaf", hi: "यह टमाटर की पत्ती नहीं है", kn: "ಇದು ಟೊಮ್ಯಾಟೊ ಎಲೆ ಅಲ್ಲ", te: "ఇది టమోటా ఆకు కాదు", ta: "இது தக்காளி இலை அல்ல" },
+          "Uncertain - Retake Photo": { en: "Uncertain - Retake Photo", hi: "अनिश्चित - फिर से फोटो लें", kn: "ಖಚಿತವಿಲ್ಲ - ಮತ್ತೆ ಫೋಟೋ ತೆಗೆಯಿರಿ", te: "నిశ్చయం లేదు - మళ్ళీ ఫోటో తీయండి", ta: "உறுதியில்லை - மீண்டும் புகைப்படம் எடுக்கவும்" }
         };
 
         function getUiExtras(lang) {
@@ -772,20 +775,36 @@
           return extras[lang] || extras.en;
         }
 
+        // Descriptions already fetched, keyed "label|lang", so switching back is instant
+        const descriptionCache = {};
+
+        async function fetchDescription(label, lang) {
+          const key = `${label}|${lang}`;
+          if (!descriptionCache[key]) {
+            const descRes = await axios.post("/describe", { disease: label, lang });
+            if (descRes.status === 200 && descRes.data && descRes.data.description) {
+              const d = descRes.data.description;
+              descriptionCache[key] = Array.isArray(d) ? d : [d];
+            }
+          }
+          return descriptionCache[key];
+        }
+
         async function refreshPredictionTranslations(lang) {
           if (!lastPredictionLabel) return;
+          const label = lastPredictionLabel;
 
-          const translatedLabel = (diseaseTranslations[lastPredictionLabel] && diseaseTranslations[lastPredictionLabel][lang])
-            ? diseaseTranslations[lastPredictionLabel][lang]
-            : lastPredictionLabel;
+          const translatedLabel = (diseaseTranslations[label] && diseaseTranslations[label][lang])
+            ? diseaseTranslations[label][lang]
+            : label;
           $("#result").text(translatedLabel);
           $("#confidenceScore").text(lastConfidence || "N/A");
 
           try {
-            const descRes = await axios.post("/describe", { disease: lastPredictionLabel, lang });
-            if (descRes.status === 200 && descRes.data && descRes.data.description) {
-              lastDescription = Array.isArray(descRes.data.description) ? descRes.data.description : [descRes.data.description];
-            }
+            const description = await fetchDescription(label, lang);
+            // The user may have switched language or uploaded a new image meanwhile
+            if (lang !== currentLang || label !== lastPredictionLabel) return;
+            if (description) lastDescription = description;
           } catch (err) {
             console.error("Description refresh failed", err);
           }
@@ -1185,8 +1204,15 @@
           handleFile(e.dataTransfer.files[0]);
         });
 
+        const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/bmp"];
+
         function handleFile(f) {
           if (!f) return;
+          input.value = ""; // allow re-selecting the same file
+          if (!validTypes.includes(f.type)) {
+            toastr.error(translations[currentLang].invalidFile);
+            return;
+          }
           file = f;
           showPreview(file);
           sendImage(file);
@@ -1194,11 +1220,6 @@
 
         // === Show Preview ===
         function showPreview(file) {
-          const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/bmp"];
-          if (!validTypes.includes(file.type)) {
-            toastr.error(translations[currentLang].invalidFile);
-            return;
-          }
           const reader = new FileReader();
           reader.onload = e => $("#previewImage").attr("src", e.target.result);
           reader.readAsDataURL(file);
@@ -1209,6 +1230,9 @@
           const formData = new FormData();
           formData.append("file", file);
 
+          stopSpeechPlayback();
+          lastDescription = [];
+          lastPredictionLabel = "";
           $(".loadingArea").show();
           $(".resultArea").hide();
 
@@ -1233,12 +1257,8 @@
               // Fetch description (backend returns array of points)
               let description = [];
               try {
-                const currentSelectedLang = languageSelect.value;
-                const descRes = await axios.post("/describe", { disease: label, lang: currentSelectedLang });
-                if (descRes.status === 200 && descRes.data && descRes.data.description) {
-                  description = descRes.data.description;
-                  lastDescription = Array.isArray(description) ? description : [description];
-                }
+                description = await fetchDescription(label, languageSelect.value);
+                if (description) lastDescription = description;
               } catch (err) {
                 console.error(err);
               }
@@ -1415,7 +1435,8 @@
       // ...existing code...
 
       // Function to populate & show supplement modal.
-      function showSupplement(data = {}) {
+      // Exposed on window so the prediction script (a separate ready handler) can call it.
+      window.showSupplement = function (data = {}) {
         // data expected keys: title, image_url, desc, prevent, simage, sname, buy_link, pred
         $('#supplementModalLabel').text(data.title || (data.sname ? data.sname : 'Supplement Suggestion'));
         $('#supTitle').text(data.title || (data.sname ? data.sname : 'Supplement / Fertilizer'));
@@ -1435,9 +1456,8 @@
 
         // show bootstrap modal
         const modalEl = document.getElementById('supplementModal');
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
-      }
+        bootstrap.Modal.getOrCreateInstance(modalEl).show();
+      };
 
       // --- integrate with existing prediction flow ---
       // After successful prediction, backend may return a `supplement` object.

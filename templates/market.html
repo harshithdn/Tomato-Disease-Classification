@@ -77,9 +77,14 @@
         header h6 {
             font-family: var(--font-secondary);
             font-weight: bold;
-            font-size: 24px;
+            font-size: clamp(16px, 5vw, 24px);
             color: var(--main-color);
             margin-bottom: 0;
+            white-space: normal;
+        }
+        header .navbar-brand {
+            white-space: normal;
+            max-width: 100%;
         }
 
         /* --- Main Content --- */

@@ -6,7 +6,6 @@ import cv2
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from functools import wraps
-from functools import lru_cache
 from flask import Flask, request, render_template, jsonify, send_file, abort
 from flask_cors import CORS
 from deep_translator import GoogleTranslator
@@ -17,6 +16,7 @@ import csv
 import os
 import pandas as pd
 import json
+import threading
 from urllib import request as urllib_request
 from urllib import error as urllib_error
 from dotenv import load_dotenv
@@ -46,54 +46,82 @@ log = setup_logger()
 selected_language = 'en'
 camera = cv2.VideoCapture()
 
-# Load model once at startup (not inside the function)
-MODEL_PATH = 'model/model_tomato.h5'
+# Load models once at startup (not inside the function)
+# - tomato_leaf_disease_prediction.h5 (128x128): ~98% on PlantVillage lab photos,
+#   but guesses confidently on real phone photos and on images that are not leaves.
+# - tomato_mobilenetv2.h5 (224x224, built by train_mobilenet.py): trained on lab
+#   photos, PlantDoc field photos and non-leaf photos; its extra 11th output means
+#   "not a tomato leaf".
+# The MobileNetV2 model rejects non-leaf images; for leaves both models' disease
+# probabilities are averaged, and low-confidence results become UNCERTAIN.
+MODEL_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model')
 
-try:
-    model = load_model(MODEL_PATH)
-except Exception as e:
-    log.error(f"Failed to load model at {MODEL_PATH}. Prediction will fail. Error: {e}")
-    # Define a placeholder model to prevent app crash if model loading fails
-    # In a real app, you would handle this more gracefully.
-    class MockModel:
-        def predict(self, x):
-            return np.zeros((1, 10))
-    model = MockModel()
+
+def _load(name):
+    try:
+        return load_model(os.path.join(MODEL_DIR, name), compile=False)
+    except Exception as e:
+        log.error(f"Failed to load model {name}: {e}")
+        return None
+
+
+model = _load('tomato_leaf_disease_prediction.h5')
+leaf_model = _load('tomato_mobilenetv2.h5')
 
 # Class labels in the same order used during training
+# (flow_from_directory sorts the PlantVillage class folders alphabetically)
 CLASS_NAMES = [
-    "Tomato Mosaic Virus",
-    "Target Spot",
     "Bacterial Spot",
     "Early Blight",
     "Late Blight",
     "Leaf Mold",
     "Septoria Leaf Spot",
     "Spider Mites",
-    "Bacterial Speck",
+    "Target Spot",
+    "Tomato Yellow Leaf Curl Virus",
+    "Tomato Mosaic Virus",
     "Healthy"
 ]
+NOT_A_LEAF = "Not a Tomato Leaf"
+UNCERTAIN = "Uncertain - Retake Photo"
+# Below this confidence the photo is too unclear to name a disease
+MIN_CONFIDENCE = 60.0
+
+
+def _prepare(img_rgb, m):
+    height, width = m.input_shape[1:3]
+    return np.expand_dims(cv2.resize(img_rgb, (width, height)) / 255.0, axis=0)
+
 
 def model_predict(img_bytes):
-    """Predict tomato disease using the trained CNN model."""
+    """Predict tomato disease, or NOT_A_LEAF / UNCERTAIN when no disease can be named."""
     try:
-        # Check if the model is a placeholder
-        if not hasattr(model, 'predict'):
-             raise RuntimeError("Model not loaded. Cannot predict.")
-             
+        if model is None and leaf_model is None:
+            raise RuntimeError("Model not loaded. Cannot predict.")
+
         # Convert bytes to OpenCV image
         npimg = np.frombuffer(img_bytes, np.uint8)
         img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+        if img is None:
+            raise ValueError("Uploaded file is not a readable image")
 
-        # Use the correct training image size (64x64)
-        img = cv2.resize(img, (64, 64))
-        img = img / 255.0
-        img = np.expand_dims(img, axis=0)
+        # The models were trained on RGB images; OpenCV decodes as BGR
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-        # Make prediction
-        preds = model.predict(img)
+        probs = []
+        if leaf_model is not None:
+            leaf_preds = leaf_model.predict(_prepare(img, leaf_model), verbose=0)[0]
+            if np.argmax(leaf_preds) == len(CLASS_NAMES):
+                return {"label": NOT_A_LEAF, "confidence score": round(float(leaf_preds[-1]) * 100, 2)}
+            probs.append(leaf_preds[:len(CLASS_NAMES)] / leaf_preds[:len(CLASS_NAMES)].sum())
+        if model is not None:
+            probs.append(model.predict(_prepare(img, model), verbose=0)[0])
+
+        preds = np.mean(probs, axis=0)
         confidence = float(np.max(preds) * 100)
         label = CLASS_NAMES[np.argmax(preds)]
+        if confidence < MIN_CONFIDENCE:
+            label = UNCERTAIN
 
         return {"label": label, "confidence score": round(confidence, 2)}
     
@@ -187,7 +215,7 @@ DISEASE_DESCRIPTIONS = {
         "9. Resistant Varieties: 'Heinz 1706', F1 hybrids with Cf genes.\n"
         "10. Post-Harvest Impact: Minimal; usually no fruit impact.\n"
         "11. Other Notes: Proper greenhouse humidity control most effective.\n"
-        "12. Recommended Supplement/Product: <a href='/market' class='text-decoration-underline text-success fw-bold' target='_blank'>Virus Special Set (Immuno 1L + Enviro 1L)</a> (Combination product for broad protection)."
+        "12. Recommended Supplement/Product: <a href='/market' class='text-decoration-underline text-success fw-bold' target='_blank'>Kavach Fungicide (Chlorothalonil 75% WP)</a> (Broad-spectrum fungicide for leaf mold and other fungal leaf diseases)."
     ),
     "Septoria Leaf Spot": (
         "1. Symptoms: Small circular spots with dark brown edges and gray centers; yellow halos; premature leaf drop.\n"
@@ -217,6 +245,20 @@ DISEASE_DESCRIPTIONS = {
         "11. Other Notes: Early detection key; pesticide resistance can develop.\n"
         "12. Recommended Supplement/Product: <a href='/market' class='text-decoration-underline text-success fw-bold' target='_blank'>OMITE INSECTICIDE</a> (A potent miticide for controlling mites)."
     ),
+    "Tomato Yellow Leaf Curl Virus": (
+        "1. Symptoms: Upward curling and cupping of leaves, yellow leaf margins, small crumpled leaves, stunted bushy plants and heavy flower drop.\n"
+        "2. Incubation/Progression: Symptoms appear 2 to 4 weeks after infection; plants infected young may produce almost no fruit.\n"
+        "3. Yield Loss & Economic Impact: Losses up to 100 percent when plants are infected early.\n"
+        "4. Environmental Conditions Favoring Disease: Warm weather and high whitefly populations.\n"
+        "5. Spread Mechanism / Vectors: Transmitted by the silverleaf whitefly (Bemisia tabaci) and infected transplants; not seed-borne.\n"
+        "6. Treatment / Chemical Control: No cure for infected plants; control whiteflies with insecticides such as imidacloprid or thiamethoxam.\n"
+        "7. Biological Control / Natural Predators: Encarsia and Eretmocerus parasitic wasps, yellow sticky traps, neem oil.\n"
+        "8. Cultural & Agronomic Practices / Prevention: Use virus-free seedlings, insect-proof nursery nets, reflective mulch, and remove infected plants and weeds.\n"
+        "9. Resistant Varieties: Hybrids carrying Ty-1 or Ty-3 resistance genes.\n"
+        "10. Post-Harvest Impact: Fewer and smaller fruit; fruit quality is usually normal.\n"
+        "11. Other Notes: Remove and destroy infected plants early to stop further spread.\n"
+        "12. Recommended Supplement/Product: <a href='/market' class='text-decoration-underline text-success fw-bold' target='_blank'>Pegasus Insecticide (Diafenthiuron 50% WP)</a> (Controls the whiteflies that spread this virus; fungicides do not treat it)."
+    ),
     "Bacterial Speck": (
         "1. Symptoms: Small dark spots with yellow halos on leaves, stems, and fruit; spots may merge, causing leaf curling.\n"
         "2. Incubation/Progression: Appears 5 to 8 days after infection; can devastate foliage in 2 weeks.\n"
@@ -242,8 +284,22 @@ DISEASE_DESCRIPTIONS = {
         "8. Post-Harvest Impact: Uniform fruit ripening and longer shelf life.\n"
         "9. Other Notes: Optimal soil moisture and organic compost enhance plant health.\n"
         "12. Recommended Supplement/Product: <a href='/market' class='text-decoration-underline text-success fw-bold' target='_blank'>Tomato Organic Fertilizer (Home/Balcony)</a> (For maintaining optimal plant health and maximizing yield)."
+    ),
+    NOT_A_LEAF: (
+        "1. This photo does not look like a tomato leaf, so no disease was predicted.\n"
+        "2. Upload a clear photo of a single tomato leaf.\n"
+        "3. Fill most of the frame with the leaf and keep it in focus.\n"
+        "4. Use daylight and avoid strong shadows or glare."
+    ),
+    UNCERTAIN: (
+        "1. The model is not confident enough to name a disease from this photo.\n"
+        "2. Take a closer photo of one affected leaf, filling most of the frame.\n"
+        "3. Make sure the spots or discoloration are in focus and well lit.\n"
+        "4. If symptoms keep spreading, consult a local agriculture extension officer."
     )
 }
+# Labels that are not diseases: no YouTube treatment link is added for them
+NON_DISEASE_LABELS = {NOT_A_LEAF, UNCERTAIN}
 
 # -------------------- API Key Setup --------------------
 API_KEY = os.getenv('API_KEY', 'free-access-key')
@@ -316,6 +372,8 @@ def predict():
 
         uploaded = request.files['file']
         img_bytes = uploaded.read()
+        if cv2.imdecode(np.frombuffer(img_bytes, np.uint8), cv2.IMREAD_COLOR) is None:
+            return create_error_response("Uploaded file is not a valid image", 400)
 
         try:
             preds = model_predict(img_bytes)
@@ -341,6 +399,10 @@ def predict():
                 if cand in SUPPLEMENTS:
                     supplement = SUPPLEMENTS[cand]
                     break
+            # CSV keys look like "Tomato___Bacterial_spot"; compare on letters only
+            if not supplement:
+                norm = lambda s: re.sub(r"^tomato", "", re.sub(r"[^a-z]", "", s.lower()))
+                supplement = next((v for k, v in SUPPLEMENTS.items() if norm(k) == norm(label)), None)
             # fallback substring match
             if not supplement:
                 for k, v in SUPPLEMENTS.items():
@@ -368,16 +430,55 @@ def predict():
         log.exception("Prediction error")
         return create_error_response("Error during prediction", 500)
 
-# small cached translator wrapper
-@lru_cache(maxsize=2048)
+# Translations are stored on disk so switching language never waits on Google
+# Translate (live calls take 5-40s and get rate-limited). Pre-fill the file with
+# `python warm_translations.py`; any text missing from it is translated once and saved.
+TRANSLATIONS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'translations_cache.json')
+_translations_lock = threading.Lock()
+try:
+    with open(TRANSLATIONS_PATH, encoding='utf-8') as f:
+        TRANSLATIONS = json.load(f)
+except (OSError, ValueError):
+    TRANSLATIONS = {}
+
+
+def _save_translation(text: str, target_lang: str, translated: str) -> None:
+    with _translations_lock:
+        TRANSLATIONS.setdefault(target_lang, {})[text] = translated
+        tmp = TRANSLATIONS_PATH + '.tmp'
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(TRANSLATIONS, f, ensure_ascii=False, indent=1, sort_keys=True)
+        os.replace(tmp, TRANSLATIONS_PATH)
+
+
 def _translate_cached(text: str, target_lang: str) -> str:
     if not text or target_lang == 'en':
         return text
+    cached = TRANSLATIONS.get(target_lang, {}).get(text)
+    if cached:
+        return cached
     try:
-        return GoogleTranslator(source='en', target=target_lang).translate(text)
+        translated = GoogleTranslator(source='en', target=target_lang).translate(text)
+        if translated:
+            _save_translation(text, target_lang, translated)
+            return translated
     except Exception as e:
         log.debug(f"_translate_cached error: {e}")
-        return text
+
+    # Google Translate can be rate-limited or blocked; fall back to the LLM API if configured
+    language_name = LANGUAGE_NAMES.get(target_lang)
+    if language_name:
+        translated = call_llm(
+            f"Translate the user's text from English to {language_name}. "
+            "Keep the numbering, line breaks and any placeholders like __LINK_0__ exactly as they are. "
+            "Reply with the translation only.",
+            text,
+            temperature=0,
+        )
+        if translated:
+            _save_translation(text, target_lang, translated)
+            return translated
+    return text
 
 
 YOUTUBE_LANGUAGE_URLS = {
@@ -444,6 +545,14 @@ def describe_disease():
             return jsonify({"description": f"No detailed description available for {disease}.", "is_html": False})
 
         translated_body = translate_text_preserve_links(description, lang)
+        if disease in NON_DISEASE_LABELS:
+            points = [p.strip() for p in re.split(r'(?:^|\n)\d+\.\s', translated_body) if p.strip()]
+            return jsonify({
+                "description": points,
+                "description_points": points,
+                "description_html": translated_body,
+                "is_html": False
+            })
         youtube_point = build_youtube_point(lang)
         translated_html = f"{translated_body}\n{youtube_point}"
 
@@ -695,7 +804,11 @@ def build_chatbot_reply(message: str, lang: str) -> str:
     return reply
 
 
-def query_chatbot_llm(message: str, lang: str) -> str | None:
+LANGUAGE_NAMES = {"en": "English", "hi": "Hindi", "kn": "Kannada", "te": "Telugu", "ta": "Tamil"}
+
+
+def call_llm(system_prompt: str, user_message: str, temperature: float = 0.4) -> str | None:
+    """Send one chat completion request to the configured LLM API; None if unavailable."""
     api_key = (
         os.getenv("OPENROUTER_API_KEY")
         or os.getenv("OPENAI_API_KEY")
@@ -705,24 +818,16 @@ def query_chatbot_llm(message: str, lang: str) -> str | None:
     if not api_key:
         return None
 
-    normalized_lang = (lang or "en").split("-")[0].lower()
     api_url = os.getenv("CHATBOT_API_URL", "https://openrouter.ai/api/v1/chat/completions")
     model = os.getenv("CHATBOT_MODEL", "openai/gpt-4o-mini")
-
-    system_prompt = (
-        "You are AgriBot, a helpful agriculture assistant. "
-        "Answer farming, crop, soil, irrigation, fertilizer, pest, disease, weather, market, and harvest questions clearly and accurately. "
-        f"Reply only in language code '{normalized_lang}'. "
-        "Keep answers practical and directly useful for farmers."
-    )
 
     payload = {
         "model": model,
         "messages": [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": message},
+            {"role": "user", "content": user_message},
         ],
-        "temperature": 0.4,
+        "temperature": temperature,
     }
 
     req = urllib_request.Request(
@@ -748,6 +853,18 @@ def query_chatbot_llm(message: str, lang: str) -> str | None:
         log.debug(f"Chatbot API error: {e}")
 
     return None
+
+
+def query_chatbot_llm(message: str, lang: str) -> str | None:
+    normalized_lang = (lang or "en").split("-")[0].lower()
+    language_name = LANGUAGE_NAMES.get(normalized_lang, "English")
+    system_prompt = (
+        "You are AgriBot, a helpful agriculture assistant. "
+        "Answer farming, crop, soil, irrigation, fertilizer, pest, disease, weather, market, and harvest questions clearly and accurately. "
+        f"Always reply in {language_name}, written in its native script, regardless of the language of the question. "
+        "Keep answers practical and directly useful for farmers."
+    )
+    return call_llm(system_prompt, message)
 
 
 @app.route('/chat-bot/api', methods=['POST'])
