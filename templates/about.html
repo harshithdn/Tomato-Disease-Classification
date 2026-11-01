@@ -8,354 +8,241 @@
     <title>About | Tomato Disease Prediction</title>
 
     <!-- Fonts & Libraries -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Red+Rose:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/theme.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Custom CSS Styles -->
+
+    <!-- Page styles (About) — builds on /static/theme.css -->
     <style>
-        /* --- CSS Variables --- */
-        :root {
-            --green-dark: #2e7d32; /* Primary Green */
-            --green-light: #4caf50;
-            --green-accent: #e8f5e9;
-            --font-primary: 'Montserrat', sans-serif;
-            --font-secondary: 'Red Rose', cursive;
-            --text-dark: #222;
+        body.tc {
+            font-family: "Poppins", "Noto Sans", "Noto Sans Kannada", "Noto Sans Telugu", "Noto Sans Devanagari", "Noto Sans Tamil", system-ui, -apple-system, "Segoe UI", sans-serif;
+            overflow-x: hidden;
         }
+        body.tc a { text-decoration: none; }
+        img { max-width: 100%; }
 
-        /* --- Global Styles --- */
-        body {
-            font-family: var(--font-primary);
-            background: var(--green-accent);
-            color: var(--text-dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+        .tc-wrap { max-width: 1140px; margin: 0 auto; padding: 0 16px; }
+        .tc-section { padding: 64px 0; }
+        .tc-section-head { text-align: center; max-width: 760px; margin: 0 auto 36px; }
+        .tc-kicker {
+            display: inline-block;
+            font-size: .78rem; font-weight: 600; letter-spacing: .6px; text-transform: uppercase;
+            color: var(--tc-green-700);
+            background: var(--tc-green-100);
+            padding: 5px 12px; border-radius: 999px; margin-bottom: 12px;
         }
-
-        a {
-            text-decoration: none;
-            color: inherit;
+        .tc-h2 {
+            font-weight: 700;
+            font-size: clamp(1.6rem, 4.2vw, 2.3rem);
+            color: var(--tc-ink);
+            line-height: 1.25;
+            margin-bottom: 12px;
         }
+        .tc-lead { color: var(--tc-muted); font-size: 1.02rem; line-height: 1.75; margin: 0; }
 
-        /* --- Header / Navigation --- */
-        header {
-            background: var(--green-dark);
+        /* Nav brand */
+        .tc-brand-text small { display: block; font-weight: 500; font-size: .72rem; color: var(--tc-muted); letter-spacing: .2px; }
+
+        /* ---------- Hero ---------- */
+        .tc-hero { padding: 56px 0 64px; }
+        .tc-hero .hero-grid {
+            display: grid; gap: 32px; align-items: center;
+            grid-template-columns: 1fr;
+            position: relative; z-index: 1;
+        }
+        #about_hero_h2 {
+            font-weight: 700;
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            line-height: 1.15;
+            margin: 16px 0 14px;
             color: #fff;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1020; /* Higher Z-index */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+        #about_hero_p {
+            color: rgba(255,255,255,.86);
+            font-size: 1.05rem; line-height: 1.75;
+            max-width: 620px;
+            margin-bottom: 28px;
+        }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+        .tc-hero .tc-btn-light {
+            background: #fff; color: var(--tc-green-800) !important;
+            box-shadow: 0 8px 20px rgba(0,0,0,.18);
+        }
+        .tc-hero .tc-btn-light:hover { background: var(--tc-green-50); }
+        .tc-hero .tc-btn-outline {
+            background: transparent; color: #fff !important;
+            border: 1px solid rgba(255,255,255,.45);
+        }
+        .tc-hero .tc-btn-outline:hover { background: rgba(255,255,255,.12); }
+        .hero-figure {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 24px 50px rgba(0,0,0,.28);
+            border: 6px solid rgba(255,255,255,.14);
+            max-width: 440px; margin: 0 auto;
+        }
+        .hero-figure img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+        .hero-badge {
+            position: absolute; left: 14px; bottom: 14px;
+            background: rgba(255,255,255,.95); color: var(--tc-green-800);
+            border-radius: 999px; padding: 7px 14px;
+            font-size: .82rem; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 8px;
+            box-shadow: 0 6px 16px rgba(0,0,0,.15);
+        }
+        .hero-badge i { color: var(--tc-green-600); }
 
-        header h6 {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: white;
-            letter-spacing: 1px;
-        }
-
-        header .nav-link {
-            color: white !important;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
-        header .nav-link:hover {
-            color: #c8e6c9 !important;
-        }
-
-        .site-nav {
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        header #languageSelect {
-            border: 1px solid white;
-            color: var(--green-dark);
-            background-color: white;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .hero-image {
-            width: 100%;
-            max-width: 460px;
-        }
-
-        /* --- Hero Section --- */
-        #aboutHeader {
-            background: linear-gradient(rgba(46, 125, 50, 0.7), rgba(46, 125, 50, 0.7)), url('../static/images/tomato-bg.jpg') center/cover no-repeat;
-            color: white;
-            padding: 100px 0;
-            text-align: left;
-        }
-
-        #aboutHeader h2 {
-            font-family: var(--font-secondary);
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        #aboutHeader p {
-            font-size: 1.15rem;
-            line-height: 1.6;
-            margin: 20px 0 40px;
-        }
-
-        #aboutHeader a {
-            background: var(--green-light);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        #aboutHeader a:hover {
-            background: #66bb6a;
-        }
-        
-        #aboutHeader img {
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        /* --- About Section --- */
-        #about {
-            padding: 100px 0;
-            background: white;
-        }
-
-        #about h1 {
-            text-align: center;
-            font-family: var(--font-secondary);
-            font-weight: 700;
-            color: var(--green-dark);
-            margin-bottom: 50px;
-            font-size: 2.5rem;
-        }
-
+        /* ---------- Feature cards ---------- */
+        .feature-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
         .feature-card {
-            background: var(--green-accent);
-            border-radius: 12px;
-            padding: 30px;
-            text-align: center;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            min-height: 250px; /* Ensure uniform height for cards */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            padding: 28px 24px;
+            height: 100%;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .feature-card:hover { transform: translateY(-4px); box-shadow: var(--tc-shadow-lg); }
+        .tc-icon {
+            width: 54px; height: 54px; border-radius: 16px;
+            display: grid; place-items: center;
+            font-size: 1.35rem;
+            background: var(--tc-green-100); color: var(--tc-green-700);
+            margin-bottom: 18px;
+        }
+        .tc-icon.is-tomato { background: var(--tc-tomato-50); color: var(--tc-tomato); }
+        .tc-icon.is-amber { background: #fef3c7; color: #b45309; }
+        .feature-card h5 { font-weight: 600; font-size: 1.1rem; margin-bottom: 8px; color: var(--tc-ink); }
+        .feature-card p { color: var(--tc-muted); margin: 0; line-height: 1.7; font-size: .95rem; }
+
+        /* ---------- Prevention + Why ---------- */
+        .info-grid { display: grid; gap: 20px; grid-template-columns: 1fr; margin-top: 40px; }
+        .info-card { padding: 28px 24px; height: 100%; display: flex; flex-direction: column; }
+        .info-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+        .info-card-head .tc-icon { margin: 0; flex: 0 0 auto; width: 46px; height: 46px; border-radius: 14px; font-size: 1.15rem; }
+        .info-card h5 { font-weight: 600; font-size: 1.1rem; margin: 0; color: var(--tc-ink); line-height: 1.4; }
+        #prevent_steps { list-style: none; padding: 0; margin: 0 0 22px; display: grid; gap: 8px; }
+        #prevent_steps li {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 14px;
+            background: var(--tc-green-50);
+            border: 1px solid var(--tc-green-100);
+            border-radius: var(--tc-radius-sm);
+            font-size: .94rem; line-height: 1.5; color: var(--tc-ink);
+        }
+        #prevent_steps li i { color: var(--tc-green-600) !important; margin: 3px 0 0 !important; flex: 0 0 auto; }
+        .info-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; }
+        .info-actions .tc-btn { padding: 9px 18px; font-size: .9rem; }
+        #why_content { color: var(--tc-muted); line-height: 1.8; margin: 0 0 20px; }
+        .why-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: auto; }
+        .why-stat {
+            background: var(--tc-bg); border: 1px solid var(--tc-line); border-radius: var(--tc-radius-sm);
+            padding: 14px 8px; text-align: center; color: var(--tc-green-700);
+        }
+        .why-stat i { font-size: 1.25rem; }
+
+        /* ---------- Tech stack ---------- */
+        #dataset { background: var(--tc-surface); border-top: 1px solid var(--tc-line); border-bottom: 1px solid var(--tc-line); }
+        .tech-strip {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+            margin: 0 auto 28px; padding: 0; list-style: none;
+        }
+        .tech-pill {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--tc-bg);
+            border: 1px solid var(--tc-line);
+            border-radius: 999px;
+            padding: 8px 16px 8px 8px;
+            font-weight: 600; font-size: .9rem; color: var(--tc-ink);
+        }
+        .tech-pill .dot {
+            width: 32px; height: 32px; border-radius: 50%;
+            display: grid; place-items: center;
+            background: var(--tc-green-100); color: var(--tc-green-700); font-size: .9rem;
+        }
+        .tech-pill .dot.is-tomato { background: var(--tc-tomato-50); color: var(--tc-tomato); }
+        .tech-pill .dot.is-amber { background: #fef3c7; color: #b45309; }
+        .tech-card { max-width: 860px; margin: 0 auto; padding: 24px; }
+        #tech_stack_p { color: var(--tc-muted); line-height: 1.85; margin: 0; text-align: center; font-size: 1rem; }
+        #tech_stack_p strong {
+            color: var(--tc-green-800);
+            background: var(--tc-green-100);
+            padding: 1px 8px; border-radius: 6px; font-weight: 600;
         }
 
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        /* ---------- Contact ---------- */
+        .contact-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+        .contact-card {
+            padding: 22px 20px;
+            display: flex; align-items: center; gap: 16px;
+            transition: transform .2s ease, box-shadow .2s ease;
+            min-width: 0;
         }
-
-        .feature-card i {
-            font-size: 3rem;
-            color: var(--green-dark);
-            margin-bottom: 15px;
+        .contact-card:hover { transform: translateY(-3px); box-shadow: var(--tc-shadow-lg); }
+        .contact-card .tc-icon { margin: 0; flex: 0 0 auto; width: 48px; height: 48px; border-radius: 14px; font-size: 1.15rem; }
+        .contact-card .meta { min-width: 0; }
+        .contact-card .label { display: block; font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--tc-muted); margin-bottom: 2px; }
+        .contact-card .value, .contact-card .value a {
+            font-weight: 600; color: var(--tc-ink); margin: 0;
+            overflow-wrap: anywhere; word-break: break-word;
         }
+        .contact-card a.value:hover { color: var(--tc-green-700); }
 
-        /* Info Boxes */
-        .info-box {
-            background: #f9fff9;
-            border-left: 5px solid var(--green-light);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            margin-top: 30px;
+        /* ---------- Footer ---------- */
+        .tc-footer .footer-inner {
+            max-width: 1140px; margin: 0 auto;
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
         }
-        
-        .info-box h5 {
-            color: var(--green-dark);
-            font-weight: 700;
-            margin-bottom: 15px;
+        .tc-footer .social { display: flex; gap: 10px; list-style: none; margin: 0; padding: 0; }
+        .tc-footer .social a {
+            width: 38px; height: 38px; border-radius: 50%;
+            display: grid; place-items: center;
+            background: rgba(255,255,255,.1); color: #fff;
+            transition: background .2s ease, transform .2s ease;
         }
+        .tc-footer .social a:hover { background: rgba(255,255,255,.2); transform: translateY(-2px); }
 
-        /* Dataset/Tech Section */
-        #dataset {
-            background: var(--green-dark);
-            color: white;
-            padding: 80px 0;
+        /* ---------- Breakpoints ---------- */
+        @media (min-width: 576px) {
+            .contact-grid { grid-template-columns: repeat(2, 1fr); }
         }
-
-        #dataset h2 {
-            text-align: center;
-            font-family: var(--font-secondary);
-            margin-bottom: 30px;
-            font-weight: 700;
-            font-size: 2.5rem;
+        @media (min-width: 768px) {
+            .tc-section { padding: 84px 0; }
+            .feature-grid { grid-template-columns: repeat(3, 1fr); }
+            .info-grid { grid-template-columns: repeat(2, 1fr); }
+            .contact-grid { grid-template-columns: repeat(3, 1fr); }
+            .tech-card { padding: 32px; }
+            .tc-footer .footer-inner { flex-direction: row; justify-content: space-between; text-align: left; }
         }
-        
-        #dataset p {
-            font-size: 1.1rem;
-            line-height: 1.7;
+        @media (min-width: 992px) {
+            .tc-hero { padding: 88px 0 96px; }
+            .tc-hero .hero-grid { grid-template-columns: 1.25fr 1fr; gap: 56px; }
+            .hero-figure { margin: 0 0 0 auto; }
         }
-        
-        #dataset strong {
-            color: #a5d6a7; /* Light accent for tech words */
-        }
-
-        /* Contact Section */
-        #contact {
-            padding: 100px 0;
-            background: var(--green-accent);
-        }
-
-        #contact h2 {
-            font-family: var(--font-secondary);
-            font-weight: 700;
-            color: var(--green-dark);
-            margin-bottom: 10px;
-        }
-
-        .contactRow .singleItem {
-            text-align: center;
-            padding: 30px 0;
-            transition: 0.3s;
-        }
-
-        .contactRow .singleItem:hover {
-            transform: translateY(-5px);
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .contactRow .singleItem i {
-            color: var(--green-dark) !important;
-            font-size: 2.5rem;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--green-dark);
-            color: white;
-            padding: 20px 0;
-            margin-top: auto; /* Sticky footer */
-        }
-
-        footer ul {
-            list-style: none;
-            display: flex;
-            justify-content: end;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 0;
-            margin: 0;
-        }
-
-        footer img {
-            width: 28px;
-            filter: brightness(0) invert(1); /* Makes icons white */
-            transition: 0.3s;
-        }
-
-        footer img:hover {
-            transform: scale(1.15);
-            filter: brightness(0) invert(0.8); /* Slight gray on hover */
-        }
-        
-        /* Responsive */
-        @media (max-width: 991.98px) {
-            #aboutHeader h2 { font-size: 3rem; }
-            #aboutHeader { text-align: center; }
-            #aboutHeader img { margin-top: 30px; }
-            header .nav-link { padding: 5px 10px !important; }
-            .site-nav {
-                justify-content: center;
-                margin-top: 1rem;
-            }
-            header .container {
-                flex-direction: column;
-                align-items: center !important;
-            }
-            footer .container {
-                gap: 1rem;
-            }
-        }
-
-        @media (max-width: 767.98px) {
-            #aboutHeader {
-                padding: 72px 0;
-            }
-
-            #aboutHeader h2 {
-                font-size: 2.35rem;
-            }
-
-            #aboutHeader p,
-            #dataset p,
-            #contact_p {
-                font-size: 1rem;
-            }
-
-            #about,
-            #contact {
-                padding: 72px 0;
-            }
-
-            .feature-card,
-            .info-box {
-                padding: 24px;
-            }
-
-            footer .container {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
         @media (max-width: 575.98px) {
-            header h6 {
-                font-size: 1.2rem;
-            }
-
-            .site-nav {
-                flex-direction: column;
-                width: 100%;
-                align-items: stretch;
-            }
-
-            .site-nav .nav-item,
-            .site-nav .nav-link,
-            .site-nav #languageSelect {
-                width: 100%;
-                text-align: center;
-            }
-
-            #aboutHeader h2,
-            #about h1,
-            #dataset h2,
-            #contact h2 {
-                font-size: 2rem;
-            }
+            .tc-brand-text small { display: none; }
+            .hero-actions .tc-btn { flex: 1 1 auto; }
         }
     </style>
 </head>
 
-<body data-page="about">
-    <header>
-        <div class="container d-flex justify-content-between align-items-center">
-            <h6>HARSHITH</h6>
-            <ul class="nav align-items-center site-nav">
-                <li class="nav-item"><a class="nav-link text-white" href="/">Predict</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="/about">About</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="#contact">Contact</a></li>
-                
-                <li class="nav-item ms-3">
-                    <select id="languageSelect" class="form-select form-select-sm w-auto">
+<body class="tc" data-page="about">
+    <header class="tc-nav">
+        <div class="tc-nav-inner">
+            <a class="tc-brand" href="/">
+                <span class="tc-brand-mark" aria-hidden="true">🍅</span>
+                <span class="tc-brand-text">Tomato Care<small>Leaf disease predictor</small></span>
+            </a>
+            <ul class="tc-links">
+                <li><a id="nav_predict" href="/">Predict</a></li>
+                <li><a href="/chat-bot">Chat</a></li>
+                <li><a href="/market">Market</a></li>
+                <li><a class="active" id="nav_about" href="/about" aria-current="page">About</a></li>
+                <li><a id="nav_contact" href="#contact">Contact</a></li>
+                <li>
+                    <select id="languageSelect" class="tc-lang" aria-label="Language">
                       <option value="en">English</option>
                       <option value="kn">ಕನ್ನಡ (Kannada)</option>
                       <option value="te">తెలుగు (Telugu)</option>
@@ -369,63 +256,76 @@
 
     <main>
         <!-- Hero -->
-        <section id="aboutHeader">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-7" data-aos="fade-right">
+        <section id="aboutHeader" class="tc-hero">
+            <div class="tc-wrap">
+                <div class="hero-grid">
+                    <div data-aos="fade-up">
+                        <span class="tc-eyebrow"><i class="fa-solid fa-leaf"></i> AI for farmers</span>
                         <h2 id="about_hero_h2">Tomato Disease Prediction</h2>
                         <p id="about_hero_p">
                             This intelligent system leverages deep learning to help farmers and gardeners quickly identify tomato leaf diseases with just an image.
                             Our mission is to promote healthier crops and sustainable farming through AI innovation.
                         </p>
-                        <a href="#about" id="about_hero_link">Learn More</a>
+                        <div class="hero-actions">
+                            <a href="#about" id="about_hero_link" class="tc-btn tc-btn-light">Learn More</a>
+                            <a href="/" class="tc-btn tc-btn-outline" aria-label="Predict"><i class="fa-solid fa-camera"></i> <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
                     </div>
-                    <div class="col-lg-5 text-center" data-aos="fade-left">
-                        <img src="../static/images/tomato.jpg" alt="Tomato Leaf" class="img-fluid rounded hero-image">
+                    <div data-aos="fade-up" data-aos-delay="100">
+                        <div class="hero-figure">
+                            <img src="../static/images/tomato.jpg" alt="Tomato Leaf">
+                            <span class="hero-badge" aria-hidden="true"><i class="fa-solid fa-brain"></i> CNN</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- About Project -->
-        <section id="about">
-            <div class="container">
-                <h1 id="about_section_h1" data-aos="fade-up">About the Project</h1>
-                <p id="about_section_p" class="text-center mb-5 lead" data-aos="fade-up" style="max-width: 900px; margin: 0 auto;">
-                    Our deep learning model is trained using a comprehensive tomato leaf dataset. It utilizes Convolutional Neural Networks (CNNs) 
-                    on resized and augmented images to enable high-accuracy classification of common tomato diseases and healthy leaves.
-                </p>
+        <section id="about" class="tc-section">
+            <div class="tc-wrap">
+                <div class="tc-section-head">
+                    <span class="tc-kicker" aria-hidden="true"><i class="fa-solid fa-seedling"></i></span>
+                    <h1 id="about_section_h1" class="tc-h2" data-aos="fade-up">About the Project</h1>
+                    <p id="about_section_p" class="tc-lead" data-aos="fade-up">
+                        Our deep learning model is trained using a comprehensive tomato leaf dataset. It utilizes Convolutional Neural Networks (CNNs)
+                        on resized and augmented images to enable high-accuracy classification of common tomato diseases and healthy leaves.
+                    </p>
+                </div>
 
-                <div class="row g-5 mt-4">
-                    <div class="col-md-4" data-aos="zoom-in">
-                        <div class="feature-card">
-                            <i class="fa-solid fa-brain"></i>
+                <div class="feature-grid">
+                    <div data-aos="fade-up">
+                        <div class="tc-card feature-card">
+                            <div class="tc-icon"><i class="fa-solid fa-brain"></i></div>
                             <h5 id="feature_1_h5">AI-Powered Detection</h5>
                             <p id="feature_1_p">Utilizes deep learning to automatically detect tomato leaf diseases from uploaded images with speed and accuracy.</p>
                         </div>
                     </div>
-                    <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
-                        <div class="feature-card">
-                            <i class="fa-solid fa-database"></i>
+                    <div data-aos="fade-up" data-aos-delay="100">
+                        <div class="tc-card feature-card">
+                            <div class="tc-icon is-tomato"><i class="fa-solid fa-database"></i></div>
                             <h5 id="feature_2_h5">Rich Dataset & CNN</h5>
                             <p id="feature_2_p">Trained on thousands of images collected from trusted agricultural datasets for robust, high-performance classification.</p>
                         </div>
                     </div>
-                    <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
-                        <div class="feature-card">
-                            <i class="fa-solid fa-seedling"></i>
+                    <div data-aos="fade-up" data-aos-delay="200">
+                        <div class="tc-card feature-card">
+                            <div class="tc-icon is-amber"><i class="fa-solid fa-seedling"></i></div>
                             <h5 id="feature_3_h5">Sustainable Farming</h5>
                             <p id="feature_3_p">Designed to assist farmers and home gardeners in maintaining healthy tomato crops, reducing pesticide use.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Prevent Plant Disease -->
-                <div class="row mt-5">
-                    <div class="col-lg-6 mx-auto" data-aos="fade-up">
-                        <div class="info-box" style="height: 100%;">
-                            <h5 id="prevent_title" class="mb-3">Prevent Plant Disease: Steps to Follow</h5>
-                            <ol id="prevent_steps" class="list-unstyled">
+                <div class="info-grid">
+                    <!-- Prevent Plant Disease -->
+                    <div data-aos="fade-up">
+                        <div class="tc-card info-card">
+                            <div class="info-card-head">
+                                <div class="tc-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                                <h5 id="prevent_title">Prevent Plant Disease: Steps to Follow</h5>
+                            </div>
+                            <ol id="prevent_steps">
                                 <li><i class="fa-solid fa-circle-check text-success me-2"></i> Follow Good Sanitation Practices.</li>
                                 <li><i class="fa-solid fa-circle-check text-success me-2"></i> Fertilize to Keep Your Plants Healthy.</li>
                                 <li><i class="fa-solid fa-circle-check text-success me-2"></i> Inspect Plants Before You Bring Them Home.</li>
@@ -434,24 +334,32 @@
                                 <li><i class="fa-solid fa-circle-check text-success me-2"></i> Provide Good Air Circulation.</li>
                                 <li><i class="fa-solid fa-circle-check text-success me-2"></i> Remove Diseased Stems and Foliage promptly.</li>
                             </ol>
-                            <a id="prevent_more" target="_blank" href="https://www.thespruce.com/prevent-plant-diseases-in-your-garden-2539511" class="d-inline-block mt-3">
-                                <button type="button" class="btn btn-sm btn-outline-success px-4">More Info</button>
-                            </a>
-                            <a id="prevent_video_link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+english" class="d-inline-block mt-3 ms-2">
-                                <button id="prevent_video_label" type="button" class="btn btn-sm btn-success px-4">Watch Video</button>
-                            </a>
+                            <div class="info-actions">
+                                <a id="prevent_video_link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/results?search_query=tomato+plant+disease+prevention+english" class="tc-btn tc-btn-accent">
+                                    <i class="fa-brands fa-youtube" aria-hidden="true"></i><span id="prevent_video_label">Watch Video</span>
+                                </a>
+                                <a id="prevent_more" target="_blank" rel="noopener noreferrer" href="https://www.thespruce.com/prevent-plant-diseases-in-your-garden-2539511" class="tc-btn tc-btn-ghost">More Info</a>
+                            </div>
                         </div>
                     </div>
-                
+
                     <!-- Why Detection is Necessary -->
-                    <div class="col-lg-6 mx-auto" data-aos="fade-up" data-aos-delay="100">
-                        <div class="info-box" style="height: 100%;">
-                            <h5 id="why_title" class="mb-3">Why is it Necessary to Detect Disease?</h5>
+                    <div data-aos="fade-up" data-aos-delay="100">
+                        <div class="tc-card info-card">
+                            <div class="info-card-head">
+                                <div class="tc-icon is-tomato"><i class="fa-solid fa-magnifying-glass"></i></div>
+                                <h5 id="why_title">Why is it Necessary to Detect Disease?</h5>
+                            </div>
                             <p id="why_content">
-                                Accurate diagnosis is the most important aspect of plant pathology. Without proper identification of the disease and the causal agent, 
-                                control measures are often ineffective, wasting resources and leading to further crop losses. This system provides the transparency needed 
+                                Accurate diagnosis is the most important aspect of plant pathology. Without proper identification of the disease and the causal agent,
+                                control measures are often ineffective, wasting resources and leading to further crop losses. This system provides the transparency needed
                                 to detect diseases early, often before symptoms are clearly visible, ensuring timely and effective intervention.
                             </p>
+                            <div class="why-stats" aria-hidden="true">
+                                <div class="why-stat"><i class="fa-solid fa-stopwatch"></i></div>
+                                <div class="why-stat"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                                <div class="why-stat"><i class="fa-solid fa-wheat-awn"></i></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -459,55 +367,71 @@
         </section>
 
         <!-- Dataset & Tech -->
-        <section id="dataset">
-            <div class="container">
-                <h2 id="tech_stack_h2" data-aos="fade-up">Technology Stack</h2>
-                <div class="row justify-content-center mt-4" data-aos="fade-up">
-                    <div class="col-md-10 text-center">
-                        <p id="tech_stack_p">
-                            The core detection model is powered by modern deep learning frameworks: <strong>TensorFlow</strong> and <strong>Keras</strong>, 
-                            with image preprocessing handled by <strong>OpenCV</strong>. The responsive web interface is built using <strong>Flask</strong> (Python) and 
-                            the mobile-first framework <strong>Bootstrap 5</strong>. This combination ensures a reliable, fast, and scalable system for real-time predictions.
-                        </p>
-                        
-                    </div>
+        <section id="dataset" class="tc-section">
+            <div class="tc-wrap">
+                <div class="tc-section-head">
+                    <span class="tc-kicker" aria-hidden="true"><i class="fa-solid fa-microchip"></i></span>
+                    <h2 id="tech_stack_h2" class="tc-h2" data-aos="fade-up">Technology Stack</h2>
+                </div>
+                <ul class="tech-strip" data-aos="fade-up">
+                    <li class="tech-pill"><span class="dot is-amber"><i class="fa-solid fa-brain"></i></span>TensorFlow</li>
+                    <li class="tech-pill"><span class="dot is-tomato"><i class="fa-solid fa-layer-group"></i></span>Keras</li>
+                    <li class="tech-pill"><span class="dot"><i class="fa-solid fa-eye"></i></span>OpenCV</li>
+                    <li class="tech-pill"><span class="dot"><i class="fa-brands fa-python"></i></span>Flask</li>
+                    <li class="tech-pill"><span class="dot is-tomato"><i class="fa-brands fa-bootstrap"></i></span>Bootstrap 5</li>
+                </ul>
+                <div class="tc-card tech-card" data-aos="fade-up">
+                    <p id="tech_stack_p">
+                        The core detection model is powered by modern deep learning frameworks: <strong>TensorFlow</strong> and <strong>Keras</strong>,
+                        with image preprocessing handled by <strong>OpenCV</strong>. The responsive web interface is built using <strong>Flask</strong> (Python) and
+                        the mobile-first framework <strong>Bootstrap 5</strong>. This combination ensures a reliable, fast, and scalable system for real-time predictions.
+                    </p>
                 </div>
             </div>
         </section>
 
         <!-- Contact -->
-        <section id="contact">
-            <div class="container text-center">
-                <h2 id="contact_h2" data-aos="fade-up">Connect With Me</h2>
-                <p id="contact_p" data-aos="fade-up" data-aos-delay="100" class="lead text-muted">Feel free to reach out for collaboration, suggestions, or queries.</p>
+        <section id="contact" class="tc-section">
+            <div class="tc-wrap">
+                <div class="tc-section-head">
+                    <span class="tc-kicker" aria-hidden="true"><i class="fa-solid fa-paper-plane"></i></span>
+                    <h2 id="contact_h2" class="tc-h2" data-aos="fade-up">Connect With Me</h2>
+                    <p id="contact_p" class="tc-lead" data-aos="fade-up" data-aos-delay="100">Feel free to reach out for collaboration, suggestions, or queries.</p>
+                </div>
 
-                <div class="row contactRow mt-5 g-4">
-                    <div class="col-md-4 singleItem" data-aos="zoom-in">
-                        <i class="fa-solid fa-location-dot fa-2x mb-3"></i>
-                        <p id="contact_location" class="fw-semibold">Bangalore, Karnataka, India</p>
+                <div class="contact-grid">
+                    <div class="tc-card contact-card" data-aos="fade-up">
+                        <div class="tc-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="meta">
+                            <p id="contact_location" class="value">Bangalore, Karnataka, India</p>
+                        </div>
                     </div>
-                    <div class="col-md-4 singleItem" data-aos="zoom-in" data-aos-delay="100">
-                        <i class="fa-solid fa-phone fa-2x mb-3"></i>
-                        <a id="contact_phone_link" href="tel:+91 7483367339" class="d-block fw-semibold">+91 7483367339</a>
+                    <div class="tc-card contact-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="tc-icon is-amber"><i class="fa-solid fa-phone"></i></div>
+                        <div class="meta">
+                            <a id="contact_phone_link" href="tel:+91 7483367339" class="value d-block">+91 7483367339</a>
+                        </div>
                     </div>
-                    <div class="col-md-4 singleItem" data-aos="zoom-in" data-aos-delay="200">
-                        <i class="fa-solid fa-envelope fa-2x mb-3"></i>
-                        <a id="contact_email_link" href="mailto:harshithdn27@gmail.com" class="d-block fw-semibold">harshithdn27@gmail.com</a>
+                    <div class="tc-card contact-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="tc-icon is-tomato"><i class="fa-solid fa-envelope"></i></div>
+                        <div class="meta">
+                            <a id="contact_email_link" href="mailto:harshithdn27@gmail.com" class="value d-block">harshithdn27@gmail.com</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-
-        <footer id="footer_section">
-            <div class="container d-flex justify-content-between align-items-center">
-                <p id="footer_p" class="m-0 small">© 2025 Tomato Disease Prediction | All rights reserved</p>
-                <ul class="m-0">
-                    <li><a href="https://www.linkedin.com/in/%20harshith-d-n" target="_blank"><img src="../static/images/linkedin.svg" alt="LinkedIn"></a></li>
-                    <li><a href="https://github.com/harshithdn" target="_blank"><img src="../static/images/github.svg" alt="GitHub"></a></li>
-                </ul>
-            </div>
-        </footer>
     </main>
+
+    <footer id="footer_section" class="tc-footer">
+        <div class="footer-inner">
+            <p id="footer_p" class="m-0">© 2025 Tomato Disease Prediction | All rights reserved</p>
+            <ul class="social">
+                <li><a href="https://www.linkedin.com/in/%20harshith-d-n" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                <li><a href="https://github.com/harshithdn" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a></li>
+            </ul>
+        </div>
+    </footer>
 
     <!-- JS Scripts (Keep the translation logic) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -724,6 +648,14 @@
                 ta: "வீடியோ பார்க்க"
             };
 
+            const navTextByLanguage = {
+                en: ["Predict", "About", "Contact"],
+                hi: ["पहचानें", "परिचय", "संपर्क"],
+                kn: ["ಪತ್ತೆ", "ಬಗ್ಗೆ", "ಸಂಪರ್ಕ"],
+                te: ["గుర్తించు", "గురించి", "సంప్రదించండి"],
+                ta: ["கண்டறி", "பற்றி", "தொடர்பு"]
+            };
+
             function applyLanguageToPage(lang) {
                 const translations = aboutTranslations[lang] || aboutTranslations.en;
 
@@ -741,6 +673,11 @@
                     }
                 }
 
+                const nav = navTextByLanguage[lang] || navTextByLanguage.en;
+                $("#nav_predict").text(nav[0]);
+                $("#nav_about").text(nav[1]);
+                $("#nav_contact").text(nav[2]);
+
                 $("#prevent_video_link").attr("href", youtubeLinksByLanguage[lang] || youtubeLinksByLanguage.en);
                 $("#prevent_video_label").text(youtubeButtonTextByLanguage[lang] || youtubeButtonTextByLanguage.en);
             }
@@ -750,10 +687,24 @@
             
             languageSelect.addEventListener("change", (e) => {
                 const lang = e.target.value;
+                try { localStorage.setItem("appLang", lang); } catch (err) {}
                 applyLanguageToPage(lang);
             });
 
-            // Initial load
+            // Keep other open tabs in sync
+            window.addEventListener("storage", (e) => {
+                if (e.key === "appLang" && e.newValue) {
+                    languageSelect.value = e.newValue;
+                    applyLanguageToPage(e.newValue);
+                }
+            });
+
+            // Initial load: use the language chosen on any page
+            let savedLang = "en";
+            try { savedLang = localStorage.getItem("appLang") || "en"; } catch (err) {}
+            if ([...languageSelect.options].some(o => o.value === savedLang)) {
+                languageSelect.value = savedLang;
+            }
             applyLanguageToPage(languageSelect.value);
 
             // Initialize AOS library

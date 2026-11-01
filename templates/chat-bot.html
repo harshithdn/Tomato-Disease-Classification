@@ -3,375 +3,471 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>🌾 AgriBot — Smart Farming Assistant</title>
+<title>AgriBot — Smart Farming Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="/static/theme.css">
 <style>
-:root {
-  --bg: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-  --card-bg: rgba(255,255,255,0.84);
-  --accent: #16a34a;
-  --accent-dark: #15803d;
-  --muted: #6b7280;
-  --border: rgba(16,88,41,0.14);
-  --shadow: 0 22px 48px rgba(15, 71, 33, 0.22);
-  --radius: 20px;
-  --font: 'Poppins', system-ui, sans-serif;
-}
-* {
-  box-sizing: border-box;
-  font-family: var(--font);
-  scroll-behavior: smooth;
-}
-body {
-  margin: 0;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 92, 0.26), rgba(255, 210, 92, 0) 24%),
-    radial-gradient(circle at bottom left, rgba(34, 197, 94, 0.22), rgba(34, 197, 94, 0) 26%),
-    linear-gradient(rgba(16, 64, 28, 0.18), rgba(233, 248, 235, 0.30)),
-    url("/static/images/chatbot-bg-custom.jpg") center/cover no-repeat fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 24px;
-}
-.card {
+* { box-sizing: border-box; }
+body.tc { margin: 0; }
+
+.cb-shell {
+  max-width: 860px;
   width: 100%;
-  max-width: 780px;
-  background: var(--card-bg);
-  backdrop-filter: blur(10px) saturate(1.08);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  margin: 24px auto;
+  padding: 0 16px;
+  flex: 1 0 auto;
+  display: flex;
+}
+.cb-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--border);
-  animation: fadeIn 0.6s ease;
+  height: calc(100vh - 150px);
+  min-height: 520px;
 }
-@keyframes fadeIn {
-  from {opacity:0; transform: translateY(10px);}
-  to {opacity:1; transform: translateY(0);}
-}
-header {
-  background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+
+/* Header */
+.cb-head {
+  background: var(--tc-hero);
   color: #fff;
   padding: 16px 20px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
-header h1 {
-  font-size: 18px;
-  margin: 0;
-  font-weight: 600;
+.cb-avatar {
+  width: 46px; height: 46px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.18);
+  display: grid; place-items: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
 }
-header .small {
-  margin-left: auto;
-  font-size: 13px;
-  opacity: 0.9;
+.cb-head h1 { font-size: 1.1rem; font-weight: 600; margin: 0; }
+.cb-status { font-size: .8rem; opacity: .85; display: flex; align-items: center; gap: 6px; }
+.cb-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 3px rgba(74,222,128,.25); }
+.cb-head-actions { margin-left: auto; display: flex; gap: 8px; }
+.cb-icon-btn {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  border: 0;
+  background: rgba(255,255,255,.16);
+  color: #fff;
+  cursor: pointer;
+  display: grid; place-items: center;
+  transition: background .15s;
 }
-.chat {
-  display: flex;
-  flex-direction: column;
-  height: 72vh;
-  max-height: 78vh;
-  padding: 16px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0.08));
-}
-.messages {
+.cb-icon-btn:hover { background: rgba(255,255,255,.28); }
+
+/* Messages */
+.cb-messages {
   flex: 1;
   overflow-y: auto;
+  padding: 22px 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-right: 8px;
+  gap: 14px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(22,163,74,.06), transparent 40%),
+    var(--tc-bg);
 }
-.msg {
-  max-width: 75%;
-  padding: 12px 14px;
-  border-radius: 16px;
-  line-height: 1.4;
+.cb-row { display: flex; gap: 10px; align-items: flex-end; max-width: 88%; animation: cbIn .22s ease-out; }
+.cb-row.user { align-self: flex-end; flex-direction: row-reverse; }
+@keyframes cbIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.cb-mini {
+  width: 30px; height: 30px; border-radius: 10px;
+  display: grid; place-items: center;
+  font-size: .95rem; flex-shrink: 0;
+  background: var(--tc-green-100);
+}
+.cb-row.user .cb-mini { background: var(--tc-tomato-50); }
+.cb-bubble {
+  padding: 11px 15px;
+  border-radius: 18px;
+  line-height: 1.55;
+  font-size: .94rem;
   word-wrap: break-word;
-  animation: slideIn 0.3s ease;
+  overflow-wrap: anywhere;
 }
-@keyframes slideIn {
-  from {opacity:0; transform: translateY(6px);}
-  to {opacity:1; transform: translateY(0);}
-}
-.msg.user {
-  align-self: flex-end;
-  background: linear-gradient(135deg, #18a34a, #0f7e37);
-  color: #fff;
-  border-bottom-right-radius: 4px;
-}
-.msg.bot {
-  align-self: flex-start;
-  background: rgba(246, 247, 250, 0.94);
-  color: #111827;
-  border-bottom-left-radius: 4px;
-}
-.controls {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-  align-items: center;
-}
-.controls input[type="text"] {
-  flex: 1;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 1px solid #d1d5db;
-  font-size: 14px;
-  outline: none;
-  transition: 0.2s;
-}
-.controls input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(34,197,94,0.15);
-}
-.controls button {
-  border: none;
+.cb-row.bot .cb-bubble { background: #fff; border: 1px solid var(--tc-line); border-bottom-left-radius: 6px; box-shadow: 0 1px 2px rgba(16,35,26,.05); }
+.cb-row.user .cb-bubble { background: var(--tc-green-700); color: #fff; border-bottom-right-radius: 6px; }
+.cb-bubble p { margin: 0 0 6px; }
+.cb-bubble p:last-child { margin-bottom: 0; }
+.cb-bubble ul { margin: 4px 0; padding-left: 18px; }
+.cb-speak {
+  margin-top: 6px;
+  border: 0;
+  background: none;
+  color: var(--tc-green-700);
+  font: 500 .78rem var(--tc-font);
   cursor: pointer;
-  border-radius: 12px;
-  transition: all 0.25s ease;
+  padding: 2px 0;
+  display: inline-flex; align-items: center; gap: 5px;
 }
-#sendBtn {
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: white;
-  padding: 10px 16px;
-  font-weight: 500;
-}
-#sendBtn:hover {transform: scale(1.05);}
-.icon-btn {
-  background: #fff;
-  color: var(--accent);
-  border: 1px solid #d1d5db;
-  font-size: 18px;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.icon-btn:hover {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-footer {
-  text-align: center;
-  padding: 10px 14px;
-  font-size: 12px;
-  color: var(--muted);
-  border-top: 1px solid var(--border);
-  background: rgba(255,255,255,0.7);
-}
-.lang-row {
+.cb-speak:hover { text-decoration: underline; }
+
+.cb-typing { display: inline-flex; gap: 4px; padding: 4px 2px; }
+.cb-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--tc-green-600); opacity: .4; animation: cbDot 1s infinite; }
+.cb-typing span:nth-child(2) { animation-delay: .15s; }
+.cb-typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes cbDot { 0%, 100% { opacity: .3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+
+/* Suggestions */
+.cb-suggest {
   display: flex;
   gap: 8px;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 8px;
+  padding: 10px 16px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: #fff;
 }
-.lang-row label { font-size: 13px; color: var(--muted); }
-select {
-  padding: 8px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  font-size: 13px;
+.cb-suggest::-webkit-scrollbar { display: none; }
+.cb-chip {
+  flex-shrink: 0;
+  border: 1px solid var(--tc-green-100);
+  background: var(--tc-green-50);
+  color: var(--tc-green-800);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font: 500 .83rem var(--tc-font);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.cb-chip:hover { background: var(--tc-green-100); }
+
+/* Composer */
+.cb-composer {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px 14px;
+  background: #fff;
+  align-items: center;
+}
+.cb-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--tc-line);
+  background: var(--tc-bg);
+  border-radius: 999px;
+  padding: 12px 18px;
+  font: 400 .95rem var(--tc-font);
+}
+.cb-input:focus { outline: none; border-color: var(--tc-green-600); background: #fff; box-shadow: 0 0 0 3px rgba(22,163,74,.15); }
+.cb-round {
+  width: 46px; height: 46px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 0;
+  cursor: pointer;
+  display: grid; place-items: center;
+  font-size: 1.05rem;
+  transition: transform .12s, background .15s;
+}
+.cb-round:active { transform: scale(.95); }
+.cb-mic { background: var(--tc-green-50); color: var(--tc-green-700); border: 1px solid var(--tc-green-100); }
+.cb-mic.listening { background: var(--tc-tomato); color: #fff; border-color: var(--tc-tomato); animation: cbPulse 1.2s infinite; }
+@keyframes cbPulse { 0% { box-shadow: 0 0 0 0 rgba(229,72,77,.45); } 100% { box-shadow: 0 0 0 12px rgba(229,72,77,0); } }
+.cb-send { background: var(--tc-green-700); color: #fff; box-shadow: 0 6px 14px rgba(22,101,52,.3); }
+.cb-send:hover { background: var(--tc-green-800); }
+.cb-send:disabled { opacity: .5; cursor: not-allowed; }
+
+.cb-foot-note { font-size: .74rem; color: var(--tc-muted); text-align: center; padding: 0 16px 12px; background: #fff; margin: 0; }
+
+@media (max-width: 575.98px) {
+  .cb-shell { margin: 0; padding: 0; }
+  .cb-card { border-radius: 0; border-left: 0; border-right: 0; height: calc(100vh - 118px); min-height: 0; }
+  .cb-row { max-width: 94%; }
+  .cb-head { padding: 12px 14px; }
+  .tc-footer { margin-top: 0; }
 }
 </style>
 </head>
-<body>  
-<style>
-/* ...existing styles... */
+<body class="tc">
 
-/* CORNER BACK BUTTON */
-.corner-back {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 9999;
-  background: #f59e0b;
-  color: #fff;
-  padding: 8px 10px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-}
-.corner-back:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.14);
-}
-
-/* ...existing styles... */
-</style>
-
-<a href="/" class="corner-back" aria-label="Back to app">← Back</a>
-
-<div class="card">
-  <header>
-    <h1>🌾 AgriBot Assistant</h1>
-    <div class="small">Multilingual Smart Chat</div>
-  </header>
-
-  <main class="chat">
-    <div id="messages" class="messages">
-      <div class="msg bot">👋 Hi! I'm AgriBot. Ask me about crops, weather, or fertilizers!</div>
-    </div>
-
-    <div class="controls">
-      <button id="micBtn" class="icon-btn" title="Start voice input">🎤</button>
-      <input id="input" type="text" placeholder="Type your question..." />
-      <button id="sendBtn">Send</button>
-      <button id="speakBtn" class="icon-btn" title="Play bot reply">🔊</button>
-    </div>
-
-    <div class="lang-row">
-      <label>Language:</label>
-      <select id="langSelect">
+<header class="tc-nav">
+  <div class="tc-nav-inner">
+    <a class="tc-brand" href="/">
+      <span class="tc-brand-mark">🍅</span>
+      <span>Tomato Care</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <a href="/" class="tc-btn tc-btn-ghost" style="padding:8px 14px" id="backLink"><i class="fa-solid fa-arrow-left"></i> <span id="backText">Back</span></a>
+      <select id="langSelect" class="tc-lang" aria-label="Language">
         <option value="en">English</option>
-        <option value="hi-IN">हिन्दी (Hindi)</option>
-        <option value="ta-IN">தமிழ் (Tamil)</option>
-        <option value="te-IN">తెలుగు (Telugu)</option>
-        <option value="kn-IN">ಕನ್ನಡ (Kannada)</option>
+        <option value="kn">ಕನ್ನಡ (Kannada)</option>
+        <option value="te">తెలుగు (Telugu)</option>
+        <option value="hi">हिन्दी (Hindi)</option>
+        <option value="ta">தமிழ் (Tamil)</option>
       </select>
     </div>
-  </main>
+  </div>
+</header>
 
-  <footer>© 2025 AgriBot — Voice + Multilingual Smart Farming Chat</footer>
+<div class="cb-shell">
+  <section class="tc-card cb-card">
+    <div class="cb-head">
+      <div class="cb-avatar">🌾</div>
+      <div>
+        <h1 id="botTitle">AgriBot Assistant</h1>
+        <div class="cb-status" id="botSubtitle">Online · Multilingual farming help</div>
+      </div>
+      <div class="cb-head-actions">
+        <button class="cb-icon-btn" id="clearBtn" title="New chat"><i class="fa-solid fa-rotate-right"></i></button>
+      </div>
+    </div>
+
+    <div id="messages" class="cb-messages" aria-live="polite"></div>
+
+    <div class="cb-suggest" id="suggestions"></div>
+
+    <form class="cb-composer" id="composer" autocomplete="off">
+      <button type="button" id="micBtn" class="cb-round cb-mic" title="Voice input"><i class="fa-solid fa-microphone"></i></button>
+      <input id="input" class="cb-input" type="text" placeholder="Type your question..." />
+      <button type="submit" id="sendBtn" class="cb-round cb-send" title="Send"><i class="fa-solid fa-paper-plane"></i></button>
+    </form>
+    <p class="cb-foot-note" id="footNote">AgriBot can make mistakes. Confirm treatments with a local agriculture officer.</p>
+  </section>
 </div>
 
+<footer class="tc-footer" id="botFooter">© 2025 AgriBot — Voice + Multilingual Smart Farming Chat</footer>
+
 <script>
-const SERVER_PROXY_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
-const FALLBACK_CLIENT_KEY = "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";
 const messagesEl = document.getElementById("messages");
 const inputEl = document.getElementById("input");
 const sendBtn = document.getElementById("sendBtn");
 const micBtn = document.getElementById("micBtn");
-const speakBtn = document.getElementById("speakBtn");
 const langSelect = document.getElementById("langSelect");
-let lastBotText = "";
-let botUtterance = null;
-let botSpeaking = false;
+const suggestionsEl = document.getElementById("suggestions");
 
-function appendMessage(text, who = "bot") {
-  const div = document.createElement("div");
-  div.className = "msg " + (who === "user" ? "user" : "bot");
-  div.innerHTML = text;
-  messagesEl.appendChild(div);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+// Language is shared with the other pages via localStorage ("en", "hi", "kn", "te", "ta")
+const SPEECH_LOCALE = { en: "en-IN", hi: "hi-IN", kn: "kn-IN", te: "te-IN", ta: "ta-IN" };
+
+const UI_TEXT = {
+  en: { back: "Back", title: "AgriBot Assistant", subtitle: "Online · Multilingual farming help", greeting: "👋 Hi! I'm AgriBot. Ask me about crops, diseases, weather or fertilizers!", placeholder: "Type your question...", listen: "Listen", stop: "Stop", note: "AgriBot can make mistakes. Confirm treatments with a local agriculture officer.", error: "⚠️ Sorry, I couldn't reach the server. Please try again.", noVoice: "Voice input is not supported in this browser. Try Chrome.", footer: "© 2025 AgriBot — Voice + Multilingual Smart Farming Chat",
+        suggestions: ["How to prevent early blight?", "Best fertilizer for tomato", "How often should I water?", "How to control whiteflies?"] },
+  hi: { back: "वापस", title: "एग्रीबॉट सहायक", subtitle: "ऑनलाइन · बहुभाषी कृषि सहायता", greeting: "👋 नमस्ते! मैं एग्रीबॉट हूँ। फसलों, रोगों, मौसम या उर्वरकों के बारे में पूछें!", placeholder: "अपना प्रश्न लिखें...", listen: "सुनें", stop: "रोकें", note: "एग्रीबॉट से गलती हो सकती है। उपचार की पुष्टि स्थानीय कृषि अधिकारी से करें।", error: "⚠️ क्षमा करें, सर्वर से संपर्क नहीं हो सका। कृपया फिर से प्रयास करें।", noVoice: "इस ब्राउज़र में आवाज़ इनपुट समर्थित नहीं है। Chrome आज़माएँ।", footer: "© 2025 एग्रीबॉट — आवाज़ + बहुभाषी स्मार्ट कृषि चैट",
+        suggestions: ["अगेती झुलसा से कैसे बचें?", "टमाटर के लिए सबसे अच्छा उर्वरक", "कितनी बार पानी दें?", "सफेद मक्खी को कैसे नियंत्रित करें?"] },
+  kn: { back: "ಹಿಂದೆ", title: "ಅಗ್ರಿಬಾಟ್ ಸಹಾಯಕ", subtitle: "ಆನ್‌ಲೈನ್ · ಬಹುಭಾಷಾ ಕೃಷಿ ಸಹಾಯ", greeting: "👋 ನಮಸ್ಕಾರ! ನಾನು ಅಗ್ರಿಬಾಟ್. ಬೆಳೆಗಳು, ರೋಗಗಳು, ಹವಾಮಾನ ಅಥವಾ ಗೊಬ್ಬರಗಳ ಬಗ್ಗೆ ಕೇಳಿ!", placeholder: "ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಬರೆಯಿರಿ...", listen: "ಕೇಳಿ", stop: "ನಿಲ್ಲಿಸಿ", note: "ಅಗ್ರಿಬಾಟ್ ತಪ್ಪು ಮಾಡಬಹುದು. ಚಿಕಿತ್ಸೆಯನ್ನು ಸ್ಥಳೀಯ ಕೃಷಿ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ದೃಢೀಕರಿಸಿ.", error: "⚠️ ಕ್ಷಮಿಸಿ, ಸರ್ವರ್ ತಲುಪಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.", noVoice: "ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಬೆಂಬಲಿತವಿಲ್ಲ. Chrome ಬಳಸಿ.", footer: "© 2025 ಅಗ್ರಿಬಾಟ್ — ಧ್ವನಿ + ಬಹುಭಾಷಾ ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಚಾಟ್",
+        suggestions: ["ಆರಂಭಿಕ ಎಲೆ ಕರಗು ತಡೆಯುವುದು ಹೇಗೆ?", "ಟೊಮೇಟೊಗೆ ಉತ್ತಮ ಗೊಬ್ಬರ", "ಎಷ್ಟು ಬಾರಿ ನೀರು ಹಾಕಬೇಕು?", "ಬಿಳಿ ನೊಣ ನಿಯಂತ್ರಣ ಹೇಗೆ?"] },
+  te: { back: "వెనుకకు", title: "అగ్రిబాట్ సహాయకుడు", subtitle: "ఆన్‌లైన్ · బహుభాషా వ్యవసాయ సహాయం", greeting: "👋 నమస్కారం! నేను అగ్రిబాట్. పంటలు, వ్యాధులు, వాతావరణం లేదా ఎరువుల గురించి అడగండి!", placeholder: "మీ ప్రశ్నను టైప్ చేయండి...", listen: "వినండి", stop: "ఆపు", note: "అగ్రిబాట్ తప్పులు చేయవచ్చు. చికిత్సను స్థానిక వ్యవసాయ అధికారితో నిర్ధారించుకోండి.", error: "⚠️ క్షమించండి, సర్వర్‌ను చేరుకోలేకపోయాను. దయచేసి మళ్లీ ప్రయత్నించండి.", noVoice: "ఈ బ్రౌజర్‌లో వాయిస్ ఇన్‌పుట్ లేదు. Chrome ప్రయత్నించండి.", footer: "© 2025 అగ్రిబాట్ — వాయిస్ + బహుభాషా స్మార్ట్ వ్యవసాయ చాట్",
+        suggestions: ["ముందస్తు ఆకు ఎండును ఎలా నివారించాలి?", "టమోటాకు ఉత్తమ ఎరువు", "ఎంత తరచుగా నీరు పెట్టాలి?", "తెల్లదోమను ఎలా నియంత్రించాలి?"] },
+  ta: { back: "பின்செல்", title: "அக்ரிபாட் உதவியாளர்", subtitle: "ஆன்லைன் · பன்மொழி விவசாய உதவி", greeting: "👋 வணக்கம்! நான் அக்ரிபாட். பயிர்கள், நோய்கள், வானிலை அல்லது உரங்கள் பற்றி கேளுங்கள்!", placeholder: "உங்கள் கேள்வியை தட்டச்சு செய்யுங்கள்...", listen: "கேளுங்கள்", stop: "நிறுத்து", note: "அக்ரிபாட் தவறு செய்யலாம். சிகிச்சையை உள்ளூர் வேளாண் அலுவலரிடம் உறுதிப்படுத்துங்கள்.", error: "⚠️ மன்னிக்கவும், சேவையகத்தை அடைய முடியவில்லை. மீண்டும் முயற்சிக்கவும்.", noVoice: "இந்த உலாவியில் குரல் உள்ளீடு இல்லை. Chrome முயற்சிக்கவும்.", footer: "© 2025 அக்ரிபாட் — குரல் + பன்மொழி ஸ்மார்ட் விவசாய அரட்டை",
+        suggestions: ["முன் கருகலை எப்படி தடுப்பது?", "தக்காளிக்கு சிறந்த உரம்", "எத்தனை முறை தண்ணீர் விட வேண்டும்?", "வெள்ளை ஈயை எப்படி கட்டுப்படுத்துவது?"] }
+};
+
+let currentLang = "en";
+let busy = false;
+let speakingBtn = null;
+
+function t() { return UI_TEXT[currentLang] || UI_TEXT.en; }
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-async function sendMessage() {
-  const text = inputEl.value.trim();
-  if (!text) return;
-  appendMessage(text, "user");
+// Small, safe formatter: escapes HTML, then supports **bold**, bullet lines and paragraphs
+function formatReply(text) {
+  const lines = escapeHtml(text).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").split(/\n/);
+  let html = "", inList = false;
+  for (const raw of lines) {
+    const line = raw.trim();
+    const bullet = line.match(/^(?:[-*•]|\d+[.)])\s+(.*)/);
+    if (bullet) {
+      if (!inList) { html += "<ul>"; inList = true; }
+      html += `<li>${bullet[1]}</li>`;
+      continue;
+    }
+    if (inList) { html += "</ul>"; inList = false; }
+    if (line) html += `<p>${line}</p>`;
+  }
+  return html + (inList ? "</ul>" : "");
+}
+
+function addMessage(text, who, opts = {}) {
+  const row = document.createElement("div");
+  row.className = "cb-row " + who;
+  const mini = document.createElement("div");
+  mini.className = "cb-mini";
+  mini.textContent = who === "user" ? "🧑‍🌾" : "🌾";
+  const bubble = document.createElement("div");
+  bubble.className = "cb-bubble";
+  if (opts.typing) {
+    bubble.innerHTML = '<span class="cb-typing"><span></span><span></span><span></span></span>';
+  } else if (who === "bot") {
+    bubble.innerHTML = formatReply(text);
+    if (!opts.noSpeak) {
+      const speak = document.createElement("button");
+      speak.type = "button";
+      speak.className = "cb-speak";
+      speak.innerHTML = `<i class="fa-solid fa-volume-high"></i> <span>${t().listen}</span>`;
+      speak.addEventListener("click", () => toggleSpeak(text, speak));
+      bubble.appendChild(speak);
+    }
+  } else {
+    bubble.textContent = text;
+  }
+  row.append(mini, bubble);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return row;
+}
+
+function resetChat() {
+  stopSpeaking();
+  messagesEl.innerHTML = "";
+  addMessage(t().greeting, "bot", { noSpeak: true });
+}
+
+function renderSuggestions() {
+  suggestionsEl.innerHTML = "";
+  t().suggestions.forEach(q => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "cb-chip";
+    chip.textContent = q;
+    chip.addEventListener("click", () => sendMessage(q));
+    suggestionsEl.appendChild(chip);
+  });
+}
+
+async function sendMessage(preset) {
+  const text = (preset || inputEl.value).trim();
+  if (!text || busy) return;
+  busy = true;
+  sendBtn.disabled = true;
   inputEl.value = "";
-  appendMessage("⏳ Thinking...", "bot");
-
-  const lang = langSelect.value;
-  const langMap = {
-    "en": "English",
-    "hi-IN": "Hindi",
-    "ta-IN": "Tamil",
-    "te-IN": "Telugu",
-    "kn-IN": "Kannada"
-  };
-  const targetLang = langMap[lang] || "English";
-
-  const promptInstruction = `You are AgriBot, a smart farming assistant. The user wants to chat in ${targetLang}. 
-Always reply in ${targetLang} only, regardless of the input language. 
-Keep answers helpful, short, and relevant to agriculture, crops, weather, and farming tips.`;
-
-  const payload = {
-    model: "gpt-4o-mini",
-    messages: [
-      { role: "system", content: promptInstruction },
-      ...Array.from(messagesEl.querySelectorAll(".msg")).map(el => ({
-        role: el.classList.contains("user") ? "user" : "assistant",
-        content: el.textContent
-      })),
-      { role: "user", content: text }
-    ],
-    temperature: 0.6
-  };
+  addMessage(text, "user");
+  const typing = addMessage("", "bot", { typing: true });
 
   try {
-    const res = await fetch(SERVER_PROXY_ENDPOINT, {
+    // The server keeps the API key private and falls back to built-in answers
+    const res = await fetch("/chat-bot/api", {
       method: "POST",
-      headers: {
-        "Authorization": `Bearer ${FALLBACK_CLIENT_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text, lang: currentLang })
     });
     const data = await res.json();
-    messagesEl.querySelectorAll(".msg.bot").forEach(el => {
-      if (el.textContent.includes("Thinking")) el.remove();
-    });
-    const reply = data?.choices?.[0]?.message?.content || "⚠️ No response.";
-    appendMessage(reply, "bot");
-    lastBotText = reply;
+    typing.remove();
+    addMessage(data.reply || t().error, "bot");
   } catch (err) {
-    appendMessage("⚠️ Error: " + err.message, "bot");
+    typing.remove();
+    addMessage(t().error, "bot", { noSpeak: true });
+  } finally {
+    busy = false;
+    sendBtn.disabled = false;
+    inputEl.focus();
   }
 }
 
-sendBtn.addEventListener("click", sendMessage);
-inputEl.addEventListener("keydown", e => { if (e.key === "Enter") sendMessage(); });
+document.getElementById("composer").addEventListener("submit", e => { e.preventDefault(); sendMessage(); });
+document.getElementById("clearBtn").addEventListener("click", resetChat);
 
-// Speech recognition
+// Speech recognition (voice input)
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recognition, listening = false;
+let recognition = null;
+let listening = false;
 
 micBtn.addEventListener("click", () => {
-  if (!SpeechRecognition) { alert("SpeechRecognition not supported."); return; }
+  if (!SpeechRecognition) { addMessage(t().noVoice, "bot", { noSpeak: true }); return; }
   if (listening) { recognition.stop(); return; }
   recognition = new SpeechRecognition();
-  recognition.lang = langSelect.value || "en";
+  recognition.lang = SPEECH_LOCALE[currentLang] || "en-IN";
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
-  recognition.onstart = () => { listening = true; micBtn.textContent = "🛑"; };
-  recognition.onend = () => { listening = false; micBtn.textContent = "🎤"; };
-  recognition.onresult = e => {
-    inputEl.value = e.results[0][0].transcript;
-    sendMessage();
-  };
+  recognition.onstart = () => { listening = true; micBtn.classList.add("listening"); };
+  recognition.onend = () => { listening = false; micBtn.classList.remove("listening"); };
+  recognition.onresult = e => sendMessage(e.results[0][0].transcript);
   recognition.start();
 });
 
-// Text-to-speech
-speakBtn.addEventListener("click", () => {
-  if (!lastBotText) { appendMessage("No message to speak.", "bot"); return; }
-  if (botSpeaking || speechSynthesis.speaking) {
-    speechSynthesis.cancel();
-    botSpeaking = false;
-    botUtterance = null;
-    speakBtn.textContent = "🔊";
+// Text-to-speech: browser voice if available for the language, else server (gTTS)
+let audioEl = null;
+
+function setSpeakLabel(btn, playing) {
+  if (!btn) return;
+  btn.innerHTML = playing
+    ? `<i class="fa-solid fa-stop"></i> <span>${t().stop}</span>`
+    : `<i class="fa-solid fa-volume-high"></i> <span>${t().listen}</span>`;
+}
+
+function stopSpeaking() {
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  if (audioEl) { audioEl.pause(); audioEl = null; }
+  setSpeakLabel(speakingBtn, false);
+  speakingBtn = null;
+}
+
+async function toggleSpeak(text, btn) {
+  const wasThis = speakingBtn === btn;
+  stopSpeaking();
+  if (wasThis) return;
+  speakingBtn = btn;
+  setSpeakLabel(btn, true);
+
+  const locale = SPEECH_LOCALE[currentLang];
+  const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  const voice = voices.find(v => v.lang === locale) || voices.find(v => v.lang.startsWith(currentLang));
+
+  if (voice || currentLang === "en") {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = locale;
+    if (voice) u.voice = voice;
+    u.onend = u.onerror = () => { if (speakingBtn === btn) stopSpeaking(); };
+    speechSynthesis.speak(u);
     return;
   }
 
-  botUtterance = new SpeechSynthesisUtterance(lastBotText);
-  botUtterance.lang = langSelect.value || "en";
-  botUtterance.onstart = () => {
-    botSpeaking = true;
-    speakBtn.textContent = "⏹";
-  };
-  botUtterance.onend = () => {
-    botSpeaking = false;
-    botUtterance = null;
-    speakBtn.textContent = "🔊";
-  };
-  botUtterance.onerror = () => {
-    botSpeaking = false;
-    botUtterance = null;
-    speakBtn.textContent = "🔊";
-  };
-  speechSynthesis.speak(botUtterance);
+  try {
+    const res = await fetch("/speak", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, lang: currentLang })
+    });
+    if (!res.ok) throw new Error("speak failed");
+    if (speakingBtn !== btn) return;
+    audioEl = new Audio(URL.createObjectURL(await res.blob()));
+    audioEl.onended = () => { if (speakingBtn === btn) stopSpeaking(); };
+    audioEl.play();
+  } catch (e) {
+    stopSpeaking();
+  }
+}
+
+function applyChatLanguage(lang) {
+  currentLang = UI_TEXT[lang] ? lang : "en";
+  langSelect.value = currentLang;
+  document.documentElement.lang = currentLang;
+  const s = t();
+  document.getElementById("backText").textContent = s.back;
+  document.getElementById("botTitle").textContent = s.title;
+  document.getElementById("botSubtitle").textContent = s.subtitle;
+  document.getElementById("footNote").textContent = s.note;
+  document.getElementById("botFooter").textContent = s.footer;
+  inputEl.placeholder = s.placeholder;
+  renderSuggestions();
+  // Fresh conversation only if nothing has been asked yet
+  if (messagesEl.querySelectorAll(".cb-row.user").length === 0) resetChat();
+  document.querySelectorAll(".cb-speak").forEach(b => setSpeakLabel(b, b === speakingBtn));
+}
+
+let savedLang = "en";
+try { savedLang = localStorage.getItem("appLang") || "en"; } catch (e) {}
+applyChatLanguage(savedLang);
+
+langSelect.addEventListener("change", () => {
+  try { localStorage.setItem("appLang", langSelect.value); } catch (e) {}
+  applyChatLanguage(langSelect.value);
 });
+
+window.addEventListener("storage", e => {
+  if (e.key === "appLang" && e.newValue) applyChatLanguage(e.newValue);
+});
+
+if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
 </script>
 </body>
 </html>

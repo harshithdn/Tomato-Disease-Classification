@@ -17,6 +17,9 @@ import csv
 import os
 import pandas as pd
 import json
+import io
+import threading
+import time
 from urllib import request as urllib_request
 from urllib import error as urllib_error
 from dotenv import load_dotenv
@@ -47,18 +50,64 @@ selected_language = 'en'
 camera = cv2.VideoCapture()
 
 # Load model once at startup (not inside the function)
-MODEL_PATH = 'model/model_tomato.h5'
+MODEL_CANDIDATES = [
+    os.getenv("MODEL_PATH"),
+    "model/model_tomato.h5"
+,
+]
 
-try:
-    model = load_model(MODEL_PATH)
-except Exception as e:
-    log.error(f"Failed to load model at {MODEL_PATH}. Prediction will fail. Error: {e}")
-    # Define a placeholder model to prevent app crash if model loading fails
-    # In a real app, you would handle this more gracefully.
+
+def load_prediction_model():
+    last_error = None
+
+    for candidate in MODEL_CANDIDATES:
+        if not candidate:
+            continue
+
+        normalized_path = os.path.normpath(candidate)
+        if not os.path.exists(normalized_path):
+            continue
+
+        if not normalized_path.lower().endswith((".h5", ".keras")):
+            log.warning(
+                f"Skipping unsupported model file format for Keras load_model(): {normalized_path}"
+            )
+            continue
+
+        try:
+            loaded_model = load_model(normalized_path, compile=False)
+            log.info(f"Loaded prediction model from {normalized_path}")
+            return loaded_model, normalized_path
+        except Exception as e:
+            last_error = e
+            log.error(f"Failed to load model at {normalized_path}. Error: {e}")
+
+    if last_error:
+        log.error("Prediction will use a placeholder model because no supported model could be loaded.")
+    else:
+        log.error("Prediction will use a placeholder model because no model file was found.")
+
     class MockModel:
         def predict(self, x):
             return np.zeros((1, 10))
-    model = MockModel()
+
+    return MockModel(), "mock-model"
+
+
+model, MODEL_PATH = load_prediction_model()
+
+
+def get_model_target_size():
+    """Read the loaded model input size instead of hardcoding image dimensions."""
+    input_shape = getattr(model, "input_shape", None)
+    if (
+        isinstance(input_shape, (list, tuple))
+        and len(input_shape) >= 4
+        and input_shape[1]
+        and input_shape[2]
+    ):
+        return int(input_shape[1]), int(input_shape[2])
+    return 224, 224
 
 # Class labels in the same order used during training
 CLASS_NAMES = [
@@ -84,14 +133,21 @@ def model_predict(img_bytes):
         # Convert bytes to OpenCV image
         npimg = np.frombuffer(img_bytes, np.uint8)
         img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+        if img is None:
+            raise ValueError("Uploaded file could not be decoded as an image.")
 
-        # Use the correct training image size (64x64)
-        img = cv2.resize(img, (64, 64))
+        # The model was trained on RGB images; OpenCV decodes as BGR
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+        # Resize to the actual model input size.
+        target_height, target_width = get_model_target_size()
+        img = cv2.resize(img, (target_width, target_height))
         img = img / 255.0
         img = np.expand_dims(img, axis=0)
 
-        # Make prediction
-        preds = model.predict(img)
+        # Make prediction (verbose=0: the Keras progress bar uses Unicode
+        # characters that crash on the Windows cp1252 console)
+        preds = model.predict(img, verbose=0)
         confidence = float(np.max(preds) * 100)
         label = CLASS_NAMES[np.argmax(preds)]
 
@@ -370,14 +426,53 @@ def predict():
 
 # small cached translator wrapper
 @lru_cache(maxsize=2048)
+def _translate_remote(text: str, target_lang: str) -> str:
+    # Raises on failure so failed (English fallback) results are never cached
+    last_error = None
+    for attempt in range(3):
+        try:
+            return GoogleTranslator(source='en', target=target_lang).translate(text)
+        except Exception as e:
+            # Google allows ~5 requests/second; back off and retry
+            last_error = e
+            time.sleep(1 + attempt)
+    raise last_error
+
+
+# Translations are saved to disk so language switching works instantly and keeps
+# working when Google Translate rate-limits us. Any new text is translated once and saved.
+TRANSLATIONS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'translations_cache.json')
+_translations_lock = threading.Lock()
+try:
+    with open(TRANSLATIONS_PATH, encoding='utf-8') as f:
+        TRANSLATIONS = json.load(f)
+except (OSError, ValueError):
+    TRANSLATIONS = {}
+
+
+def _save_translation(text: str, target_lang: str, translated: str) -> None:
+    with _translations_lock:
+        TRANSLATIONS.setdefault(target_lang, {})[text] = translated
+        tmp = TRANSLATIONS_PATH + '.tmp'
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(TRANSLATIONS, f, ensure_ascii=False, indent=1, sort_keys=True)
+        os.replace(tmp, TRANSLATIONS_PATH)
+
+
 def _translate_cached(text: str, target_lang: str) -> str:
     if not text or target_lang == 'en':
         return text
+    cached = TRANSLATIONS.get(target_lang, {}).get(text)
+    if cached:
+        return cached
     try:
-        return GoogleTranslator(source='en', target=target_lang).translate(text)
+        translated = _translate_remote(text, target_lang)
+        if translated:
+            _save_translation(text, target_lang, translated)
+            return translated
     except Exception as e:
         log.debug(f"_translate_cached error: {e}")
-        return text
+    return text
 
 
 YOUTUBE_LANGUAGE_URLS = {
@@ -532,7 +627,6 @@ def translate_content():
                     translated_texts[key] = val['en']
             else:
                 # Translate all blocks
-                translator = GoogleTranslator(source='en', target=lang)
                 for key, val in contents_map.items():
                     english_text = val['en']
                     try:
@@ -542,7 +636,7 @@ def translate_content():
                             steps = re.findall(r'</i>\s*(.*?)\.</li>', english_text)
                             translated_steps = []
                             for step in steps:
-                                translated_step = translator.translate(step)
+                                translated_step = _translate_cached(step, lang)
                                 translated_steps.append(translated_step)
                             
                             # Reconstruct HTML with translated content
@@ -553,7 +647,7 @@ def translate_content():
                             translated_html += '</ol>'
                             translated_texts[key] = translated_html
                         else:
-                            translated_text = translator.translate(english_text)
+                            translated_text = _translate_cached(english_text, lang)
                             translated_texts[key] = translated_text
                     except Exception as e:
                         log.debug(f"Translation error for {key}: {e}")
@@ -571,9 +665,9 @@ def translate_content():
 @app.route('/speak', methods=['POST'])
 def speak_description():
     try:
-        data = request.json
-        text = data.get('text')
-        lang = data.get('lang', 'en')
+        data = request.json or {}
+        text = (data.get('text') or '').strip()
+        lang = (data.get('lang') or 'en').split('-')[0].lower()
 
         if not text:
             return create_error_response("No text provided for speech", 400)
@@ -587,13 +681,17 @@ def speak_description():
         }
         gtts_lang = lang_map.get(lang, 'en')
 
-        # Since the frontend will manage the loading indicator, we keep the blocking
-        # calls here for simplicity, assuming the frontend handles the UX.
         tts = gTTS(text=text, lang=gtts_lang)
-        output_path = os.path.join("static", "speech_output.mp3")
-        tts.save(output_path)
+        audio_buffer = io.BytesIO()
+        tts.write_to_fp(audio_buffer)
+        audio_buffer.seek(0)
 
-        return send_file(output_path, mimetype='audio/mpeg')
+        return send_file(
+            audio_buffer,
+            mimetype='audio/mpeg',
+            as_attachment=False,
+            download_name='speech_output.mp3'
+        )
 
     except Exception as e:
         log.debug(f"Speech error: {e}")

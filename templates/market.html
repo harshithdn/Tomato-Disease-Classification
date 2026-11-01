@@ -1,333 +1,353 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tomato Plant Care Marketplace</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomato Care Marketplace</title>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600&family=Red+Rose:wght@400;600&display=swap"
-        rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/theme.css">
 
-    <!-- Bootstrap -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    />
-    
-    <!-- Font Awesome (for shopping cart icon) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-
-    <!-- Custom CSS Styles -->
     <style>
-        /* --- CSS Variables --- */
-        :root {
-            --main-color: #4CAF50; /* A pleasant green for tomato plants */
-            --secondary-color: #2196F3;
-            --text-dark: #333;
-            --text-light: #666;
-            --border-color: #dee2e6;
-            --font-primary: 'Montserrat', sans-serif;
-            --font-secondary: 'Red Rose', cursive;
+        .mk-hero { padding: 48px 16px 88px; text-align: center; }
+        .mk-hero h1 { font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.6rem); margin: 14px 0 10px; }
+        .mk-hero p { max-width: 640px; margin: 0 auto; color: rgba(255,255,255,.85); font-size: 1.02rem; }
+
+        .mk-wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+
+        /* Toolbar floats over the hero edge */
+        .mk-toolbar {
+            margin-top: -48px;
+            position: relative;
+            z-index: 2;
+            padding: 14px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .mk-search { flex: 1 1 260px; position: relative; }
+        .mk-search i {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: var(--tc-muted);
+        }
+        .mk-search input {
+            width: 100%;
+            border: 1px solid var(--tc-line);
+            border-radius: 999px;
+            padding: 11px 16px 11px 42px;
+            font: 400 .95rem var(--tc-font);
+            background: var(--tc-bg);
+        }
+        .mk-search input:focus { outline: none; border-color: var(--tc-green-600); background: #fff; box-shadow: 0 0 0 3px rgba(22,163,74,.15); }
+        .mk-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+        .mk-filter {
+            border: 1px solid var(--tc-line);
+            background: #fff;
+            color: var(--tc-muted);
+            border-radius: 999px;
+            padding: 9px 16px;
+            font: 500 .88rem var(--tc-font);
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .mk-filter:hover { border-color: var(--tc-green-600); color: var(--tc-green-700); }
+        .mk-filter.active { background: var(--tc-green-700); border-color: var(--tc-green-700); color: #fff; }
+        .mk-count { color: var(--tc-muted); font-size: .9rem; margin: 22px 2px 14px; }
+
+        .mk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 20px;
         }
 
-        /* --- Base Styles (Full Screen Setup) --- */
-        body {
-            background-color: #ffffff;
-            min-height: 100vh;
-            font-family: var(--font-primary);
-            color: var(--text-dark);
+        .mk-card {
             display: flex;
             flex-direction: column;
-            margin: 0; /* Important: removes default margin */
-            padding: 0; /* Important: removes default padding */
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        a:hover {
-            color: var(--main-color);
-            text-decoration: none;
-        }
-
-        /* --- Header (Full Width) --- */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            padding: 15px 0;
-            width: 100%; /* Ensure full width */
-        }
-
-        .market-header {
-            gap: 1rem;
-        }
-
-        header .navbar {
-             /* Use container-fluid inside the navbar to keep content centered but allow full width nav */
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
-        header h6 {
-            font-family: var(--font-secondary);
-            font-weight: bold;
-            font-size: 24px;
-            color: var(--main-color);
-            margin-bottom: 0;
-        }
-
-        /* --- Main Content --- */
-        main {
-            flex-grow: 1; 
-            width: 100%; /* Ensure main is full width */
-        }
-
-        /* --- Marketplace Styling (Full Width Section) --- */
-        #marketplace {
-            background-color: #f7f7f7;
-            padding: 50px 0; /* Vertical padding */
-            width: 100%;
-        }
-
-        #marketplace .row {
-            /* Add horizontal padding/margin to the grid content inside the full width section */
-            padding-left: 1rem; 
-            padding-right: 1rem;
-            margin-left: 0;
-            margin-right: 0;
-        }
-
-        #marketplace h2 {
-            font-family: var(--font-secondary);
-            font-size: 2.5rem; /* Slightly larger for a full-screen feel */
-            color: var(--main-color) !important;
-            padding-left: 1rem; /* Align text with content grid */
-            padding-right: 1rem;
-        }
-        
-        #marketplace .lead {
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
-
-        .product-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
-            cursor: pointer;
-            border: 1px solid transparent !important;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
-            border: 1px solid var(--main-color) !important;
-        }
-
-        .product-image-container {
-            width: 100%;
-            max-width: min(100%, 220px);
-            aspect-ratio: 4 / 5;
             overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: transform .2s ease, box-shadow .2s ease;
         }
+        .mk-card:hover { transform: translateY(-4px); box-shadow: var(--tc-shadow-lg); }
 
-        .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
+        .mk-media {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            background: linear-gradient(180deg, #f7faf6, #eef5ef);
+            display: grid;
+            place-items: center;
+            padding: 22px;
         }
-
-        .product-card:hover .product-image {
-            transform: scale(1.05);
+        .mk-media img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+            transition: transform .3s ease;
         }
+        .mk-card:hover .mk-media img { transform: scale(1.05); }
+        .mk-type { position: absolute; top: 12px; left: 12px; }
 
-        .product-name {
-            color: var(--text-dark);
-            font-size: 1.1rem;
-            min-height: 2.2rem;
+        /* Shown when the product image can't be loaded */
+        .mk-fallback {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
         }
-
-        .product-status .badge {
-            font-size: 0.8rem;
+        .mk-fallback .mk-fallback-icon {
+            width: 84px; height: 84px; border-radius: 24px;
+            display: grid; place-items: center;
+            background: var(--tc-green-100);
+            font-size: 2.2rem;
         }
+        .mk-fallback span { font-size: .8rem; color: var(--tc-muted); }
+        .mk-media.no-image img { display: none; }
+        .mk-media.no-image .mk-fallback { display: flex; }
 
-        .product-type-badge {
-            letter-spacing: 0.5px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-            z-index: 10;
-        }
-
-        .buy-btn {
-            background-color: #05380b !important;
-            border-color: #05380b !important;
-            color: white;
+        .mk-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .mk-name {
             font-weight: 600;
-            transition: background-color 0.3s ease;
-            margin-top: 15px !important;
+            font-size: 1rem;
+            line-height: 1.35;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.7em;
         }
+        .mk-for { font-size: .82rem; color: var(--tc-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .mk-body .tc-btn { margin-top: auto; width: 100%; }
 
-        .buy-btn:hover {
-            background-color: #388e3c !important;
-            border-color: #388e3c !important;
+        .mk-empty { text-align: center; padding: 56px 16px; color: var(--tc-muted); display: none; }
+        .mk-empty i { font-size: 2.4rem; color: var(--tc-green-600); margin-bottom: 10px; }
+
+        .mk-note {
+            margin-top: 28px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            font-size: .9rem;
+            color: var(--tc-muted);
         }
-
-        /* --- Footer (Full Width) --- */
-        footer {
-            background-color: rgba(255, 255, 255, 0.95);
-            border-top: 1px solid rgba(0,0,0,0.1);
-            padding: 15px 0;
-            margin-top: auto;
-            width: 100%;
-        }
-        footer .text-center {
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
-
-        @media (max-width: 767.98px) {
-            header .navbar,
-            #marketplace .row,
-            #marketplace h2,
-            #marketplace .lead,
-            footer .text-center {
-                padding-left: 0.75rem;
-                padding-right: 0.75rem;
-            }
-
-            .market-header {
-                flex-direction: column;
-                align-items: stretch !important;
-                text-align: center;
-            }
-
-            .market-header .btn {
-                width: 100%;
-            }
-
-            #marketplace {
-                padding: 36px 0;
-            }
-
-            #marketplace h2 {
-                font-size: 2rem;
-            }
-        }
+        .mk-note i { color: var(--tc-amber); font-size: 1.2rem; margin-top: 2px; }
 
         @media (max-width: 575.98px) {
-            .product-card .card-body {
-                padding: 1.25rem;
-            }
-
-            .product-image-container {
-                max-width: 180px;
-            }
-
-            .product-name {
-                font-size: 1rem;
-                min-height: auto;
-            }
+            .mk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+            .mk-media { padding: 14px; }
+            .mk-body { padding: 12px; }
+            .mk-name { font-size: .9rem; }
+            .mk-body .tc-btn { padding: 9px 10px; font-size: .85rem; }
+            .mk-toolbar { margin-top: -40px; }
         }
     </style>
 </head>
 
-<body>
-    <!-- Header -->
-    <header>
-        <nav class="navbar navbar-light bg-white-transparent">
-            <!-- Use container-fluid for a full-width header with padded content -->
-            <div class="container-fluid market-header d-flex align-items-center justify-content-between flex-wrap">
-                <a class="navbar-brand" href="/">
-                    <h6>TOMATO CARE MARKETPLACE</h6>
+<body class="tc">
+    <header class="tc-nav">
+        <div class="tc-nav-inner">
+            <a class="tc-brand" href="/">
+                <span class="tc-brand-mark">🍅</span>
+                <span id="mkBrand">Tomato Care Marketplace</span>
+            </a>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <a href="/" class="tc-btn tc-btn-ghost py-2 px-3">
+                    <i class="fa-solid fa-arrow-left"></i> <span id="mkBack">Back to Predictor</span>
                 </a>
-                <!-- Optional: Add a nav link back to the main prediction page -->
-                <a href="/" class="btn btn-outline-success">Back to Predictor</a>
+                <select id="languageSelect" class="tc-lang" aria-label="Language">
+                    <option value="en">English</option>
+                    <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                    <option value="te">తెలుగు (Telugu)</option>
+                    <option value="hi">हिन्दी (Hindi)</option>
+                    <option value="ta">தமிழ் (Tamil)</option>
+                </select>
             </div>
-        </nav>
+        </div>
     </header>
 
-    <!-- Main Content (Full Width) -->
     <main>
-        <!-- Marketplace Section for Supplements and Fertilizers -->
-        <section id="marketplace" class="py-5">
-            <div class="row justify-content-center mb-5 mx-0">
-                <div class="col-12 text-center">
-                    <h2 class="fw-bold mb-3">Recommended Plant Care Solutions</h2>
-                    <p class="lead text-muted">Find the right supplement or fertilizer for your tomato plant's health needs.</p>
+        <section class="tc-hero mk-hero">
+            <span class="tc-eyebrow"><i class="fa-solid fa-seedling"></i> <span id="mkEyebrow">Trusted crop care</span></span>
+            <h1 id="mkTitle">Recommended Plant Care Solutions</h1>
+            <p id="mkSubtitle">Find the right supplement or fertilizer for your tomato plant's health needs.</p>
+        </section>
+
+        <div class="mk-wrap">
+            <div class="tc-card mk-toolbar">
+                <label class="mk-search mb-0">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input id="mkSearch" type="search" placeholder="Search products or diseases..." autocomplete="off">
+                </label>
+                <div class="mk-filters" role="group">
+                    <button type="button" class="mk-filter active" data-filter="all" id="mkFilterAll">All</button>
+                    <button type="button" class="mk-filter" data-filter="supplement" id="mkFilterSupplement">Supplements</button>
+                    <button type="button" class="mk-filter" data-filter="fertilizer" id="mkFilterFertilizer">Fertilizers</button>
                 </div>
             </div>
 
-            <!-- Product Grid (Jinja2 Template Logic) - Removed container, rely on row g-4 -->
-            <div class="row g-4 justify-content-center mx-0">
-                <!-- NOTE: The content below uses Jinja2 syntax which requires Flask/Jinja to execute. -->
-                <!-- The original Jinja loop is kept for your Flask application. -->
-                
+            <p class="mk-count" id="mkCount"></p>
+
+            <div class="mk-grid" id="mkGrid">
                 {% for index in range(0, supplement_name | length) %}
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                    <div class="card product-card border-0 shadow-lg h-100 position-relative overflow-hidden">
-                        <!-- Product Type Label (Top Left) -->
-                        <span class="product-type-badge position-absolute top-0 start-0 px-3 py-1 fw-bold text-uppercase"
-                            style="font-size: 0.75rem; border-bottom-right-radius: 8px; {% if 'healthy' in disease[index] %} background-color: var(--main-color); color: white; {% else %} background-color: #dc3545; color: white; {% endif %}">
-                            {% if "healthy" in disease[index] %}
-                                Fertilizer
-                            {% else %}
-                                Supplement
-                            {% endif %}
-                        </span>
-
-                        <div class="card-body d-flex flex-column align-items-center p-4">
-                            
-                            <!-- Image -->
-                            <div class="product-image-container mb-3">
-                                <img src="{{ supplement_image[index] }}" alt="{{ supplement_name[index] }}" class="img-fluid rounded product-image">
-                            </div>
-
-                            <!-- Name and Type -->
-                            <h5 class="fw-bold text-center mb-1 product-name">{{ supplement_name[index] }}</h5>
-                            
-                            <!-- Disease/Health Status -->
-                            <p class="mb-2 text-center small text-uppercase fw-semibold product-status">
-                                For <span class="badge rounded-pill px-3 py-2" 
-                                      style="{% if 'healthy' in disease[index] %} background-color: #e8f5e9; color: #388e3c; border: 1px solid #4CAF50; {% else %} background-color: #ffebee; color: #d32f2f; border: 1px solid #f44336; {% endif %}">
-                                    {{ disease[index] }}
-                                </span>
-                            </p>
-
-                            <!-- Buy Button -->
-                            <a target="_blank" href="{{ buy[index] }}" class="btn btn-success mt-auto w-100 buy-btn">
-                                <i class="fas fa-shopping-cart me-2"></i> Buy Product
-                            </a>
+                {% set is_healthy = 'healthy' in disease[index] %}
+                {% set disease_key = disease[index].replace('Tomato___', '').strip() %}
+                <article class="tc-card mk-card"
+                         data-type="{{ 'fertilizer' if is_healthy else 'supplement' }}"
+                         data-disease="{{ disease_key }}"
+                         data-search="{{ (supplement_name[index] ~ ' ' ~ disease_key.replace('_', ' ')) | lower }}">
+                    <div class="mk-media">
+                        {% if is_healthy %}
+                        <span class="tc-chip tc-chip-green mk-type"><i class="fa-solid fa-leaf"></i> <span class="mk-fertilizer">Fertilizer</span></span>
+                        {% else %}
+                        <span class="tc-chip tc-chip-red mk-type"><i class="fa-solid fa-shield-virus"></i> <span class="mk-supplement">Supplement</span></span>
+                        {% endif %}
+                        <img src="{{ supplement_image[index] }}" alt="{{ supplement_name[index] }}" loading="lazy"
+                             referrerpolicy="no-referrer"
+                             onerror="this.closest('.mk-media').classList.add('no-image')">
+                        <div class="mk-fallback">
+                            <div class="mk-fallback-icon">{{ '🌱' if is_healthy else '🧴' }}</div>
+                            <span class="mk-noimage">Image not available</span>
                         </div>
                     </div>
-                </div>
+                    <div class="mk-body">
+                        <h3 class="mk-name" title="{{ supplement_name[index] }}">{{ supplement_name[index] }}</h3>
+                        <div class="mk-for">
+                            <span class="mk-for-label">For</span>
+                            <span class="tc-chip {{ 'tc-chip-green' if is_healthy else 'tc-chip-red' }} mk-disease">{{ disease_key.replace('_', ' ') }}</span>
+                        </div>
+                        <a target="_blank" rel="noopener noreferrer" href="{{ buy[index] }}" class="tc-btn tc-btn-primary">
+                            <i class="fa-solid fa-cart-shopping"></i> <span class="mk-buy">Buy Product</span>
+                        </a>
+                    </div>
+                </article>
                 {% endfor %}
             </div>
-            <!-- END Product Grid -->
-        </section>
+
+            <div class="mk-empty" id="mkEmpty">
+                <i class="fa-solid fa-basket-shopping d-block"></i>
+                <p class="mb-0" id="mkEmptyText">No products match your search.</p>
+            </div>
+
+            <div class="tc-card mk-note">
+                <i class="fa-solid fa-circle-info"></i>
+                <p class="mb-0" id="mkNote">Always read the product label and follow the recommended dose. Prices and availability are shown on the seller's website.</p>
+            </div>
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="mt-5">
-        <div class="text-center">
-            <p class="copyright mb-0">
-                &copy; <span id="currentYear"></span> All rights reserved.
-            </p>
-        </div>
+    <footer class="tc-footer">
+        &copy; <span id="currentYear"></span> Tomato Care · <span id="mkRights">All rights reserved.</span>
     </footer>
 
-    <!-- JS Libraries (Required for Bootstrap) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Simple Script for Current Year (Optional) -->
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Language is shared with the other pages via localStorage
+        const MARKET_TEXT = {
+            en: { brand: "Tomato Care Marketplace", back: "Back to Predictor", eyebrow: "Trusted crop care", title: "Recommended Plant Care Solutions", subtitle: "Find the right supplement or fertilizer for your tomato plant's health needs.", search: "Search products or diseases...", all: "All", supplements: "Supplements", fertilizers: "Fertilizers", fertilizer: "Fertilizer", supplement: "Supplement", forText: "For", buy: "Buy Product", noImage: "Image not available", empty: "No products match your search.", count: n => `${n} product${n === 1 ? "" : "s"}`, note: "Always read the product label and follow the recommended dose. Prices and availability are shown on the seller's website.", rights: "All rights reserved." },
+            hi: { brand: "टमाटर देखभाल बाज़ार", back: "पहचान पेज पर वापस", eyebrow: "विश्वसनीय फसल देखभाल", title: "अनुशंसित पौध देखभाल समाधान", subtitle: "अपने टमाटर के पौधे के स्वास्थ्य के लिए सही सप्लीमेंट या उर्वरक खोजें।", search: "उत्पाद या रोग खोजें...", all: "सभी", supplements: "सप्लीमेंट", fertilizers: "उर्वरक", fertilizer: "उर्वरक", supplement: "सप्लीमेंट", forText: "के लिए", buy: "उत्पाद खरीदें", noImage: "चित्र उपलब्ध नहीं", empty: "आपकी खोज से कोई उत्पाद मेल नहीं खाता।", count: n => `${n} उत्पाद`, note: "हमेशा उत्पाद का लेबल पढ़ें और अनुशंसित मात्रा का पालन करें। कीमत और उपलब्धता विक्रेता की वेबसाइट पर दिखाई जाती है।", rights: "सर्वाधिकार सुरक्षित।" },
+            kn: { brand: "ಟೊಮೇಟೊ ಆರೈಕೆ ಮಾರುಕಟ್ಟೆ", back: "ಪತ್ತೆ ಪುಟಕ್ಕೆ ಹಿಂದಿರುಗಿ", eyebrow: "ವಿಶ್ವಾಸಾರ್ಹ ಬೆಳೆ ಆರೈಕೆ", title: "ಶಿಫಾರಸು ಮಾಡಿದ ಸಸ್ಯ ಆರೈಕೆ ಪರಿಹಾರಗಳು", subtitle: "ನಿಮ್ಮ ಟೊಮೇಟೊ ಸಸ್ಯದ ಆರೋಗ್ಯಕ್ಕೆ ಸರಿಯಾದ ಪೂರಕ ಅಥವಾ ಗೊಬ್ಬರವನ್ನು ಹುಡುಕಿ.", search: "ಉತ್ಪನ್ನ ಅಥವಾ ರೋಗ ಹುಡುಕಿ...", all: "ಎಲ್ಲಾ", supplements: "ಪೂರಕಗಳು", fertilizers: "ಗೊಬ್ಬರಗಳು", fertilizer: "ಗೊಬ್ಬರ", supplement: "ಪೂರಕ", forText: "ಇದಕ್ಕಾಗಿ", buy: "ಉತ್ಪನ್ನ ಖರೀದಿಸಿ", noImage: "ಚಿತ್ರ ಲಭ್ಯವಿಲ್ಲ", empty: "ನಿಮ್ಮ ಹುಡುಕಾಟಕ್ಕೆ ಯಾವುದೇ ಉತ್ಪನ್ನ ಹೊಂದಿಕೆಯಾಗಿಲ್ಲ.", count: n => `${n} ಉತ್ಪನ್ನಗಳು`, note: "ಯಾವಾಗಲೂ ಉತ್ಪನ್ನದ ಲೇಬಲ್ ಓದಿ ಮತ್ತು ಶಿಫಾರಸು ಮಾಡಿದ ಪ್ರಮಾಣವನ್ನು ಅನುಸರಿಸಿ. ಬೆಲೆ ಮತ್ತು ಲಭ್ಯತೆ ಮಾರಾಟಗಾರರ ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಇರುತ್ತದೆ.", rights: "ಎಲ್ಲ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ." },
+            te: { brand: "టమోటా సంరక్షణ మార్కెట్", back: "గుర్తింపు పేజీకి తిరిగి", eyebrow: "నమ్మకమైన పంట సంరక్షణ", title: "సిఫారసు చేసిన మొక్కల సంరక్షణ పరిష్కారాలు", subtitle: "మీ టమోటా మొక్క ఆరోగ్యానికి సరైన సప్లిమెంట్ లేదా ఎరువును కనుగొనండి.", search: "ఉత్పత్తులు లేదా వ్యాధులు వెతకండి...", all: "అన్నీ", supplements: "సప్లిమెంట్లు", fertilizers: "ఎరువులు", fertilizer: "ఎరువు", supplement: "సప్లిమెంట్", forText: "కోసం", buy: "ఉత్పత్తి కొనండి", noImage: "చిత్రం అందుబాటులో లేదు", empty: "మీ శోధనకు సరిపోయే ఉత్పత్తులు లేవు.", count: n => `${n} ఉత్పత్తులు`, note: "ఎల్లప్పుడూ ఉత్పత్తి లేబుల్ చదివి సిఫారసు చేసిన మోతాదును పాటించండి. ధర మరియు లభ్యత విక్రేత వెబ్‌సైట్‌లో ఉంటాయి.", rights: "అన్ని హక్కులు రిజర్వ్ చేయబడ్డాయి." },
+            ta: { brand: "தக்காளி பராமரிப்பு சந்தை", back: "கண்டறிதல் பக்கத்திற்கு திரும்பு", eyebrow: "நம்பகமான பயிர் பராமரிப்பு", title: "பரிந்துரைக்கப்பட்ட தாவர பராமரிப்பு தீர்வுகள்", subtitle: "உங்கள் தக்காளி செடியின் ஆரோக்கியத்திற்கு சரியான சப்ளிமெண்ட் அல்லது உரத்தை கண்டறியுங்கள்.", search: "பொருட்கள் அல்லது நோய்களை தேடுங்கள்...", all: "அனைத்தும்", supplements: "சப்ளிமெண்ட்கள்", fertilizers: "உரங்கள்", fertilizer: "உரம்", supplement: "சப்ளிமெண்ட்", forText: "இதற்கு", buy: "பொருளை வாங்கு", noImage: "படம் கிடைக்கவில்லை", empty: "உங்கள் தேடலுக்கு பொருந்தும் பொருட்கள் இல்லை.", count: n => `${n} பொருட்கள்`, note: "எப்போதும் பொருளின் லேபிளைப் படித்து பரிந்துரைக்கப்பட்ட அளவைப் பின்பற்றுங்கள். விலை மற்றும் கிடைப்பு விற்பனையாளர் இணையதளத்தில் உள்ளது.", rights: "அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை." }
+        };
+
+        // Disease names keyed by the CSV value (after removing "Tomato___")
+        const DISEASE_NAMES = {
+            "Bacterial_spot":          { en: "Bacterial Spot", hi: "बैक्टीरियल स्पॉट", kn: "ಬ್ಯಾಕ್ಟೀರಿಯಾ ಚುಕ್ಕೆ", te: "బ్యాక్టీరియల్ మచ్చ", ta: "பாக்டீரியா புள்ளி" },
+            "Early_blight":            { en: "Early Blight", hi: "अगेती झुलसा", kn: "ಆರಂಭಿಕ ಎಲೆ ಕರಗು", te: "ముందస్తు ఆకు ఎండు", ta: "முன் கருகல்" },
+            "Late_blight":             { en: "Late Blight", hi: "पछेती झुलसा", kn: "ತಡವಾದ ಎಲೆ ಕರಗು", te: "ఆలస్య ఆకు ఎండు", ta: "பின் கருகல்" },
+            "Leaf_Mold":               { en: "Leaf Mold", hi: "पत्ती फफूंद", kn: "ಎಲೆ ಬೂಸ್ಟು", te: "ఆకు బూజు", ta: "இலை பூஞ்சை" },
+            "Septoria_leaf_spot":      { en: "Septoria Leaf Spot", hi: "सेप्टोरिया पत्ती धब्बा", kn: "ಸೆಪ್ಟೋರಿಯಾ ಎಲೆ ಚುಕ್ಕೆ", te: "సెప్టోరియా ఆకు మచ్చ", ta: "செப்டோரியா இலை புள்ளி" },
+            "Spider_mites":            { en: "Spider Mites", hi: "मकड़ी घुन", kn: "ಜೇಡ ಹುಳು", te: "సాలీడు పురుగులు", ta: "சிலந்திப் பூச்சி" },
+            "Target_Spot":             { en: "Target Spot", hi: "टारगेट स्पॉट", kn: "ಟಾರ್ಗೆಟ್ ಚುಕ್ಕೆ", te: "టార్గెట్ మచ్చ", ta: "இலக்கு புள்ளி" },
+            "Yellow_Leaf_Curl_Virus":  { en: "Yellow Leaf Curl Virus", hi: "पीली पत्ती मोड़ वायरस", kn: "ಹಳದಿ ಎಲೆ ಸುರುಳಿ ವೈರಸ್", te: "పసుపు ఆకు ముడత వైరస్", ta: "மஞ்சள் இலை சுருள் வைரஸ்" },
+            "mosaic_virus":            { en: "Mosaic Virus", hi: "मोज़ेक वायरस", kn: "ಮೊಸಾಯಿಕ್ ವೈರಸ್", te: "మొజాయిక్ వైరస్", ta: "மொசைக் வைரஸ்" },
+            "healthy":                 { en: "Healthy Plants", hi: "स्वस्थ पौधे", kn: "ಆರೋಗ್ಯಕರ ಸಸ್ಯಗಳು", te: "ఆరోగ్యకరమైన మొక్కలు", ta: "ஆரோக்கியமான செடிகள்" }
+        };
+
+        const languageSelect = document.getElementById('languageSelect');
+        const searchInput = document.getElementById('mkSearch');
+        const cards = [...document.querySelectorAll('.mk-card')];
+        let currentLang = 'en';
+        let activeFilter = 'all';
+
+        function t() { return MARKET_TEXT[currentLang] || MARKET_TEXT.en; }
+
+        function applyFilters() {
+            const q = searchInput.value.trim().toLowerCase();
+            let shown = 0;
+            cards.forEach(card => {
+                const typeOk = activeFilter === 'all' || card.dataset.type === activeFilter;
+                const text = card.dataset.search + ' ' + card.querySelector('.mk-disease').textContent.toLowerCase();
+                const visible = typeOk && (!q || text.includes(q));
+                card.style.display = visible ? '' : 'none';
+                if (visible) shown++;
+            });
+            document.getElementById('mkCount').textContent = t().count(shown);
+            document.getElementById('mkEmpty').style.display = shown ? 'none' : 'block';
+        }
+
+        function applyMarketLanguage(lang) {
+            currentLang = MARKET_TEXT[lang] ? lang : 'en';
+            const s = t();
+            languageSelect.value = currentLang;
+            document.documentElement.lang = currentLang;
+            $('#mkBrand').text(s.brand);
+            $('#mkBack').text(s.back);
+            $('#mkEyebrow').text(s.eyebrow);
+            $('#mkTitle').text(s.title);
+            $('#mkSubtitle').text(s.subtitle);
+            $('#mkFilterAll').text(s.all);
+            $('#mkFilterSupplement').text(s.supplements);
+            $('#mkFilterFertilizer').text(s.fertilizers);
+            $('.mk-fertilizer').text(s.fertilizer);
+            $('.mk-supplement').text(s.supplement);
+            $('.mk-for-label').text(s.forText);
+            $('.mk-buy').text(s.buy);
+            $('.mk-noimage').text(s.noImage);
+            $('#mkEmptyText').text(s.empty);
+            $('#mkNote').text(s.note);
+            $('#mkRights').text(s.rights);
+            searchInput.placeholder = s.search;
+            cards.forEach(card => {
+                const names = DISEASE_NAMES[card.dataset.disease];
+                if (names) card.querySelector('.mk-disease').textContent = names[currentLang] || names.en;
+            });
+            applyFilters();
+        }
+
+        document.querySelectorAll('.mk-filter').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mk-filter').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.dataset.filter;
+                applyFilters();
+            });
+        });
+        searchInput.addEventListener('input', applyFilters);
+
+        let savedLang = 'en';
+        try { savedLang = localStorage.getItem('appLang') || 'en'; } catch (e) {}
+        applyMarketLanguage(savedLang);
+
+        languageSelect.addEventListener('change', (e) => {
+            try { localStorage.setItem('appLang', e.target.value); } catch (err) {}
+            applyMarketLanguage(e.target.value);
+        });
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'appLang' && e.newValue) applyMarketLanguage(e.newValue);
+        });
     </script>
 </body>
 </html>
