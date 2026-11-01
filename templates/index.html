@@ -4,522 +4,304 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#14532d" />
   <title>{% block pagetitle %}Tomato Disease Prediction | Harshith AI{% endblock pagetitle %}</title>
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Poppins (UI) + Noto Sans families for Indic scripts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Red+Rose:wght@600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet"/>
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
+  <!-- Shared design system -->
+  <link rel="stylesheet" href="/static/theme.css">
+
   <!-- Toastr notifications -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
 
-  <!-- Custom CSS (Embedded and Updated for Modern Look) -->
+  <!-- Page styles (home) -->
   <style>
-    /* ---------------------------------------------------- */
-    /* --- Base/Utility Styles --- */
-    /* ---------------------------------------------------- */
-
     :root {
-      --primary-green: #38a169; /* Success/Upload */
-      --secondary-red: #ef3a3a; /* Accent/Tomato */
-      --text-dark: #262626;
-      --text-light: #444444;
-      --bg-light: #f8f9fa;
-      --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-      --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+      /* Extend the shared font stack so Kannada / Telugu / Tamil glyphs use Noto */
+      --tc-font: "Poppins", "Noto Sans", "Noto Sans Kannada", "Noto Sans Telugu", "Noto Sans Tamil", system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
-    body {
-      background-image: url("../static/images/background.jpg");
-      background-repeat: no-repeat;
-      background-size: cover; /* Changed from 100% 130% to cover */
-      background-position: center;
-      min-height: 100vh;
-      font-family: 'Montserrat', sans-serif;
-      color: var(--text-light);
-      position: relative;
-      display: flex;
-      flex-direction: column;
+    body.tc { overflow-x: hidden; }
+    body.tc a { transition: color .15s; }
+
+    /* ---------- Nav ---------- */
+    .tc-nav-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .tc-links a { min-height: 40px; display: inline-flex; align-items: center; }
+    .tc-links a.tc-link-cta {
+      background: var(--tc-tomato-50);
+      color: #b42318 !important;
     }
+    .tc-links a.tc-link-cta:hover { background: #ffe1e1; color: #8f1d14 !important; }
+    .tc-lang { min-height: 40px; max-width: 100%; }
 
-    html {
-      position: relative;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-      transition: color 0.3s;
-    }
-
-    a:hover {
-      color: var(--primary-green);
-    }
-
-    /* ---------------------------------------------------- */
-    /* --- Header/Navigation --- */
-    /* ---------------------------------------------------- */
-
-    header {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow-sm);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .navbar-brand {
-      font-family: 'Red Rose', cursive;
-      font-weight: 700;
-      color: var(--primary-green) !important;
-    }
-    
-    .navbar-nav .nav-link {
-        font-weight: 500;
-        color: var(--text-dark);
-        padding: 0.5rem 1rem;
-    }
-
-    .navbar-nav .nav-item a.btn {
-        font-weight: 600;
-        border-radius: 0.5rem;
-        transition: background-color 0.3s, transform 0.2s;
-    }
-
-    .navbar-nav .nav-item a.btn:hover {
-        transform: translateY(-2px);
-    }
-
-    .top-nav-actions {
-      gap: 0.75rem;
-    }
-
-    /* ---------------------------------------------------- */
-    /* --- Main Upload Section --- */
-    /* ---------------------------------------------------- */
-
-    main {
-      flex: 1 0 auto;
-    }
-
-    main #uploadImage {
-      padding-top: 50px;
-      padding-bottom: 100px;
-    }
-
+    /* ---------- Hero ---------- */
+    .home-hero { padding: 44px 0 96px; text-align: center; }
+    .home-hero .tc-eyebrow { margin-bottom: 14px; }
     #pageTitle {
-      font-family: 'Red Rose', cursive;
       font-weight: 700;
-      color: var(--text-dark);
-      font-size: 2.5rem;
+      font-size: clamp(1.7rem, 4.6vw, 2.75rem);
+      line-height: 1.2;
+      letter-spacing: -.3px;
+      margin: 0 auto 12px;
+      max-width: 820px;
+      color: #fff;
     }
-
     #pageSubtitle {
-      font-weight: 400;
-      color: var(--text-light);
-      margin-top: 0.5rem;
-      font-size: 1.1rem;
+      font-size: clamp(.98rem, 2.2vw, 1.12rem);
+      color: rgba(255,255,255,.86);
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 1.6;
     }
-
-    .agrimart-card {
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid rgba(56, 161, 105, 0.15);
-      border-radius: 1.5rem;
-      padding: 1.5rem;
-      box-shadow: var(--shadow-md);
-      height: 100%;
+    .hero-steps {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 8px;
+      margin-top: 22px; padding: 0; list-style: none;
     }
-
-    .agrimart-badge {
-      display: inline-block;
-      padding: 0.3rem 0.8rem;
+    .hero-steps li {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      color: #fff;
       border-radius: 999px;
-      background: rgba(56, 161, 105, 0.12);
-      color: var(--primary-green);
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      padding: 6px 14px;
+      font-size: .85rem;
+      font-weight: 500;
     }
 
-    .agrimart-card h5 {
-      color: var(--text-dark);
-      font-weight: 700;
-      margin: 0.9rem 0 0.65rem;
-    }
+    /* ---------- Layout ---------- */
+    .home-main { margin-top: -64px; position: relative; z-index: 2; padding-bottom: 8px; }
 
-    .agrimart-card p,
-    .agrimart-card li,
-    .agrimart-card a {
-      font-size: 0.95rem;
+    /* ---------- Upload card / drop zone ---------- */
+    #drop-area { padding: 22px; }
+    .upload-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .upload-head-icon {
+      width: 42px; height: 42px; flex: 0 0 42px;
+      border-radius: 12px;
+      display: grid; place-items: center;
+      background: var(--tc-green-100);
+      font-size: 1.25rem;
     }
-
-    .agrimart-list {
-      list-style: none;
-      padding: 0;
-      margin: 1rem 0 0;
-    }
-
-    .agrimart-list li {
-      margin-bottom: 0.65rem;
-      color: var(--text-light);
-    }
-
-    .agrimart-meta {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid #eef2f0;
-    }
-
-    .agrimart-meta p {
-      margin-bottom: 0.45rem;
-      color: var(--text-light);
-    }
-
-    .agrimart-socials {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .agrimart-socials a {
-      width: 2.3rem;
-      height: 2.3rem;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #f3f7f4;
-      border: 1px solid #e3ece6;
-    }
-
-    .agrimart-socials img {
-      width: 1rem;
-      height: 1rem;
-    }
-
-    .agrimart-socials span {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-dark);
-    }
-
-    .farmer-help-card {
-      border-color: rgba(239, 58, 58, 0.16);
-    }
-
-    .farmer-help-badge {
-      background: rgba(239, 58, 58, 0.12);
-      color: var(--secondary-red);
-    }
-
-    #drop-area {
-      background-color: white;
-      border: 3px dashed var(--primary-green);
-      border-radius: 1.5rem; /* Smoother corners */
-      padding: 40px;
-      box-shadow: var(--shadow-md);
-      transition: box-shadow 0.3s;
-      width: 100%;
-    }
-
-    #drop-area:hover {
-        box-shadow: 0 0 20px rgba(56, 161, 105, 0.2); /* Green hover glow */
-    }
+    .upload-head h2 { font-size: 1.05rem; font-weight: 600; margin: 0; color: var(--tc-ink); }
+    .upload-head p { font-size: .85rem; margin: 0; color: var(--tc-muted); }
 
     #preview-container {
-        margin-bottom: 1.5rem;
-        border-radius: 1rem;
-        overflow: hidden;
-        border: 1px solid #e0e0e0;
+      display: block;
+      cursor: pointer;
+      text-align: center;
+      border: 2px dashed #b7dcc3;
+      background: var(--tc-green-50);
+      border-radius: var(--tc-radius);
+      padding: 22px 16px;
+      margin-bottom: 16px;
+      transition: border-color .2s, background .2s, box-shadow .2s, transform .2s;
     }
-
+    #preview-container:hover {
+      border-color: var(--tc-green-600);
+      background: #e8f9ee;
+    }
+    #drop-area.active #preview-container {
+      border-color: var(--tc-green-600);
+      border-style: solid;
+      background: var(--tc-green-100);
+      box-shadow: 0 0 0 5px rgba(22,163,74,.15);
+      transform: scale(1.01);
+    }
     #previewImage {
-        width: 100%;
-        height: auto;
-        max-height: 300px;
-        object-fit: contain;
-        background-color: #f7f7f7;
-    }
-
-    .texts p {
-        margin-bottom: 0.5rem;
-        text-align: center;
-    }
-
-    #dragText {
-        font-weight: 600;
-        color: var(--primary-green);
-        font-size: 1.1rem;
-    }
-
-    #fileTypeText {
-        font-weight: 400;
-        color: #8e8e8e;
-        font-size: 0.9rem;
-    }
-
-    /* Buttons */
-    #uploadButton {
-        border-radius: 2rem;
-        padding: 0.6rem 2rem;
-        font-weight: 600;
-        border: 2px solid var(--primary-green);
-        color: var(--primary-green);
-        transition: all 0.3s;
-    }
-
-    #uploadButton:hover {
-        background-color: var(--primary-green);
-        color: white;
-    }
-    
-    #speakButton {
-        border-radius: 2rem;
-        padding: 0.6rem 2rem;
-        font-weight: 600;
-        background-color: #ffc107; /* Bootstrap warning */
-        border: none;
-        transition: all 0.3s;
-    }
-    
-    #speakButton:hover {
-        background-color: #e0a800;
-    }
-
-    /* Results Area */
-    .resultArea {
-        margin-top: 1.5rem;
-        border-top: 1px solid #f0f0f0;
-        padding-top: 1.5rem;
-    }
-    
-    .resultArea .list-group-item {
-        border: none;
-        padding: 0.5rem 0;
-        background: transparent;
-        align-items: flex-start;
-    }
-
-    .resultArea .list-group-item p {
-        font-weight: 500;
-        color: var(--text-dark);
-        margin-right: 0.5rem;
-        min-width: 150px;
-    }
-
-    #result, #confidenceScore {
-        font-weight: 700;
-        color: var(--primary-green);
-        margin-left: 0.5rem;
-    }
-    
-    #diseaseDescription {
-        flex-grow: 1;
-        padding-left: 0.5rem;
-    }
-    
-    /* FIX: Styling for the list now rendered as <ul>, relying on text content for numbering */
-    #diseaseDescription ul { 
-        list-style: none; /* Remove default bullets/numbers */
-        padding-left: 0;
-        margin-bottom: 0;
-        font-size: 0.95rem;
-        font-weight: 400;
-        line-height: 1.4;
-    }
-    
-    #diseaseDescription li {
-        margin-bottom: 0.5rem;
-        color: var(--text-light);
-    }
-    
-    /* Loading Area */
-    .loadingArea {
-        text-align: center;
-    }
-    .loadingArea .progress {
-        height: 10px;
-        border-radius: 5px;
-    }
-    #uploadStatus {
-        display: block;
-        margin-top: 5px;
-        font-size: 0.9rem;
-        color: var(--primary-green);
-    }
-
-    /* ---------------------------------------------------- */
-    /* --- Footer --- */
-    /* ---------------------------------------------------- */
-
-    footer {
-      background-color: var(--bg-light) !important;
-      border-top: 1px solid #e0e0e0;
+      display: block;
       width: 100%;
-      padding: 1.5rem 0;
-      margin-top: auto;
+      max-height: 280px;
+      object-fit: contain;
+      margin: 0 auto;
+      border-radius: var(--tc-radius-sm);
     }
-    
-    /* ---------------------------------------------------- */
-    /* --- Media Queries --- */
-    /* ---------------------------------------------------- */
-
-    @media (max-width: 991px) {
-      .navbar-collapse {
-        padding-top: 1rem;
-      }
-
-      .navbar-nav {
-        align-items: stretch !important;
-        gap: 0.5rem;
-      }
-
-      .navbar-nav .nav-link {
-        padding-left: 0;
-        padding-right: 0;
-      }
-
-      .top-nav-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .top-nav-actions .nav-item,
-      .top-nav-actions .nav-item.ms-lg-3 {
-        margin-left: 0 !important;
-      }
-
-      .top-nav-actions .btn,
-      #languageSelect {
-        width: 100%;
-      }
+    .texts { margin-top: 14px; }
+    #dragText {
+      display: block;
+      font-weight: 600;
+      color: var(--tc-green-800);
+      font-size: 1.05rem;
+      margin-bottom: 4px;
     }
+    #fileTypeText { display: block; font-size: .85rem; color: var(--tc-muted); }
 
-    @media (max-width: 767px) {
-      main #uploadImage {
-        padding-top: 32px;
-        padding-bottom: 56px;
-      }
+    .upload-actions { display: flex; justify-content: center; gap: 12px; margin-bottom: 4px; }
+    #uploadButton { min-height: 48px; padding: 12px 28px; font-size: 1rem; }
+    #uploadButton::before { content: "\2B06"; font-size: .95rem; }
 
-      #pageTitle {
-        font-size: 2rem;
-      }
-
-      #pageSubtitle {
-        font-size: 1rem;
-      }
-
-      .agrimart-card {
-        margin-bottom: 1.25rem;
-      }
-
-      #drop-area {
-        padding: 30px 20px;
-      }
-
-      .d-flex.justify-content-center.gap-3.mb-4 {
-        flex-direction: column;
-      }
-
-      #uploadButton,
-      #speakButton {
-        width: 100%;
-      }
-
-      .resultArea .list-group-item {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-      .resultArea .list-group-item p {
-        margin-bottom: 0.2rem;
-        min-width: unset;
-      }
-      #diseaseDescription {
-          padding-left: 0;
-          margin-top: 0.5rem;
-          text-align: left; /* Keep lists readable */
-      }
-
-      .modal-dialog {
-        margin: 0.75rem;
-      }
-
-      #supImageMain {
-        max-height: 240px !important;
-        margin-bottom: 1rem;
-      }
-
-      #supSimage {
-        width: 100% !important;
-        max-width: 180px;
-        height: auto !important;
-      }
+    /* Loading */
+    .loadingArea {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: var(--tc-radius-sm);
+      background: var(--tc-green-50);
+      border: 1px solid var(--tc-green-100);
     }
+    .loadingArea .progress { height: 8px; border-radius: 999px; background: #d7eadc; }
+    .loadingArea .progress-bar { background-color: var(--tc-green-600) !important; }
+    .loading-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    #uploadStatus { font-size: .9rem; font-weight: 600; color: var(--tc-green-700); }
+    .cancelUpload {
+      border: 0; background: transparent;
+      color: #b42318; font: 600 .88rem var(--tc-font);
+      padding: 8px 10px; border-radius: 10px; min-height: 40px; cursor: pointer;
+    }
+    .cancelUpload:hover { background: var(--tc-tomato-50); }
 
-    @media (max-width: 575px) {
-      .container-fluid.px-4,
-      .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-      }
+    /* Result */
+    .resultArea {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: var(--tc-radius);
+      background: var(--tc-surface);
+      border: 1px solid var(--tc-line);
+      box-shadow: var(--tc-shadow);
+      border-top: 4px solid var(--tc-green-600);
+    }
+    #predictionHeading {
+      font-size: .78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--tc-muted);
+      margin: 0 0 10px;
+    }
+    .result-list { list-style: none; padding: 0; margin: 0; }
+    .result-row { padding: 10px 0; border-bottom: 1px solid var(--tc-line); }
+    .result-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .result-row > p { font-size: .82rem; font-weight: 500; color: var(--tc-muted); margin: 0 0 4px; }
+    #result { display: block; font-size: 1.35rem; font-weight: 700; color: var(--tc-green-800); line-height: 1.3; word-break: break-word; }
+    .confidence-line { display: flex; align-items: center; gap: 12px; }
+    #confidenceScore { font-weight: 700; color: var(--tc-ink); min-width: 64px; white-space: nowrap; }
+    #confidenceScore.is-pct::after { content: "%"; }
+    .confidence-bar {
+      flex: 1;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--tc-green-100);
+      overflow: hidden;
+    }
+    .confidence-bar > span {
+      display: block; height: 100%; width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--tc-green-600), #22c55e);
+      transition: width .6s ease;
+    }
+    .confidence-bar.is-low > span { background: linear-gradient(90deg, var(--tc-amber), #fbbf24); }
+    #diseaseDescription { display: block; color: var(--tc-ink); font-size: .95rem; line-height: 1.6; }
+    #diseaseDescription ul { list-style: none; padding: 0; margin: 0; }
+    #diseaseDescription li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 8px;
+      color: #33463b;
+    }
+    #diseaseDescription li::before {
+      content: "";
+      position: absolute; left: 2px; top: .62em;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--tc-green-600);
+    }
+    #diseaseDescription a { color: var(--tc-green-700); font-weight: 600; word-break: break-word; }
 
-      #pageTitle {
-        font-size: 1.75rem;
-      }
+    #speakButton { width: 100%; min-height: 48px; margin-top: 16px; }
 
-      #dragText {
-        font-size: 1rem;
-      }
+    /* ---------- Info cards (Agrimart / Farmer helpline) ---------- */
+    .info-card { padding: 20px; }
+    .info-card + .info-card { margin-top: 20px; }
+    .info-card h5 { font-size: 1.08rem; font-weight: 700; color: var(--tc-ink); margin: 12px 0 6px; }
+    .info-card > p { font-size: .92rem; color: var(--tc-muted); line-height: 1.55; margin-bottom: 0; }
+    .agrimart-list { list-style: none; padding: 0; margin: 14px 0 0; }
+    .agrimart-list li {
+      font-size: .9rem;
+      color: #33463b;
+      padding: 8px 0;
+      border-top: 1px solid var(--tc-line);
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .agrimart-list strong, .agrimart-meta strong { color: var(--tc-ink); font-weight: 600; }
+    .agrimart-meta {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: var(--tc-radius-sm);
+      background: var(--tc-bg);
+    }
+    .agrimart-meta p { font-size: .88rem; margin: 0 0 6px; color: #33463b; word-break: break-word; }
+    .agrimart-meta p:last-child { margin-bottom: 0; }
+    .info-card a:not(.tc-btn) { color: var(--tc-green-700); font-weight: 600; text-decoration: none; }
+    .info-card a:not(.tc-btn):hover { text-decoration: underline; }
+    #farmerHelpPhoneLink {
+      display: inline-flex; align-items: center; min-height: 32px;
+    }
+    .agrimart-socials { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .agrimart-socials a {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--tc-green-50);
+      border: 1px solid var(--tc-green-100);
+      transition: background .15s, transform .15s;
+    }
+    .agrimart-socials a:hover { background: var(--tc-green-100); transform: translateY(-1px); text-decoration: none !important; }
+    .agrimart-socials img { width: 18px; height: 18px; }
+    .agrimart-socials span { font-size: .75rem; font-weight: 700; color: var(--tc-green-800); }
+    .farmer-help-card { border-top: 4px solid var(--tc-tomato); }
+    .agrimart-card { border-top: 4px solid var(--tc-green-600); }
+
+    /* ---------- Modal ---------- */
+    #supplementModal .modal-content { border: 0; border-radius: var(--tc-radius); box-shadow: var(--tc-shadow-lg); }
+    #supplementModal .modal-header { border-bottom: 1px solid var(--tc-line); }
+    #supplementModal .modal-title { font-weight: 600; color: var(--tc-green-800); }
+    #supplementModal .modal-footer { border-top: 1px solid var(--tc-line); }
+
+    /* ---------- Footer ---------- */
+    .tc-footer #footerText { color: rgba(255,255,255,.75); }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 767.98px) {
+      .home-hero { padding: 32px 0 84px; }
+      #drop-area, .info-card { padding: 16px; }
+      #uploadButton { width: 100%; }
+      .modal-dialog { margin: .75rem; }
+      #supImageMain { max-height: 240px !important; margin-bottom: 1rem; }
+      #supSimage { width: 100% !important; max-width: 180px; height: auto !important; }
+    }
+    @media (max-width: 575.98px) {
+      .tc-nav .tc-nav-inner { padding: 8px 12px; }
+      .tc-nav-actions, .tc-links { justify-content: center; width: 100%; }
+      .hero-steps { display: none; }
+      #previewImage { max-height: 200px; }
     }
   </style>
 </head>
-<body>
+<body class="tc">
   <!-- Header -->
-  <header>
-    <nav class="navbar navbar-expand-lg navbar-light py-3">
-      <div class="container-fluid px-4">
-        <span class="navbar-brand fs-4 fw-bold">AGRIBOT AI</span>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+  <header class="tc-nav">
+    <nav class="tc-nav-inner" aria-label="Main navigation">
+      <a href="/" class="tc-brand"><span class="tc-brand-mark" aria-hidden="true">🍅</span>AGRIBOT AI</a>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center top-nav-actions">
-              <li class="nav-item"><a href="/about" class="nav-link" id="navAbout">About Project</a></li>
-              <li class="nav-item"><a href="/contact" class="nav-link" id="navContact">Contact</a></li>
+      <div class="tc-nav-actions" id="navbarNav">
+        <ul class="tc-links">
+          <li><a href="/about" id="navAbout">About Project</a></li>
+          <li><a href="/contact" id="navContact">Contact</a></li>
+          <li><a href="/chat-bot" target="_blank" rel="noopener noreferrer" id="navChatBot" class="tc-link-cta">Chat Bot</a></li>
+          <li><a href="/market" target="_blank" rel="noopener noreferrer" id="navMarket">Market</a></li>
+        </ul>
 
-              <!-- Chat Bot Button -->
-              <li class="nav-item">
-                <a href="/chat-bot" target="_blank" rel="noopener noreferrer"
-                   class="nav-link btn btn-warning text-white px-3" id="navChatBot">Chat Bot</a>
-              </li>
-
-              <!-- Market Button (added) -->
-              <li class="nav-item">
-                <a href="/market" target="_blank" rel="noopener noreferrer"
-                   class="nav-link btn btn-info text-white px-3" id="navMarket">Market</a>
-              </li>
-
-              <!-- Language Selector -->
-              <li class="nav-item ms-lg-3">
-                <select id="languageSelect" class="form-select form-select-sm w-auto">
-                  <option value="en">English</option>
-                  <option value="kn">ಕನ್ನಡ (Kannada)</option>
-                  <option value="te">తెలుగు (Telugu)</option>
-                  <option value="hi">हिन्दी (Hindi)</option>
-                  <option value="ta">தமிழ் (Tamil)</option>
-                </select>
-              </li>
-            </ul>
-        </div>
+        <!-- Language Selector -->
+        <select id="languageSelect" class="tc-lang" aria-label="Language">
+          <option value="en">English</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+        </select>
       </div>
     </nav>
   </header>
@@ -527,18 +309,86 @@
   {% block body %}
   <!-- Main -->
   <main>
-    <section id="uploadImage" class="py-5">
+    <section class="tc-hero home-hero">
       <div class="container">
-        <div class="row justify-content-center mb-5">
-          <div class="col-lg-10 text-center">
-            <h4 id="pageTitle" class="mt-4">Tomato Disease Classification</h4>
-            <p id="pageSubtitle" class="lead">Upload an image of a tomato leaf to instantly predict and learn about potential diseases.</p>
+        <span class="tc-eyebrow">🌿 AI Leaf Doctor</span>
+        <h1 id="pageTitle">Tomato Disease Classification</h1>
+        <p id="pageSubtitle">Upload an image of a tomato leaf to instantly predict and learn about potential diseases.</p>
+        <ul class="hero-steps" aria-hidden="true">
+          <li>📷 1 · Photo</li>
+          <li>🔍 2 · Diagnose</li>
+          <li>🔊 3 · Listen</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="uploadImage" class="home-main">
+      <div class="container">
+        <div class="row justify-content-center g-4">
+          <!-- Upload + result -->
+          <div class="col-lg-7 col-12">
+            <div id="drop-area" class="tc-card">
+              <div class="upload-head">
+                <span class="upload-head-icon" aria-hidden="true">🍃</span>
+                <div>
+                  <h2>Leaf scan</h2>
+                  <p>JPG · PNG · WEBP · BMP</p>
+                </div>
+              </div>
+
+              <form id="customForm" method="post" enctype="multipart/form-data">
+
+                <!-- Image Preview / Drop Zone (label opens the file picker natively) -->
+                <label for="fileElement" id="preview-container">
+                  <img id="previewImage" src="../static/images/drag_drop.svg" alt="Drop Zone" />
+                  <span class="texts">
+                    <span id="dragText">Drag & Drop your image here</span>
+                    <span id="fileTypeText">PNG, JPG, JPEG, WEBP or BMP formats are accepted.</span>
+                  </span>
+                </label>
+
+                <input type="file" name="file" id="fileElement" accept="image/*" class="form-control d-none"/>
+
+                <!-- Action Buttons -->
+                <div class="upload-actions">
+                  <button type="button" class="tc-btn tc-btn-primary" id="uploadButton">Upload Image</button>
+                </div>
+
+                <!-- Loading Area -->
+                <div class="loadingArea" style="display:none;">
+                  <div class="progress mb-2">
+                    <div id="uploadProgress" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:100%;"></div>
+                  </div>
+                  <div class="loading-row">
+                    <span id="uploadStatus">Processing...</span>
+                    <button type="button" class="cancelUpload" id="cancelUploadText">Cancel</button>
+                  </div>
+                </div>
+
+                <!-- Result Area -->
+                <div class="resultArea" style="display:none;" aria-live="polite">
+                  <h5 id="predictionHeading">Prediction Result</h5>
+                  <ul class="result-list">
+                    <li class="result-row"><p id="resultLabel">Result:</p><span id="result"></span></li>
+                    <li class="result-row">
+                      <p id="confidenceLabel">Confidence Score:</p>
+                      <div class="confidence-line">
+                        <span id="confidenceScore"></span>
+                        <div class="confidence-bar" aria-hidden="true"><span></span></div>
+                      </div>
+                    </li>
+                    <li class="result-row"><p id="descriptionLabel">Description:</p><span id="diseaseDescription"></span></li>
+                  </ul>
+                </div>
+              </form>
+              <button type="button" id="speakButton" class="tc-btn tc-btn-ghost">🔊 Speak Description</button>
+            </div>
           </div>
-        </div>
-        <div class="row justify-content-center align-items-start g-4">
-          <div class="col-xl-3 col-lg-4 col-md-10 col-12">
-            <aside class="agrimart-card">
-              <span class="agrimart-badge" id="agrimartBadge">Agrimart</span>
+
+          <!-- Info cards -->
+          <div class="col-lg-5 col-xl-4 col-12">
+            <aside class="tc-card info-card agrimart-card">
+              <span class="tc-chip tc-chip-green agrimart-badge" id="agrimartBadge">Agrimart</span>
               <h5 id="agrimartTitle">Agrimart India</h5>
               <p id="agrimartDescription">Based at Bangalore, Agrimart is marketed by Ratnagiri Impex Pvt. Ltd. with a long agriculture business background.</p>
 
@@ -568,53 +418,9 @@
                 </a>
               </div>
             </aside>
-          </div>
-          <div class="col-xl-6 col-lg-8 col-md-10 col-12">
-            <div id="drop-area" class="p-4 rounded-4">
-              <form id="customForm" method="post" enctype="multipart/form-data">
-                
-                <!-- Image Preview / Drop Zone Placeholder -->
-                <div class="mb-4 text-center" id="preview-container">
-                  <img id="previewImage" src="../static/images/drag_drop.svg" alt="Drop Zone" class="img-fluid rounded" />
-                  <div class="texts mt-3">
-                    <p id="dragText">Drag & Drop your image here</p>
-                    <p id="fileTypeText">PNG, JPG, JPEG, WEBP or BMP formats are accepted.</p>
-                  </div>
-                </div>
 
-                <input type="file" name="file" id="fileElement" accept="image/*" class="form-control d-none"/>
-                
-                <!-- Action Buttons -->
-                <div class="d-flex justify-content-center gap-3 mb-4">
-                  <button type="button" class="btn btn-outline-success" id="uploadButton">Upload Image</button>
-                  <!-- Live Camera button removed -->
-                </div>
-
-                <!-- Loading Area -->
-                <div class="loadingArea mt-3 p-3 bg-light rounded" style="display:none;">
-                  <div class="progress mb-2">
-                    <div id="uploadProgress" class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:100%;"></div>
-                  </div>
-                  <span id="uploadStatus" class="d-block text-start text-success fw-bold">Processing...</span>
-                  <span class="cancelUpload btn btn-sm btn-link text-danger" id="cancelUploadText">Cancel</span>
-                </div>
-
-                <!-- Result Area -->
-                <div class="resultArea mt-4" style="display:none;">
-                  <h5 class="text-center mb-3 text-dark fw-bold" id="predictionHeading">Prediction Result</h5>
-                  <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex"><p id="resultLabel" class="mb-0">Result:</p><span id="result"></span></li>
-                    <li class="list-group-item d-flex"><p id="confidenceLabel" class="mb-0">Confidence Score:</p><span id="confidenceScore"></span></li>
-                    <li class="list-group-item d-flex"><p id="descriptionLabel" class="mb-0">Description:</p><span id="diseaseDescription"></span></li>
-                  </ul>
-                </div>
-              </form>
-              <button type="button" id="speakButton" class="btn btn-warning mt-4 w-100">🔊 Speak Description</button>
-            </div>
-          </div>
-          <div class="col-xl-3 col-lg-10 col-md-10 col-12">
-            <aside class="agrimart-card farmer-help-card">
-              <span class="agrimart-badge farmer-help-badge" id="farmerHelpBadge">Farmer Helpline</span>
+            <aside class="tc-card info-card farmer-help-card">
+              <span class="tc-chip tc-chip-red agrimart-badge farmer-help-badge" id="farmerHelpBadge">Farmer Helpline</span>
               <h5 id="farmerHelpTitle">Language-Based Farmer Support</h5>
               <p id="farmerHelpDescription">Choose your preferred language to see a suitable local contact or helpline for farming support.</p>
 
@@ -638,9 +444,9 @@
   </main>
 
   <!-- Footer -->
-  <footer class="footer mt-auto py-3 bg-light">
-    <div class="container text-center">
-      <span id="footerText" class="text-muted">All rights reserved</span>
+  <footer class="tc-footer">
+    <div class="container">
+      <span>🍅 AGRIBOT AI · </span><span id="footerText">All rights reserved</span>
     </div>
   </footer>
   {% endblock body %}
@@ -664,7 +470,11 @@
         const speakButton = document.getElementById("speakButton");
 
         let file = null;
+        // Language is shared across all pages through localStorage
         let currentLang = "en";
+        try { currentLang = localStorage.getItem("appLang") || "en"; } catch (e) {}
+        if (![...languageSelect.options].some(o => o.value === currentLang)) currentLang = "en";
+        languageSelect.value = currentLang;
         let lastDescription = []; // stored as array of points
         let lastPredictionLabel = "";
         let lastConfidence = "";
@@ -1066,7 +876,17 @@
 
         languageSelect.addEventListener("change", (e) => {
           currentLang = e.target.value;
+          try { localStorage.setItem("appLang", currentLang); } catch (err) {}
           applyLanguageToPage(currentLang);
+        });
+
+        // Keep other open tabs (e.g. Market) in sync
+        window.addEventListener("storage", (e) => {
+          if (e.key === "appLang" && e.newValue && e.newValue !== currentLang) {
+            currentLang = e.newValue;
+            languageSelect.value = currentLang;
+            applyLanguageToPage(currentLang);
+          }
         });
 
         function loadVoices() {
@@ -1389,26 +1209,26 @@
           <div class="container-fluid">
             <div class="row mb-4">
               <div class="col-md-6 text-center">
-                <img id="supImageMain" src="/static/images/drag_drop.svg" alt="Supplement image" class="img-fluid rounded" style="max-height:360px; object-fit:cover;">
+                <img id="supImageMain" src="/static/images/drag_drop.svg" alt="Supplement image" class="img-fluid rounded-3" style="max-height:360px; object-fit:cover;">
               </div>
               <div class="col-md-6">
                 <h4 id="supTitle" class="fw-bold">Supplement / Fertilizer</h4>
                 <p id="supPredDesc" class="small text-muted"></p>
                 <hr>
-                <h6 class="mb-1">Benefits / Notes</h6>
+                <h6 class="mb-1 fw-semibold">Benefits / Notes</h6>
                 <p id="supPrevent" class="small"></p>
 
                 <div class="mt-3">
-                  <img id="supSimage" src="/static/images/drag_drop.svg" alt="Product" style="width:160px;height:180px;object-fit:cover;" class="rounded mb-2">
+                  <img id="supSimage" src="/static/images/drag_drop.svg" alt="Product" style="width:160px;height:180px;object-fit:cover;" class="rounded-3 mb-2">
                   <div><strong id="supSname"></strong></div>
-                  <a id="supBuyLink" target="_blank" class="btn btn-success btn-sm mt-2">Buy Product</a>
+                  <a id="supBuyLink" target="_blank" class="tc-btn tc-btn-primary mt-2">Buy Product</a>
                 </div>
               </div>
             </div>
 
             <div class="row">
               <div class="col">
-                <h6 class="mb-2">Summary</h6>
+                <h6 class="mb-2 fw-semibold">Summary</h6>
                 <div id="supSummary" class="small"></div>
               </div>
             </div>
@@ -1416,7 +1236,7 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="tc-btn tc-btn-ghost" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
@@ -1474,6 +1294,27 @@
       //   buy_link: 'https://example.com/product1'
       // }));
     });
+  </script>
+
+  <!-- Display-only: mirror the confidence text into the progress bar (no app logic) -->
+  <script>
+    (function () {
+      var score = document.getElementById("confidenceScore");
+      var bar = document.querySelector(".confidence-bar");
+      if (!score || !bar || !window.MutationObserver) return;
+      var fill = bar.querySelector("span");
+      function sync() {
+        var n = parseFloat(score.textContent);
+        var ok = isFinite(n);
+        var pct = ok ? Math.max(0, Math.min(100, n)) : 0;
+        score.classList.toggle("is-pct", ok && !/%/.test(score.textContent));
+        bar.style.display = ok ? "" : "none";
+        bar.classList.toggle("is-low", ok && pct < 60);
+        fill.style.width = pct + "%";
+      }
+      new MutationObserver(sync).observe(score, { childList: true, characterData: true, subtree: true });
+      sync();
+    })();
   </script>
 </body>
 </html>
